@@ -1,0 +1,45 @@
+<?php 
+
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ *
+ */
+
+namespace MelisEngine\Model\Tables;
+
+use Zend\Db\TableGateway\TableGateway;
+
+class MelisSiteDomainTable extends MelisGenericTable
+{
+	public function __construct(TableGateway $tableGateway)
+	{
+		parent::__construct($tableGateway);
+		$this->idField = 'sdom_id';
+	}
+	
+	public function getDataBySiteIdAndEnv($siteId, $siteEnv) 
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->columns(array('*'));
+	    
+	    $select->where(array("sdom_site_id" => $siteId, 'sdom_env' => $siteEnv));
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    
+	    return $resultSet;
+	}
+	
+	public function getDataByEnv($siteEnv) 
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	     
+	    $select->columns(array('*'));
+	    $select->group('melis_cms_site_domain.sdom_env');
+	    $select->where(array('sdom_env' => $siteEnv));
+	    $resultSet = $this->tableGateway->selectWith($select);
+	     
+	    return $resultSet;
+	}
+}
