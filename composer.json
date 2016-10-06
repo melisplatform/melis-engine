@@ -1,8 +1,22 @@
 {
   "name": "melisplatform/melis-engine",
+  "description": "Melis Platform engine module",
   "type": "melisplatform-module",
   "license": "OSL-3.0",
   "homepage": "https://github.com/melisplatform/melis-engine",
+  "support": {
+    "source": "https://github.com/melisplatform/melis-engine",
+    "issues": "https://github.com/melisplatform/melis-engine/issues"
+  },
+  "keywords": [
+    "cms",
+    "melis",
+    "zf2",
+    "module"
+  ],
+  "extra": {
+    "module-name": "MelisEngine"
+  },
   "require": {
     "php": "^5.5 || ^7.0"
   },
