@@ -1,10 +1,23 @@
 <?php
+
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
+ *
+ */
+
 namespace MelisEngine\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZendSearch\Lucene\Lucene;
 use ZendSearch\Lucene\Document;
+
+/**
+ * Search service for melis search engine based on ZendSearch
+ *
+ */
 class MelisSearchService implements ServiceLocatorAwareInterface 
 {
     public $serviceLocator;
@@ -54,11 +67,14 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
     /**
      * Create index for the provided page id
-     * @param String $moduleName
+     * 
+     * @param string $moduleName
      * @param int $pageId
-     * @param (string | optional) $_defaultPath
+     * @param string[] $exclude
+     * @param string|optional $_defaultPath
      */
-    public function createIndex($moduleName, $pageId, $exclude = array(), $_defaultPath = self::FOLDER_PATH)
+    public function createIndex($moduleName, $pageId, $exclude = array(), 
+                                $_defaultPath = self::FOLDER_PATH)
     {
         $this->tmpLogs = '';
         
@@ -90,26 +106,34 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Used to clear index folder
+     * 
+     * @param string $dir
+     * 
      * @return number
      */
     public function clearIndex($dir)
     {
         $success = 0;
 
-        if (!file_exists($dir)) {
+        if (!file_exists($dir))
+        {
             $success = 1;
         }
         
-        if (!is_dir($dir)) {
+        if (!is_dir($dir))
+        {
             return @unlink($dir);
         }
         
-        foreach (scandir($dir) as $item) {
-            if ($item == '.' || $item == '..') {
+        foreach (scandir($dir) as $item)
+        {
+            if ($item == '.' || $item == '..')
+            {
                 continue;
             }
         
-            if (!$this->clearIndex($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (!$this->clearIndex($dir . DIRECTORY_SEPARATOR . $item))
+            {
                 $success = 0;
             }
         
@@ -123,7 +147,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
     /**
      * Use this function to optimize your lucene indexes
-     * @param unknown $lucenePath
+     * 
+     * @param string $moduleName
      */
     public function optimizeIndex($moduleName)
     {
@@ -142,12 +167,14 @@ class MelisSearchService implements ServiceLocatorAwareInterface
    
     /**
      * Make a search
-     * @param String $moduleName
-     * @param String $searchValue
+     * 
+     * @param string $moduleName
+     * @param string $searchValue
      * @param string $returnXml
-     * @param (string | optional) $_defaultPath
+     * @param string|optional $_defaultPath
      */
-    public function search($searchValue, $moduleName, $returnXml = false, $_defaultPath = self::FOLDER_PATH)
+    public function search($searchValue, $moduleName, $returnXml = false, 
+                           $_defaultPath = self::FOLDER_PATH)
     {
         $results = array();
         
@@ -168,8 +195,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Returns the search results as XML
-     * @param String $searchValue
+     * 
+     * @param string $searchValue
      * @param array $searchResults
+     * @return string
      */
     protected function setSearchResultsAsXml($searchValue, $searchResults)
     {
@@ -216,8 +245,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Create index with a content of a specific page
-     * @param String $lucenePath
+     * 
+     * @param string $lucenePath
      * @param int $pageId
+     * @param array $exclude
      */
     protected function createIndexForPage($lucenePath, $pageId, $exclude = array()) 
     {
@@ -437,7 +468,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Returns the header status of the URL
-     * @param unknown $url
+     * @param string $url
      */
     protected function getUrlStatus($url)
     {
@@ -456,7 +487,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Checks wether the provided path is empty or not
-     * @param unknown $path
+     * @param string $path
      */
     protected function isDirEmpty($path)
     {
@@ -471,7 +502,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Force creation of directory that can be read and written
-     * @param String $path
+     * @param string $path
      * @return bool
      */
     protected function createDir($path)
@@ -497,7 +528,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Change folder permission to 0755
-     * @param String $path
+     * 
+     * @param string $path
      */
     protected function changePermission($path, $octal = 0755)
     {
@@ -520,18 +552,17 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     {
         $status = true;
         
-        //if(!rename($oldPathName, $newPathName)) {
-            if ($this->recurse_copy($oldPathName, $newPathName)) {
-                unlink($oldPathName);
-                $status = true;
-            }
-        //}
+        if ($this->recurse_copy($oldPathName, $newPathName)) {
+            unlink($oldPathName);
+            $status = true;
+        }
         
         return $status;
         
     }
     
-    protected function recurse_copy($src,$dst) {
+    protected function recurse_copy($src,$dst) 
+    {
         $dir = opendir($src);
         @mkdir($dst);
         while(false !== ( $file = readdir($dir)) ) {
@@ -549,8 +580,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Returns a limited text
-     * @param String $text
-     * @return String
+     * 
+     * @param string $text
+     * @param int $limit
+     * @return string
      */
     protected function limitedText($text, $limit = 200)
     {
@@ -569,7 +602,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     
     /**
      * Make sure we have a valid URL when accessing a page
-     * @param String $url
+     * 
+     * @param string $url
      */
     protected function isValidUrl($url) 
     {

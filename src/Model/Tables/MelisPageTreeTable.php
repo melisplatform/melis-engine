@@ -3,7 +3,7 @@
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
- * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
  *
  */
 
@@ -19,6 +19,11 @@ class MelisPageTreeTable extends MelisGenericTable
 		$this->idField = 'tree_page_id';
 	}
 	
+	/**
+	 * Gets full datas for a page from tree, page saved, paged published, lang
+	 * @param int $id PageId
+	 * @param string $type saved or published to limit
+	 */
 	public function getFullDatasPage($id, $type = '')
 	{
 		$select = $this->tableGateway->getSql()->select();
@@ -52,6 +57,12 @@ class MelisPageTreeTable extends MelisGenericTable
 		return $resultSet;
 	}
 	
+	/**
+	 * Gets the children of a page
+	 * 
+	 * @param int $id parent page id
+	 * @param int $publishedOnly If true, only published children page will be brought back
+	 */
 	public function getPageChildrenByidPage($id, $publishedOnly = 0)
 	{
 		$select = $this->tableGateway->getSql()->select();
@@ -81,6 +92,11 @@ class MelisPageTreeTable extends MelisGenericTable
 		return $resultSet;
 	}
 	
+	/**
+	 * This function brings back the father page of a page
+	 * 
+	 * @param int $id Page id to look for
+	 */
 	public function getFatherPageById($id)
 	{
 		$select = $this->tableGateway->getSql()->select();

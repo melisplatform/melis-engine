@@ -3,7 +3,7 @@
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
- * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
  *
  */
 
@@ -23,6 +23,12 @@ class MelisSiteTable extends MelisGenericTable
 		$this->idField = 'site_id';
 	}
 	
+	/**
+	 * Gets all the datas for a site
+	 * 
+	 * @param string $env MELIS_PLATFORM variable
+	 * @param boolean $includeSite404Table If true, gets the datas in 404 table
+	 */
 	public function getSites($env = '', $includeSite404Table = false)
 	{
 		$select = $this->tableGateway->getSql()->select();
@@ -49,6 +55,13 @@ class MelisSiteTable extends MelisGenericTable
 		return $resultSet;
 	}
 	
+	/**
+	 * Gets a site by its id, and can restrict to an environment for the domain, and 404 datas
+	 * 
+	 * @param int $idSite
+	 * @param string $env
+	 * @param boolean $includeSite404Table
+	 */
 	public function getSiteById($idSite, $env = '', $includeSite404Table = false)
 	{
 		$select = $this->tableGateway->getSql()->select();
@@ -75,6 +88,12 @@ class MelisSiteTable extends MelisGenericTable
 		return $resultSet;
 	}
 	
+	/**
+	 * Gets the list of sites
+	 * 
+	 * @param array $options
+	 * @param unknown $fixedCriteria
+	 */
 	public function getSitesData(array $options, $fixedCriteria = null) {
 	    
 	    $select = $this->tableGateway->getSql()->select();

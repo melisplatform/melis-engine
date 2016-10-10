@@ -3,7 +3,7 @@
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
- * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
  *
  */
 
@@ -19,6 +19,12 @@ class MelisSiteDomainTable extends MelisGenericTable
 		$this->idField = 'sdom_id';
 	}
 	
+	/**
+	 * Gets the domain by the site id and the environment platform
+	 * 
+	 * @param int $siteId
+	 * @param string $siteEnv
+	 */
 	public function getDataBySiteIdAndEnv($siteId, $siteEnv) 
 	{
 	    $select = $this->tableGateway->getSql()->select();
@@ -31,6 +37,11 @@ class MelisSiteDomainTable extends MelisGenericTable
 	    return $resultSet;
 	}
 	
+	/**
+	 * Get the domain of the site per its environement
+	 * 
+	 * @param string $siteEnv
+	 */
 	public function getDataByEnv($siteEnv) 
 	{
 	    $select = $this->tableGateway->getSql()->select();

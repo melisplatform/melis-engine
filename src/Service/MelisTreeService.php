@@ -1,9 +1,17 @@
 <?php
 
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
+ *
+ */
+
 namespace MelisEngine\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use MelisEngine\Model\MelisPage;
 
 class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAwareInterface
 {
@@ -19,7 +27,14 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 		return $this->serviceLocator;
 	}	
-	
+
+	/**
+	 * This service gets the children pages of a specific page
+	 * 
+	 * @param int $idPage The page id
+	 * @param int $publishedOnly To retrieve only published pages or also saved version / unpublished
+	 * 
+	 */
 	public function getPageChildren($idPage, $publishedOnly = 0)
 	{
 	    if (empty($idPage))
@@ -31,6 +46,12 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		return $datasPage;
 	}
 	
+	/**
+	 * Gets the father page of a specific page
+	 * 
+	 * @param int $idPage
+	 * 
+	 */
 	public function getPageFather($idPage)
 	{
 	    if (empty($idPage))
@@ -41,7 +62,16 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 			
 		return $datasPage;
 	}
-	
+
+	/**
+	 * Gets the breadcromb of pages as an array
+	 * 
+	 * @param int $idPage The id page to start from
+	 * @param int $typeLinkOnly Get only pages with a type LINK for menu
+	 * @param boolean $allPages Brings it all 
+	 * @return MelisPage[] Array of Melis Pages
+	 * 
+	 */
 	public function getPageBreadcrumb($idPage, $typeLinkOnly = 1, $allPages = true)
 	{
 	    if (empty($idPage))
@@ -95,6 +125,13 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		return $results;
 	}
 	
+	/**
+	 * Returns the link of a page, MelisUrl or specific SEO
+	 * 
+	 * @param int $idPage The page id for the link
+	 * @param boolean $absolute If true, returns link with domain
+	 * 
+	 */ 
 	public function getPageLink($idPage, $absolute = false)
 	{
 	    if (empty($idPage))
@@ -149,6 +186,11 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		return $link;
 	}
 	
+	/**
+	 * Clean strings from special characters
+	 * 
+	 * @param string $str
+	 */ 
 	public function cleanString($str)
 	{
 		$str = preg_replace("/[áàâãªä]/u", "a", $str);
@@ -211,7 +253,12 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		 
 		return ($str);
 	}
-	
+
+	/**
+	 * Cleans a link to allow only good characters
+	 * 
+	 * @param string $link
+	 */
 	private function cleanLink($link)
 	{
 		$link = strtolower(preg_replace(
@@ -226,6 +273,12 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		return $link;
 	}
 	
+	/**
+	 * Gets the domain as define in site table for a page id
+	 * 
+	 * @param int $idPage
+	 * @return string The domain with the scheme
+	 */
 	public function getDomainByPageId($idPage)
 	{
 	    if (empty($idPage))
@@ -258,6 +311,11 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		return '';
 	}
 	
+	/**
+	 * Gets the site object of a page id
+	 * 
+	 * @param int $idPage
+	 */
 	public function getSiteByPageId($idPage)
 	{
 	    if (empty($idPage))
@@ -281,6 +339,12 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		return null;
 	}
 	
+	/**
+	 * Gets the previous and next page for a specific page in the treeview
+	 * 
+	 * @param int $idPage The page id
+	 * @param int $publishedOnly Only active pages will be taken in consideration
+	 */
 	public function getPrevNextPage($idPage, $publishedOnly = 1) {
 	
 	    $output = array(

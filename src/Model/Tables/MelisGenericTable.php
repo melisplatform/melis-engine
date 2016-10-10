@@ -3,7 +3,7 @@
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
- * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
  *
  */
 
@@ -19,6 +19,7 @@ use Zend\Db\Sql\Predicate\PredicateSet;
 use Zend\Db\Sql\Predicate\Like;
 use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Sql\Predicate\Predicate;
+
 class MelisGenericTable implements ServiceLocatorAwareInterface
 {
 	protected $serviceLocator;
