@@ -49,6 +49,25 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $sm = $e->getApplication()->getServiceManager();
+        $routeMatch = $sm->get('router')->match($sm->get('request'));
+        if (!empty($routeMatch))
+        {
+            $routeName = $routeMatch->getMatchedRouteName();
+            $module = explode('/', $routeName);
+             
+            if (!empty($module[0]))
+            {
+                if ($module[0] == 'melis-backoffice')
+                {
+                    $eventManager->getSharedManager()->attach(__NAMESPACE__,
+                        MvcEvent::EVENT_DISPATCH, function($e) {
+                        				$e->getTarget()->layout('layout/layoutEngine');
+                        });
+                }
+            }
+        }
         
         $this->createTranslations($e);
         
@@ -56,10 +75,6 @@ class Module
     
     public function init(ModuleManager $mm)
     {
-    	$mm->getEventManager()->getSharedManager()->attach(__NAMESPACE__,
-    			MvcEvent::EVENT_DISPATCH, function($e) {
-    				$e->getTarget()->layout('layout/layoutEngine');
-    			}); 
     }
 
     public function getConfig()

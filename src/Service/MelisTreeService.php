@@ -211,6 +211,8 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		$str = str_replace("Ç", "C", $str);
 		$str = str_replace("ñ", "n", $str);
 		$str = str_replace("Ñ", "N", $str);
+		$str = str_replace('"', "", $str);
+		$str = str_replace("'", "", $str);
 		
 		$trans = get_html_translation_table(HTML_ENTITIES);
 		$trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
