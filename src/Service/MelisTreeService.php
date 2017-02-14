@@ -9,25 +9,11 @@
 
 namespace MelisEngine\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use MelisEngine\Model\MelisPage;
+use MelisEngine\Service\MelisEngineGeneralService;
 
-class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAwareInterface
+class MelisTreeService extends MelisEngineGeneralService implements MelisTreeServiceInterface
 {
-	protected 	$serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}	
-
 	/**
 	 * This service gets the children pages of a specific page
 	 * 
@@ -39,10 +25,19 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 	    if (empty($idPage))
 	        return null;
+	    
+	    // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
+	    $results = $this->getCacheServiceResults($cacheKey);
+	    if (!empty($results))
+	        return $results;
 	         
 		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
 		$datasPage = $tablePageTree->getPageChildrenByidPage($idPage, $publishedOnly);
-	
+
+		// Save cache key
+		$this->setCacheServiceResults($cacheKey, $datasPage);
+		
 		return $datasPage;
 	}
 	
@@ -56,10 +51,19 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 	    if (empty($idPage))
 	        return null;
-	         
+	    
+	    // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getPageFather_' . $idPage;
+	    $results = $this->getCacheServiceResults($cacheKey);
+	    if (!empty($results))
+	        return $results;
+	        
 		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
 		$datasPage = $tablePageTree->getFatherPageById($idPage);
-			
+
+		// Save cache key
+		$this->setCacheServiceResults($cacheKey, $datasPage);
+		
 		return $datasPage;
 	}
 
@@ -76,7 +80,13 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 	    if (empty($idPage))
 	        return null;
-	         
+
+	    // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getPageBreadcrumb_' . $idPage . '_' . $typeLinkOnly . '_' . $allPages;
+	    $results = $this->getCacheServiceResults($cacheKey);
+	    if (!empty($results))
+	        return $results;
+	        
 		$results = array();
 		$tmp = $idPage;
 		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
@@ -121,7 +131,10 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		}
 	
 		krsort($results);
-	
+
+		// Save cache key
+		$this->setCacheServiceResults($cacheKey, $results);
+		
 		return $results;
 	}
 	
@@ -136,20 +149,25 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 	    if (empty($idPage))
 	        return null;
-	         
+
+
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getPageLink_' . $idPage . '_' . $absolute;
+        $results = $this->getCacheServiceResults($cacheKey);
+        if (!empty($results))
+            return $results;
+	        
 		// Check for SEO URL first
 		$seoUrl = '';
-		$melisTablePageSeo = $this->serviceLocator->get('MelisEngineTablePageSeo');
-		$datasPageSeo = $melisTablePageSeo->getEntryById($idPage);
-		if ($datasPageSeo)
+		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+		$datasPageRes = $melisPage->getDatasPage($idPage);
+		$datasPageTreeRes = $datasPageRes->getMelisPageTree();
+		
+		if ($datasPageTreeRes && !empty($datasPageTreeRes->pseo_url))
 		{
-			$datasPageSeo = $datasPageSeo->current();
-			if ($datasPageSeo && !empty($datasPageSeo->pseo_url))
-			{
-				$seoUrl = $datasPageSeo->pseo_url;
-				if (substr($seoUrl, 0, 1) != '/')
-					$seoUrl = '/' . $seoUrl;
-			}
+			$seoUrl = $datasPageTreeRes->pseo_url;
+			if (substr($seoUrl, 0, 1) != '/')
+				$seoUrl = '/' . $seoUrl;
 		}
 		
 		if ($seoUrl == '')
@@ -168,7 +186,14 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		        $seoUrl = '/';
 		        foreach ($datasPage as $page)
 		        {
-		            $namePage = $page->page_name;
+		            if (!empty($datasSite) && $datasSite->site_main_page_id == $page->page_id)
+		                continue;
+		            
+		            if (!empty($page->pseo_meta_title))    
+		                $namePage = $page->pseo_meta_title;
+		            else
+		                $namePage = $page->page_name;
+		                
 		            $seoUrl .= $namePage . '/';
 		        }
 		        $seoUrl .= 'id/' . $idPage;
@@ -182,6 +207,9 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 			$host = $this->getDomainByPageId($idPage);
 			$link = $host . $link;
 		}
+		
+		// Save cache key
+		$this->setCacheServiceResults($cacheKey, $link);
 	
 		return $link;
 	}
@@ -211,8 +239,6 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		$str = str_replace("Ç", "C", $str);
 		$str = str_replace("ñ", "n", $str);
 		$str = str_replace("Ñ", "N", $str);
-		$str = str_replace('"', "", $str);
-		$str = str_replace("'", "", $str);
 		
 		$trans = get_html_translation_table(HTML_ENTITIES);
 		$trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
@@ -252,7 +278,7 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 		$targets=array('\r\n', '\n', '\r', '\t');
 		$results=array(" ", " ", " ", "");
 		$str = str_replace($targets, $results, $str);
-		 
+		
 		return ($str);
 	}
 
@@ -285,7 +311,14 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 	    if (empty($idPage))
 	        return null;
-	         
+
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getDomainByPageId_' . $idPage;
+        $results = $this->getCacheServiceResults($cacheKey);
+        if (!empty($results))
+            return $results; 
+	        
+        $domainStr = '';
 		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
 		$datasPage = $melisPage->getDatasPage($idPage);
 		$datasTemplate = $datasPage->getMelisTemplate();
@@ -305,12 +338,15 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 					$domain = $datasSite->sdom_domain;
 					
 					if ($domain != '')
-						return $scheme . '://' . $domain;
+						$domainStr = $scheme . '://' . $domain;
 				}
 			}
 		}
+
+		// Save cache key
+		$this->setCacheServiceResults($cacheKey, $domainStr);
 		
-		return '';
+		return $domainStr;
 	}
 	
 	/**
@@ -322,7 +358,15 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 	{
 	    if (empty($idPage))
 	        return null;
-	         
+
+
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getSiteByPageId_' . $idPage;
+        $results = $this->getCacheServiceResults($cacheKey);
+        if (!empty($results))
+            return $results;
+	    
+        $datasSite = null;
 		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
 		$datasPage = $melisPage->getDatasPage($idPage);
 		$datasTemplate = $datasPage->getMelisTemplate();
@@ -333,12 +377,13 @@ class MelisTreeService implements MelisTreeServiceInterface, ServiceLocatorAware
 			if ($datasSite)
 			{
 				$datasSite = $datasSite->current();
-				if (!empty($datasSite))
-					return $datasSite;
 			}
 		}
+
+		// Save cache key
+		$this->setCacheServiceResults($cacheKey, $datasSite);
 		
-		return null;
+		return $datasSite;
 	}
 	
 	/**

@@ -18,5 +18,16 @@ class MelisPagePublishedTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'page_id';
 	}
-
+	
+	public function getPublishedSitePagesById($pageId)
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	     
+	    $select->where('page_status = 1');
+	    $select->where(array('page_type' => array('SITE', 'PAGE')));
+	    $select->where('page_id ='.$pageId);
+	    $resultSet = $this->tableGateway->selectWith($select);
+	     
+	    return $resultSet;
+	}
 }

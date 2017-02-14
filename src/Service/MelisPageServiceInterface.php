@@ -19,4 +19,14 @@ interface MelisPageServiceInterface
      *
      */
 	public function getDatasPage($idPage, $type = 'published');
+	
+	/**
+	 * This service searches a value for matching page name or page id
+	 *
+	 * @param string $value The search value
+	 * @param string $type page type
+	 * 
+	 * @return array page ids
+	 */
+	public function searchPage($value, $type = 'published');
 }

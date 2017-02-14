@@ -11,16 +11,15 @@ namespace MelisEngine\Service\Factory;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
-use MelisEngine\Service\MelisSearchService;
+use MelisEngine\Service\MelisEngineGeneralService;
 
-class MelisSearchServiceFactory implements FactoryInterface
+class MelisEngineGeneralServiceFactory implements FactoryInterface
 {
 	public function createService(ServiceLocatorInterface $sl)
 	{ 
-		$melisSearchService = new \MelisEngine\Service\MelisSearchService();
-		$melisSearchService->setServiceLocator($sl);
-		 
-		return $melisSearchService;
+        $melisEngineGeneralService = new MelisEngineGeneralService();
+		$melisEngineGeneralService->setServiceLocator($sl);
+		return $melisEngineGeneralService;
 	}
 
 }

@@ -96,6 +96,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 			return $insertedId;
 		}
 	}
+
 	
 	public function update($datas, $whereField, $whereValue)
 	{

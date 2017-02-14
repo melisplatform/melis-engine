@@ -50,6 +50,9 @@ class MelisPageTreeTable extends MelisGenericTable
 						$columns, $select::JOIN_LEFT);
 		}
 		
+		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
+		    array('*'), $select::JOIN_LEFT);
+		
 		$select->where('tree_page_id = ' . $id);
 		
 		$resultSet = $this->tableGateway->selectWith($select);
@@ -79,11 +82,16 @@ class MelisPageTreeTable extends MelisGenericTable
 		if ($publishedOnly == 1)
 			$select->where('melis_cms_page_published.page_status=1');
 		
-		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
 		if ($publishedOnly == 0)
-			$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
+		{
+    		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
+		    $select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
 					$columns, $select::JOIN_LEFT);
+		}
 		
+		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
+	       array('*'), $select::JOIN_LEFT);
+			
 		$select->where('tree_father_page_id = ' . $id);
 		$select->order('tree_page_order ASC');
 		
@@ -97,7 +105,7 @@ class MelisPageTreeTable extends MelisGenericTable
 	 * 
 	 * @param int $id Page id to look for
 	 */
-	public function getFatherPageById($id)
+	public function getFatherPageById($id, $type = 'published')
 	{
 		$select = $this->tableGateway->getSql()->select();
 		
@@ -111,14 +119,66 @@ class MelisPageTreeTable extends MelisGenericTable
 		$select->join('melis_cms_page_published', 'melis_cms_page_published.page_id = melis_cms_page_tree.tree_father_page_id', 
 						array('*'), $select::JOIN_LEFT);
 
-		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
-		$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_father_page_id', 
-						$columns, $select::JOIN_LEFT);
+		if ($type == 'published' || $type == '')
+		{
+    		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
+    		$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_father_page_id', 
+    						$columns, $select::JOIN_LEFT);
+		}
+		
+		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_father_page_id',
+		    array('*'), $select::JOIN_LEFT);
 		
 		$select->where('tree_page_id = ' . $id);
 		
 		$resultSet = $this->tableGateway->selectWith($select);
 		
 		return $resultSet;
+	}
+	
+	public function getPageTreeOrderedByFatherId($fatherId)
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->columns(array('*'));
+	    $select->where('tree_father_page_id ='.$fatherId);
+	    $select->order(array('tree_page_order' => 'ASC'));
+	    
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    
+	    return $resultSet;
+	}
+	
+	/**
+	 * This function searches for page name or page id
+	 * 
+	 * @param string $value The search value
+	 * @param string $type saved or published to limit
+	 * 
+	 * returns resultset page ids
+	 */
+	public function getPagesBySearchValue($value, $type = '')
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    $select->columns(array('tree_page_id'));
+	    
+	    if ($type == 'published' || $type == ''){
+	        $select->join('melis_cms_page_published', 'melis_cms_page_published.page_id = melis_cms_page_tree.tree_page_id',
+	            array(), $select::JOIN_LEFT);
+	    }
+	        
+	    
+        if ($type == 'saved'){
+            $select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
+                array(), $select::JOIN_LEFT);
+        }
+            
+        $search = '%'.$value.'%';
+        $select->where->NEST->like('page_name', $search)
+            ->or->like('melis_cms_page_tree.tree_page_id', $search);
+        
+        $resultSet = $this->tableGateway->selectWith($select);
+        
+        return $resultSet;
 	}
 }

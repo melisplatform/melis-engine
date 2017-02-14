@@ -79,8 +79,16 @@ class Module
     {
     	$sm = $e->getApplication()->getServiceManager();
     	$translator = $sm->get('translator');
-
-    	$translator->addTranslationFile('phparray', __DIR__ . '/../language/' . $locale . '.php');
+        
+    	if (!empty($locale)){
+    	    
+    	    // Inteface translations
+    	    $interfaceTransPath = 'module/MelisModuleConfig/languages/MelisEngine/' . $locale . '.interface.php';
+    	    $default = __DIR__ . '/../language/en_EN.interface.php';
+    	    $transPath = (file_exists($interfaceTransPath))? $interfaceTransPath : $default;
+    	    $translator->addTranslationFile('phparray', $transPath);
+    	    
+    	}
     }
     
 }

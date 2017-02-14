@@ -38,6 +38,7 @@ return array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
 			'MelisEngineTree' => 'MelisEngine\Service\Factory\MelisTreeServiceFactory',
 		    'MelisSearch' => 'MelisEngine\Service\Factory\MelisSearchServiceFactory',
+		    'MelisEngineGeneralService' => 'MelisEngine\Service\Factory\MelisEngineGeneralServiceFactory',
             
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',
@@ -53,6 +54,9 @@ return array(
             'MelisEngine\Model\Tables\MelisPlatformIdsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPlatformIdsTableFactory',
             'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
 		),
+        'abstract_factories' => array(
+            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+        )
     ),
     'view_manager' => array(
         'display_not_found_reason' => true,
@@ -61,12 +65,24 @@ return array(
         'template_map' => array(
             'layout/layoutEngine'           => __DIR__ . '/../view/layout/layoutEngine.phtml',
             'melis-engine/index/index'  => __DIR__ . '/../view/melis-engine/render/index.phtml',
+            'melis-engine/plugins/notemplate'  => __DIR__ . '/../view/melis-engine/plugins/notemplate.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
         'strategies' => array(
             'ViewJsonStrategy',
+        ),
+    ),
+    'caches' => array(
+        'engine_services' => array( 
+            'adapter' => array(
+                'name'    => 'Memory',
+                'options' => array('ttl' => 0, 'namespace' => 'melisengine'),
+            ),
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => false),
+            ),
         ),
     ),
 );
