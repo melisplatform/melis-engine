@@ -30,6 +30,8 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	protected $_selectedValues;
 	protected $_currentDataCount;
 	
+	protected $cacheResults = false;
+	
 	public function __construct(TableGateway $tableGateway)
 	{
 		$this->tableGateway = $tableGateway;
@@ -44,6 +46,37 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	public function getServiceLocator()
 	{
 		return $this->serviceLocator;
+	}
+
+	public function getRenderMode()
+	{
+	    $router = $this->serviceLocator->get('router');
+	    $request = $this->serviceLocator->get('request');
+	
+	    $routeMatch = $router->match($request);
+	    $renderMode = $routeMatch->getParam('renderMode', 'melis');
+	     
+	    return $renderMode;
+	}
+	
+	public function getCacheServiceResults($cacheKey)
+	{
+	    
+	    // Retrieve cache version if front mode to avoid multiple calls
+	    if ($this->getRenderMode() == 'front' &&
+	        $this->getServiceLocator()->get('engine_services')->hasItem($cacheKey))
+	    {
+	        return $this->getServiceLocator()->get('engine_services')->getItem($cacheKey);
+	    }
+	    
+	    return null;
+	}
+	
+	public function setCacheServiceResults($cacheKey, $results)
+	{
+	    // Save cache key
+	    if ($this->getRenderMode() == 'front')
+	        $this->getServiceLocator()->get('engine_services')->setItem($cacheKey, $results);
 	}
 	
 	public function getTableGateway()
@@ -60,7 +93,19 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 
 	public function getEntryById($id)
 	{
+    	$cacheKey = get_class($this) . '_getEntryById_' . $id;
+	    if ($this->cacheResults)
+	    {
+    	    $results = $this->getCacheServiceResults($cacheKey);
+    	    if (!empty($results))
+    	        return $results;
+	    }
+	    
 		$rowset = $this->tableGateway->select(array($this->idField => (int)$id));
+		
+		if ($this->cacheResults)
+		    $this->setCacheServiceResults($cacheKey, $rowset);
+		
 		return $rowset;
 	}
 

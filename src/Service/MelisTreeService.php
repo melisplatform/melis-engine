@@ -157,51 +157,81 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         if (!empty($results))
             return $results;
 	        
-		// Check for SEO URL first
-		$seoUrl = '';
-		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
-		$datasPageRes = $melisPage->getDatasPage($idPage);
-		$datasPageTreeRes = $datasPageRes->getMelisPageTree();
-		
-		if ($datasPageTreeRes && !empty($datasPageTreeRes->pseo_url))
-		{
-			$seoUrl = $datasPageTreeRes->pseo_url;
-			if (substr($seoUrl, 0, 1) != '/')
-				$seoUrl = '/' . $seoUrl;
-		}
-		
-		if ($seoUrl == '')
-		{
-		    // First let's see if page is the homepage one ( / no id following for url)
-		    $datasSite = $this->getSiteByPageId($idPage);
-		    if (!empty($datasSite) && $datasSite->site_main_page_id == $idPage)
-		    {
-		        $seoUrl = '/';
-		    }
-		    else
-		    {
-		        // if not, construct a classic Melis URL /..../..../id/xx
-		        $datasPage = $this->getPageBreadcrumb($idPage);
-		        
-		        $seoUrl = '/';
-		        foreach ($datasPage as $page)
-		        {
-		            if (!empty($datasSite) && $datasSite->site_main_page_id == $page->page_id)
-		                continue;
-		            
-		            if (!empty($page->pseo_meta_title))    
-		                $namePage = $page->pseo_meta_title;
-		            else
-		                $namePage = $page->page_name;
-		                
-		            $seoUrl .= $namePage . '/';
-		        }
-		        $seoUrl .= 'id/' . $idPage;
-		    }
-		}
-		
-		$link = $this->cleanLink($seoUrl);
-	
+        // Get the already generated link from the DB if possible    
+        $link = '';
+        $tablePageDefaultUrls = $this->getServiceLocator()->get('MelisEngineTablePageDefaultUrls');
+        if ($this->getRenderMode() == 'front')
+        {
+            $defaultUrls = $tablePageDefaultUrls->getEntryById($idPage);
+            if (!empty($defaultUrls))
+            {
+                $defaultUrls = $defaultUrls->toArray();
+                if (count($defaultUrls) > 0)
+                {
+                    $link = $defaultUrls[0]['purl_page_url'];
+                }
+            }
+        }
+        
+        // if nothing found in DB, then let's generate
+        if ($link == '')
+        {
+            // Generate real one
+            
+            // Check for SEO URL first
+            $seoUrl = '';
+            $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+            $datasPageRes = $melisPage->getDatasPage($idPage);
+            $datasPageTreeRes = $datasPageRes->getMelisPageTree();
+            
+            if ($datasPageTreeRes && !empty($datasPageTreeRes->pseo_url))
+            {
+                $seoUrl = $datasPageTreeRes->pseo_url;
+                if (substr($seoUrl, 0, 1) != '/')
+                    $seoUrl = '/' . $seoUrl;
+            }
+            
+            if ($seoUrl == '')
+            {
+                // First let's see if page is the homepage one ( / no id following for url)
+                $datasSite = $this->getSiteByPageId($idPage);
+                if (!empty($datasSite) && $datasSite->site_main_page_id == $idPage)
+                {
+                    $seoUrl = '/';
+                }
+                else
+                {
+                    // if not, construct a classic Melis URL /..../..../id/xx
+                    $datasPage = $this->getPageBreadcrumb($idPage);
+            
+                    $seoUrl = '/';
+                    foreach ($datasPage as $page)
+                    {
+                        if (!empty($datasSite) && $datasSite->site_main_page_id == $page->page_id)
+                            continue;
+            
+                        if (!empty($page->pseo_meta_title))
+                            $namePage = $page->pseo_meta_title;
+                        else
+                            $namePage = $page->page_name;
+    
+                        $seoUrl .= $namePage . '/';
+                    }
+                    $seoUrl .= 'id/' . $idPage;
+                }
+            }
+
+            $link = $this->cleanLink($seoUrl);
+            
+            $tablePageDefaultUrls->save(
+                array(
+                    'purl_page_id' => $idPage,
+                    'purl_page_url' => $link
+                ),
+                $idPage
+            );
+        }
+            
 		if ($absolute)
 		{
 			$host = $this->getDomainByPageId($idPage);
@@ -358,7 +388,6 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	{
 	    if (empty($idPage))
 	        return null;
-
 
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getSiteByPageId_' . $idPage;

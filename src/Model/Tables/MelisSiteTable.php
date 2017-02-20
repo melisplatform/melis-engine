@@ -49,7 +49,7 @@ class MelisSiteTable extends MelisGenericTable
 
 		if ($env != '')
 			$select->where("sdom_env = '$env'");
-	
+			
 		$resultSet = $this->tableGateway->selectWith($select);
 	
 		return $resultSet;
@@ -64,6 +64,11 @@ class MelisSiteTable extends MelisGenericTable
 	 */
 	public function getSiteById($idSite, $env = '', $includeSite404Table = false)
 	{
+	    $cacheKey = 'table_getSiteById_' . $idSite . '_' . $env . '_' . $includeSite404Table;
+        $results = $this->getCacheServiceResults($cacheKey);
+        if (!empty($results))
+	            return $results;
+	    
 		$select = $this->tableGateway->getSql()->select();
 		
 		$select->columns(array('*'));
@@ -81,10 +86,9 @@ class MelisSiteTable extends MelisGenericTable
 	
         $select->where("melis_cms_site_domain.sdom_site_id = " . $idSite . ' AND melis_cms_site_domain.sdom_env=\''.$env.'\'');
 		$resultSet = $this->tableGateway->selectWith($select);
+
+		$this->setCacheServiceResults($cacheKey, $resultSet);
 		
-		$sql = $this->tableGateway->getSql();
-		$raw = $sql->getSqlstringForSqlObject($select);
-		//echo $raw;
 		return $resultSet;
 	}
 	

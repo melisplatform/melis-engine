@@ -91,6 +91,9 @@ class MelisPageTreeTable extends MelisGenericTable
 		
 		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
 	       array('*'), $select::JOIN_LEFT);
+		
+		$select->join('melis_cms_page_default_urls', 'melis_cms_page_default_urls.purl_page_id = melis_cms_page_tree.tree_page_id',
+	       array('*'), $select::JOIN_LEFT);
 			
 		$select->where('tree_father_page_id = ' . $id);
 		$select->order('tree_page_order ASC');
@@ -119,7 +122,7 @@ class MelisPageTreeTable extends MelisGenericTable
 		$select->join('melis_cms_page_published', 'melis_cms_page_published.page_id = melis_cms_page_tree.tree_father_page_id', 
 						array('*'), $select::JOIN_LEFT);
 
-		if ($type == 'published' || $type == '')
+		if ($type != 'published' || $type == '')
 		{
     		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
     		$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_father_page_id', 

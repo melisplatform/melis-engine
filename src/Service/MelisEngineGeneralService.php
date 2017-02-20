@@ -51,7 +51,7 @@ class MelisEngineGeneralService implements ServiceLocatorAwareInterface, EventMa
 	    $request = $this->serviceLocator->get('request');
 	
 	    $routeMatch = $router->match($request);
-	    $renderMode = $routeMatch->getParam('renderMode', 'front');
+	    $renderMode = $routeMatch->getParam('renderMode', 'melis');
 	     
 	    return $renderMode;
 	}

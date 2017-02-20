@@ -19,6 +19,7 @@ class MelisTemplateTable extends MelisGenericTable
 	{
 		parent::__construct($tableGateway);
 		$this->idField = 'tpl_id';
+		$this->cacheResults = true;
 	}
 	
     /**

@@ -33,6 +33,7 @@ return array(
 			'MelisEngineTablePageSaved' => 'MelisEngine\Model\Tables\MelisPageSavedTable',
 			'MelisEngineTablePageSeo' => 'MelisEngine\Model\Tables\MelisPageSeoTable',
 		    'MelisEngineTableCmsLang' => 'MelisEngine\Model\Tables\MelisCmsLangTable',
+			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
@@ -52,6 +53,7 @@ return array(
             'MelisEngine\Model\Tables\MelisPageSavedTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageSavedTableFactory',
             'MelisEngine\Model\Tables\MelisPageSeoTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageSeoTableFactory',
             'MelisEngine\Model\Tables\MelisPlatformIdsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPlatformIdsTableFactory',
+            'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageDefaultUrlsTableFactory',
             'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
 		),
         'abstract_factories' => array(
