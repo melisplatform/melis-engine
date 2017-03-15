@@ -105,6 +105,8 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 					array_push($results, $datasPageTreeRes);
 			}
 		}
+		else
+		    return array();
 	
 		while ($tmp != -1)
 		{

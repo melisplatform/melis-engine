@@ -43,7 +43,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     abstract public function front();
 
     // To call to get back office view
-    abstract public function back();
+    public function back(){}
     
     
     public function __construct($updatesPluginConfig = array())
@@ -221,7 +221,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $viewModel = new ViewModel();
         
         foreach ($variables as $keyVar => $valueVar)
-            $viewModel->$keyVar = $valueVar;
+            if ($valueVar instanceof ViewModel)
+                $viewModel->addChild($valueVar, $keyVar);
+            else 
+                $viewModel->$keyVar = $valueVar;
         
         if (!empty($this->pluginFrontConfig['template_path']))
             $viewModel->setTemplate($this->pluginFrontConfig['template_path']);
