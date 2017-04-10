@@ -56,26 +56,6 @@ class MelisEngineGeneralService implements ServiceLocatorAwareInterface, EventMa
 	    return $renderMode;
 	}
 	
-	public function getCacheServiceResults($cacheKey)
-	{
-	    
-	    // Retrieve cache version if front mode to avoid multiple calls
-	    if ($this->getRenderMode() == 'front' &&
-	        $this->getServiceLocator()->get('engine_services')->hasItem($cacheKey))
-	    {
-	        return $this->getServiceLocator()->get('engine_services')->getItem($cacheKey);
-	    }
-	    
-	    return null;
-	}
-	
-	public function setCacheServiceResults($cacheKey, $results)
-	{
-	    // Save cache key
-	    if ($this->getRenderMode() == 'front')
-	        $this->getServiceLocator()->get('engine_services')->setItem($cacheKey, $results);
-	}
-	
 	/**
 	 * This method creates an array from the parameters, using parameters' name as keys
 	 * and taking values or default values.

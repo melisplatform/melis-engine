@@ -17,6 +17,7 @@ class MelisSiteDomainTable extends MelisGenericTable
 	{
 		parent::__construct($tableGateway);
 		$this->idField = 'sdom_id';
+		$this->cacheResults = true;
 	}
 	
 	/**

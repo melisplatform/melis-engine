@@ -17,5 +17,6 @@ class MelisPageSeoTable extends MelisGenericTable
 	{
 		parent::__construct($tableGateway);
 		$this->idField = 'pseo_id';
+		$this->cacheResults = true;
 	}
 }

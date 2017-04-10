@@ -19,7 +19,6 @@ use Zend\Db\Sql\Predicate\PredicateSet;
 use Zend\Db\Sql\Predicate\Like;
 use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Sql\Predicate\Predicate;
-
 class MelisGenericTable implements ServiceLocatorAwareInterface
 {
 	protected $serviceLocator;
@@ -47,37 +46,6 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	{
 		return $this->serviceLocator;
 	}
-
-	public function getRenderMode()
-	{
-	    $router = $this->serviceLocator->get('router');
-	    $request = $this->serviceLocator->get('request');
-	
-	    $routeMatch = $router->match($request);
-	    $renderMode = $routeMatch->getParam('renderMode', 'melis');
-	     
-	    return $renderMode;
-	}
-	
-	public function getCacheServiceResults($cacheKey)
-	{
-	    
-	    // Retrieve cache version if front mode to avoid multiple calls
-	    if ($this->getRenderMode() == 'front' &&
-	        $this->getServiceLocator()->get('engine_services')->hasItem($cacheKey))
-	    {
-	        return $this->getServiceLocator()->get('engine_services')->getItem($cacheKey);
-	    }
-	    
-	    return null;
-	}
-	
-	public function setCacheServiceResults($cacheKey, $results)
-	{
-	    // Save cache key
-	    if ($this->getRenderMode() == 'front')
-	        $this->getServiceLocator()->get('engine_services')->setItem($cacheKey, $results);
-	}
 	
 	public function getTableGateway()
 	{
@@ -93,25 +61,41 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 
 	public function getEntryById($id)
 	{
-    	$cacheKey = get_class($this) . '_getEntryById_' . $id;
+        $cacheKey = get_class($this) . '_getEntryById_' . $id;
+        $cacheConfig = 'engine_page_services';
 	    if ($this->cacheResults)
 	    {
-    	    $results = $this->getCacheServiceResults($cacheKey);
-    	    if (!empty($results))
-    	        return $results;
-	    }
+            // Retrieve cache version if front mode to avoid multiple calls
+            $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+            $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+            if (!empty($results)) return $results;
+	    } 
 	    
 		$rowset = $this->tableGateway->select(array($this->idField => (int)$id));
 		
 		if ($this->cacheResults)
-		    $this->setCacheServiceResults($cacheKey, $rowset);
+	        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $rowset);
 		
 		return $rowset;
 	}
 
 	public function getEntryByField($field, $value)
 	{
+        $cacheKey = get_class($this) . '_getEntryByField_' . $field . '_' . $value;
+        $cacheConfig = 'engine_page_services';
+	    if ($this->cacheResults)
+	    {
+            // Retrieve cache version if front mode to avoid multiple calls
+            $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+            $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+            if (!empty($results)) return $results;
+	    } 
+	    
 		$rowset = $this->tableGateway->select(array($field => $value));
+		
+		if ($this->cacheResults)
+	        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $rowset);
+		
 		return $rowset;
 	}
 

@@ -19,6 +19,7 @@ return array(
 		'invokables' => array(
 			'MelisEngine\Service\MelisPageServiceInterface' => 'MelisEngine\Service\MelisPageService',
 			'MelisEngine\Service\MelisTreeServiceInterface' => 'MelisEngine\Service\MelisTreeService',
+		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService'
 		),
 		'aliases' => array(
 			'MelisEngineTablePlatformIds' => 'MelisEngine\Model\Tables\MelisPlatformIdsTable',
@@ -40,6 +41,8 @@ return array(
 			'MelisEngineTree' => 'MelisEngine\Service\Factory\MelisTreeServiceFactory',
 		    'MelisSearch' => 'MelisEngine\Service\Factory\MelisSearchServiceFactory',
 		    'MelisEngineGeneralService' => 'MelisEngine\Service\Factory\MelisEngineGeneralServiceFactory',
+            'MelisEngineSendMail' => 'MelisEngine\Service\Factory\MelisEngineSendMailServiceFactory',
+			'MelisEngineCacheSystem' => 'MelisEngine\Service\Factory\MelisEngineCacheSystemServiceFactory',
             
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',
@@ -68,6 +71,7 @@ return array(
             'layout/layoutEngine'           => __DIR__ . '/../view/layout/layoutEngine.phtml',
             'melis-engine/index/index'  => __DIR__ . '/../view/melis-engine/render/index.phtml',
             'melis-engine/plugins/notemplate'  => __DIR__ . '/../view/melis-engine/plugins/notemplate.phtml',
+            'MelisEngine/emailLayout'          => __DIR__ . '/../view/layout/email-layout.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
@@ -77,7 +81,8 @@ return array(
         ),
     ),
     'caches' => array(
-        'engine_services' => array( 
+        'engine_page_services' => array( 
+            'active' => true, // activate or deactivate Melis Cache for this conf
             'adapter' => array(
                 'name'    => 'Memory',
                 'options' => array('ttl' => 0, 'namespace' => 'melisengine'),
@@ -85,6 +90,10 @@ return array(
             'plugins' => array(
                 'exception_handler' => array('throw_exceptions' => false),
             ),
+            'ttls' => array(
+                // add a specific ttl for a specific cache key
+                // 'my_cache_key' => 60,
+            )
         ),
     ),
 );

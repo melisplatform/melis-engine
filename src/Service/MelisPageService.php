@@ -28,9 +28,10 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	    
 	    // Retrieve cache version if front mode to avoid multiple calls
 	    $cacheKey = 'getDatasPage_' . $idPage . '_' . $type;
-	    $results = $this->getCacheServiceResults($cacheKey);
-	    if (!empty($results))
-	        return $results;
+	    $cacheConfig = 'engine_page_services';
+		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+	    $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+	    if (!empty($results)) return $results;
 	    
 		$melisPage = new MelisPage();
 		$melisPage->setId($idPage);
@@ -77,7 +78,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		}
 		
 		// Save cache key
-		$this->setCacheServiceResults($cacheKey, $melisPage);
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $melisPage);
 		
 		return $melisPage;
 	}

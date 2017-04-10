@@ -64,10 +64,12 @@ class MelisSiteTable extends MelisGenericTable
 	 */
 	public function getSiteById($idSite, $env = '', $includeSite404Table = false)
 	{
-	    $cacheKey = 'table_getSiteById_' . $idSite . '_' . $env . '_' . $includeSite404Table;
-        $results = $this->getCacheServiceResults($cacheKey);
-        if (!empty($results))
-	            return $results;
+        // Retrieve cache version if front mode to avoid multiple calls
+	    $cacheKey = get_class($this) . '_getSiteById_' . $idSite . '_' . $env . '_' . $includeSite404Table;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if (!empty($results)) return $results;
 	    
 		$select = $this->tableGateway->getSql()->select();
 		
@@ -87,7 +89,7 @@ class MelisSiteTable extends MelisGenericTable
         $select->where("melis_cms_site_domain.sdom_site_id = " . $idSite . ' AND melis_cms_site_domain.sdom_env=\''.$env.'\'');
 		$resultSet = $this->tableGateway->selectWith($select);
 
-		$this->setCacheServiceResults($cacheKey, $resultSet);
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $resultSet);
 		
 		return $resultSet;
 	}
