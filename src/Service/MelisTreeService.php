@@ -322,7 +322,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	 * 
 	 * @param string $link
 	 */
-	private function cleanLink($link)
+	public function cleanLink($link)
 	{
 		$link = strtolower(preg_replace(
 					array('#[\\s-]+#', '#[^A-Za-z0-9/ -]+#'),
