@@ -298,7 +298,6 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                             'page_name' => $page['label'],
                         )));
 
-
                         // add child page index
                         if(isset($page['pages']) && !empty($page['pages'])) {
 
@@ -310,7 +309,22 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                                     )));
                                     $totalPage++;
                                 }
+
+                                     // add grand child page index
+                                if(isset($childPage['pages']) && !empty($childPage['pages'])) {
+                                
+                                    foreach($childPage['pages'] as $grandChildPage) {
+                                        if(!in_array($grandChildPage['idPage'], $exclude)) {
+                                            $index->addDocument($this->createDocument(array(
+                                                'page_id' => $grandChildPage['idPage'],
+                                                'page_name' => $grandChildPage['label'],
+                                            )));
+                                            $totalPage++;
+                                        }
+                                    }
+                                }
                             }
+
                         }
                         $totalPage++;
                     }
@@ -381,14 +395,18 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         $doc = new Document();
         if(is_array($data)) {
+            $by_pass = true;
             $uri = $enginePage->getPageLink($data['page_id'], true);
-            $pattern = '/(http|https)\:\/\/(www)?\.[a-zA-Z0-9-_]*\.([a-z.])*/';
+            $pattern = '/(http|https)\:\/\/(www\.)?[a-zA-Z0-9-_.]+(\.([a-z.])?)*/';
             $domain = $this->getCurrentDomain();
             if(!preg_match($pattern, $uri)) {
                 $uri = $domain . $uri;
             }
 
             $pageContent = $this->getUrlContent($uri);
+
+            if ($by_pass) 
+                $uri = $uri . '/bypass=1';
 
             if($pageContent) {
 

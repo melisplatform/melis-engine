@@ -38,12 +38,5 @@ class MelisEngineControllerTest extends AbstractHttpControllerTestCase
         $this->assertEquals("equalvalue", "equalvalue");
     }
 
-    public function testBasicMelisEngineTestError()
-    {
-        $this->assertEquals("supposed-to", "display-an-error");
-    }
-
-
-
 }
 
