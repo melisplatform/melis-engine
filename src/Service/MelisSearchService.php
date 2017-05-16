@@ -395,7 +395,6 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         $doc = new Document();
         if(is_array($data)) {
-            $by_pass = true;
             $uri = $enginePage->getPageLink($data['page_id'], true);
             $pattern = '/(http|https)\:\/\/(www\.)?[a-zA-Z0-9-_.]+(\.([a-z.])?)*/';
             $domain = $this->getCurrentDomain();
@@ -404,9 +403,6 @@ class MelisSearchService implements ServiceLocatorAwareInterface
             }
 
             $pageContent = $this->getUrlContent($uri);
-
-            if ($by_pass) 
-                $uri = $uri . '/bypass=1';
 
             if($pageContent) {
 
