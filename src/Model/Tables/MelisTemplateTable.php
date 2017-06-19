@@ -36,4 +36,19 @@ class MelisTemplateTable extends MelisGenericTable
 	   
 	   return $resultSet;
 	}
+	
+	public function getUniqueWebsiteFolder()
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->columns(array('tpl_zf2_website_folder'));
+	    
+	    $select->group('tpl_zf2_website_folder');
+	    
+	    $select->order('tpl_zf2_website_folder ASC');
+	    
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    
+	    return $resultSet;
+	}
 }

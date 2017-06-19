@@ -10,6 +10,7 @@
 namespace MelisEngine\Model\Tables;
 
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Expression;
 
 class MelisPlatformIdsTable extends MelisGenericTable
 {
@@ -88,6 +89,25 @@ class MelisPlatformIdsTable extends MelisGenericTable
 	    $select->columns(array('*'));
 	    $select->join('melis_core_platform', 'melis_core_platform.plf_id = melis_cms_platform_ids.pids_id', array('*'), $select::JOIN_RIGHT);
 	    $select->where('melis_cms_platform_ids.pids_id IS NULL');
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    
+	    return $resultSet;
+	}
+	
+	/**
+	 * Fetches the an entry with the highes range of page id end and pids tpl id end
+	 */
+	public function getLastPlatformRange()
+	{
+	    
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->columns(array(
+           'pids_page_id_end_max' => new Expression('max(pids_page_id_end)'),
+           'pids_tpl_id_end_max' => new Expression('max(pids_tpl_id_end)'),
+           )
+        );
+	    
 	    $resultSet = $this->tableGateway->selectWith($select);
 	    
 	    return $resultSet;

@@ -243,7 +243,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	 * @param array $fixedCriteria (optional)
 	 * @return array
 	 */
-	public function getPagedData(array $options, $fixedCriteria = null)
+	public function getPagedData(array $options, $fixedCriteria = null, $optionalFilters = array())
 	{
 	    $select = $this->tableGateway->getSql()->select();
 	    $result = $this->tableGateway->select();
@@ -303,6 +303,9 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	        
 	    }
 	    
+	    foreach($optionalFilters as $key => $value){
+	        $select->where->equalTo($key, $value);
+	    }
 	   
 	    // used when column ordering is clicked
 	    if(!empty($order))
