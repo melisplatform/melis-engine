@@ -14,6 +14,7 @@ use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Predicate\PredicateSet;
 use Zend\Db\Sql\Predicate\Like;
 use Zend\Db\Sql\Predicate\Operator;
+use Zend\Db\Sql\Predicate\Expression;
 
 class MelisSiteTable extends MelisGenericTable
 {
@@ -62,7 +63,7 @@ class MelisSiteTable extends MelisGenericTable
 	 * @param string $env
 	 * @param boolean $includeSite404Table
 	 */
-	public function getSiteById($idSite, $env = '', $includeSite404Table = false)
+	public function getSiteById($idSite, $env, $includeSite404Table = false)
 	{
         // Retrieve cache version if front mode to avoid multiple calls
 	    $cacheKey = get_class($this) . '_getSiteById_' . $idSite . '_' . $env . '_' . $includeSite404Table;
@@ -75,18 +76,21 @@ class MelisSiteTable extends MelisGenericTable
 		
 		$select->columns(array('*'));
 	
+		$siteDomainjoin = new Expression('melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id AND sdom_env =\''.$env.'\'');
+		
 		if($includeSite404Table) {
-		    $select->join('melis_cms_site_domain', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',
-		        array('*'), $select::JOIN_LEFT)
-		        ->join('melis_cms_site_404', 'melis_cms_site_404.s404_site_id = melis_cms_site.site_id',
-		            array('*'), $select::JOIN_LEFT);
+		    
+		    $site404join = new Expression('melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id');
+		    
+		    $select->join('melis_cms_site_domain', $siteDomainjoin, array('*'), $select::JOIN_LEFT)
+		           ->join('melis_cms_site_404', $site404join, array('*'), $select::JOIN_LEFT);
 		}
 		else {
-    		$select->join('melis_cms_site_domain', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',
-    				array('*'), $select::JOIN_LEFT);
+		    $select->join('melis_cms_site_domain', $siteDomainjoin, array('*'), $select::JOIN_LEFT);
 		}
+		
+		$select->where('site_id ='.$idSite);
 	
-        $select->where("melis_cms_site_domain.sdom_site_id = " . $idSite . ' AND melis_cms_site_domain.sdom_env=\''.$env.'\'');
 		$resultSet = $this->tableGateway->selectWith($select);
 
 		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $resultSet);
@@ -107,8 +111,8 @@ class MelisSiteTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
-        $select->join('melis_cms_site_domain', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',array('*'), $select::JOIN_LEFT)
-                ->join('melis_cms_site_404', 'melis_cms_site_404.s404_site_id = melis_cms_site.site_id', array('*'), $select::JOIN_LEFT);
+        $select->join('melis_cms_site_domain', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',array(), $select::JOIN_LEFT)
+                ->join('melis_cms_site_404', 'melis_cms_site_404.s404_site_id = melis_cms_site.site_id', array(), $select::JOIN_LEFT);
 
         if(!empty($searchableColumns) && !empty($search)) {
             foreach($searchableColumns as $column) {
@@ -131,6 +135,8 @@ class MelisSiteTable extends MelisGenericTable
         if(!empty($start)) {
             $select->offset($start);
         }
+        
+        $select->group('site_id');
 
         $sql = $this->tableGateway->getSql();
         $raw = $sql->getSqlstringForSqlObject($select);

@@ -59,7 +59,7 @@ class MelisEngineSendMailService extends MelisEngineGeneralService implements Me
 	    $message->addTo($email_to);
 	    $message->setSubject($email_subject);
 	    $message->setEncoding('UTF-8');
-	    $message->setSender($email_to, $email_to_name);
+	    $message->setSender($email_from, $email_from_name);
 	    $message->setBody($body);
 	    if ($email_reply_to!=null){
 	        $message->addReplyTo($email_reply_to);

@@ -110,12 +110,15 @@ class MelisEngineGeneralService implements ServiceLocatorAwareInterface, EventMa
 	    return $parametersArray;
 	}
 	
-	public function sendEvent($eventName, $parameters)
+	public function sendEvent($eventName, $parameters, $target = null)
 	{
-	    $parameters = $this->eventManager->prepareArgs($parameters);
-	    $this->eventManager->trigger($eventName, $this, $parameters);
-	    $parameters = get_object_vars($parameters);
-	    
-	    return $parameters;
+	    if (is_null($target))
+	        $target = $this;
+	        
+        $parameters = $this->eventManager->prepareArgs($parameters);
+        $this->eventManager->trigger($eventName, $target, $parameters);
+        $parameters = get_object_vars($parameters);
+        
+        return $parameters;
 	}
 }

@@ -27,17 +27,17 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	        return null;
 	    
         // Retrieve cache version if front mode to avoid multiple calls
-        $cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
+        /* $cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
         $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-        if (!empty($results)) return $results;
+        if (!empty($results)) return $results; */
 	         
 		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
 		$datasPage = $tablePageTree->getPageChildrenByidPage($idPage, $publishedOnly);
 
 		// Save cache key
-		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $datasPage);
+		/* $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $datasPage); */
 		
 		return $datasPage;
 	}
@@ -48,7 +48,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	 * @param int $idPage
 	 * 
 	 */
-	public function getPageFather($idPage)
+	public function getPageFather($idPage, $type = 'published')
 	{
 	    if (empty($idPage))
 	        return null;
@@ -61,7 +61,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         if (!empty($results)) return $results;
 	        
 		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
-		$datasPage = $tablePageTree->getFatherPageById($idPage);
+		$datasPage = $tablePageTree->getFatherPageById($idPage, $type);
 
 		// Save cache key
 		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $datasPage);
@@ -136,7 +136,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		}
 	
 		krsort($results);
-
+		
 		// Save cache key
 		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $results);
 		
@@ -237,7 +237,16 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
             );
         }
             
-		if ($absolute)
+		$router = $this->getServiceLocator()->get('router');
+        $request = $this->getServiceLocator()->get('request');
+        $routeMatch = $router->match($request);
+        
+        $idversion = null;
+        if (!empty($routeMatch)){
+            $idversion = $routeMatch->getParam('idversion');
+        }
+            
+		if ($absolute || !empty($idversion))
 		{
 			$host = $this->getDomainByPageId($idPage);
 			$link = $host . $link;

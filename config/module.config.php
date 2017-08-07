@@ -19,7 +19,8 @@ return array(
 		'invokables' => array(
 			'MelisEngine\Service\MelisPageServiceInterface' => 'MelisEngine\Service\MelisPageService',
 			'MelisEngine\Service\MelisTreeServiceInterface' => 'MelisEngine\Service\MelisTreeService',
-		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService'
+		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService',
+		    'MelisEngine\Service\MelisEngineStyleInterface' => 'MelisEngine\Service\MelisEngineStyleService'
 		),
 		'aliases' => array(
 			'MelisEngineTablePlatformIds' => 'MelisEngine\Model\Tables\MelisPlatformIdsTable',
@@ -34,6 +35,8 @@ return array(
 			'MelisEngineTablePageSaved' => 'MelisEngine\Model\Tables\MelisPageSavedTable',
 			'MelisEngineTablePageSeo' => 'MelisEngine\Model\Tables\MelisPageSeoTable',
 		    'MelisEngineTableCmsLang' => 'MelisEngine\Model\Tables\MelisCmsLangTable',
+		    'MelisEngineTableStyle' => 'MelisEngine\Model\Tables\MelisCmsStyleTable',
+		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
 		),
         'factories' => array(
@@ -43,6 +46,7 @@ return array(
 		    'MelisEngineGeneralService' => 'MelisEngine\Service\Factory\MelisEngineGeneralServiceFactory',
             'MelisEngineSendMail' => 'MelisEngine\Service\Factory\MelisEngineSendMailServiceFactory',
 			'MelisEngineCacheSystem' => 'MelisEngine\Service\Factory\MelisEngineCacheSystemServiceFactory',
+			'MelisEngineStyle' => 'MelisEngine\Service\Factory\MelisEngineStyleServiceFactory',
             
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',
@@ -57,11 +61,18 @@ return array(
             'MelisEngine\Model\Tables\MelisPageSeoTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageSeoTableFactory',
             'MelisEngine\Model\Tables\MelisPlatformIdsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPlatformIdsTableFactory',
             'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageDefaultUrlsTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsStyleTableFactory',
+            'MelisEngine\Model\Tables\MelisPageStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisPageStyleTableFactory',
             'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
 		),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
         )
+    ),
+    'form_elements' => array(
+        'factories' => array(
+    		'MelisEnginePluginTemplateSelect' => 'MelisEngine\Form\Factory\PluginTemplateSelectFactory',
+        ),
     ),
     'view_manager' => array(
         'display_not_found_reason' => true,
@@ -70,8 +81,10 @@ return array(
         'template_map' => array(
             'layout/layoutEngine'           => __DIR__ . '/../view/layout/layoutEngine.phtml',
             'melis-engine/index/index'  => __DIR__ . '/../view/melis-engine/render/index.phtml',
-            'melis-engine/plugins/notemplate'  => __DIR__ . '/../view/melis-engine/plugins/notemplate.phtml',
             'MelisEngine/emailLayout'          => __DIR__ . '/../view/layout/email-layout.phtml',
+            'melis-engine/plugins/notemplate'  => __DIR__ . '/../view/melis-engine/plugins/notemplate.phtml',
+            'melis-engine/plugins/noformtemplate'  => __DIR__ . '/../view/melis-engine/plugins/noformtemplate.phtml',
+            'melis-engine/plugins/meliscontainer'  => __DIR__ . '/../view/melis-engine/plugins/default-melis-container-view.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
@@ -94,6 +107,15 @@ return array(
                 // add a specific ttl for a specific cache key
                 // 'my_cache_key' => 60,
             )
+        ),
+        'templating_plugins' => array( 
+            'adapter' => array(
+                'name'    => 'Memory',
+                'options' => array('ttl' => 0, 'namespace' => 'templating_plugins'),
+            ),
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => false),
+            ),
         ),
     ),
 );

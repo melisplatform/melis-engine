@@ -1,0 +1,82 @@
+<?php 
+    $module = $this->translate('tr_PluginSection_' . $this->configPluginKey);
+    if ($module == 'tr_PluginSection_' . $this->configPluginKey)
+        $module = $this->configPluginKey;
+    
+    $name = $this->pluginName;
+    if (!empty($this->pluginBackConfig))
+    {
+        $conf = $this->pluginBackConfig;
+        if (!empty($conf['name']))
+            $name = $this->translate($conf['name']);
+    }
+    
+    $pluginId = '';
+    if (!empty($this->pluginFrontConfig) && !empty($this->pluginFrontConfig['id']))
+        $pluginId = $this->pluginFrontConfig['id'];
+        
+    $uniqueContainerId =  $this->pageId . '_' . $this->configPluginKey . '_' . $this->pluginName . '_' . $pluginId;
+    
+?>
+<?php
+        
+	if ($this->encapsulatedPlugin !== 'false')
+	{
+?>		
+<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>">
+<?php
+	}
+?>
+
+	<div class="plugin-hardcoded-conf" style="display:none;">
+		<?php 
+		      echo serialize($this->hardcodedConfig);
+		?>
+	</div>
+	<div class="melis-plugin-indicator">
+		<i class="fa fa-plug"></i>
+	</div>
+	<div class="melis-plugin-tools-box" data-module="<?= $this->configPluginKey; ?>"
+		data-plugin="<?= $this->pluginName; ?>" data-plugin-id="<?= $pluginId; ?>" data-site-module="<?= $this->siteModule;?>" data-melis-tag="<?= $this->pluginXmlDbKey; ?>" data-melis-fromDragDropZone="<?= $this->fromDragDropZone; ?>">
+		<div class="melis-plugin-title-box">
+			<span class="melis-module-title"><?= $module; ?></span>
+			<span class="melis-plugin-title"><?= $name; ?></span>
+		</div>
+	    <div class="m-plugin-sub-tools clearfix">
+	    	<?php 
+	    	  if ($this->fromDragDropZone)
+	    	  {
+	    	?>
+	        <div class="m-move-handle">
+	            <i class="fa fa-arrows"></i>
+	        </div>
+	        <?php 
+	    	  }
+	        ?>
+	        <div class="m-options-handle">
+	            <i class="fa fa-cog"></i>
+	        </div>
+	    	<?php 
+	    	  if ($this->fromDragDropZone)
+	    	  {
+	    	?>
+	        <div class="m-trash-handle">
+	            <i class="fa fa-trash"></i>
+	        </div>
+	        <?php 
+	    	  }
+	        ?>
+	    </div>
+	</div>
+
+<?php 
+    echo $this->viewFront;
+?>
+<?php
+	if ($this->encapsulatedPlugin)
+	{
+?>		
+</div>
+<?php
+	}
+?>
