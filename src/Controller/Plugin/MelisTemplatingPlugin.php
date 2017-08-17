@@ -201,11 +201,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             $this->getPluginConfigs($generatePluginId);
             
-            /**
-             * TEMPORARY: DIACTIVATING COMMERCE PLUGINS
-             * $this->configPluginKey == 'meliscommerce'
-             */
-            if ($this->renderMode == 'front' || $this->previewMode || $this->configPluginKey == 'meliscommerce')
+            if ($this->renderMode == 'front' || $this->previewMode)
                 $view = $this->sendViewResult($this->front());
             else
             {
