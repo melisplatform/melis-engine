@@ -51,7 +51,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     protected $updatesPluginConfig = array();
     
     protected $fullTemplateList = array();
-    
+
+    protected $widthDesktop;
+    protected $widthTablet;
+    protected $widthMobile;
+
     protected $serviceLocator;
     protected $eventManager;
     
@@ -91,14 +95,19 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         $viewModel = new ViewModel();
         $viewModel->setTemplate('melis-engine/plugins/meliscontainer');
-        $viewModel->configPluginKey = $this->configPluginKey;
-        $viewModel->pluginName = $this->pluginName;
-        $viewModel->pluginBackConfig = $this->pluginBackConfig;
-        $viewModel->pluginFrontConfig = $this->pluginFrontConfig;
-        $viewModel->pluginHardcoded = $this->pluginHardcoded;
-        $viewModel->hardcodedConfig = $this->updatesPluginConfig;
-        $viewModel->fromDragDropZone = $this->fromDragDropZone;
+        $viewModel->configPluginKey    = $this->configPluginKey;
+        $viewModel->pluginName         = $this->pluginName;
+        $viewModel->pluginBackConfig   = $this->pluginBackConfig;
+        $viewModel->pluginFrontConfig  = $this->pluginFrontConfig;
+        $viewModel->pluginHardcoded    = $this->pluginHardcoded;
+        $viewModel->hardcodedConfig    = $this->updatesPluginConfig;
+        $viewModel->fromDragDropZone   = $this->fromDragDropZone;
         $viewModel->encapsulatedPlugin = $this->encapsulatedPlugin;
+
+        $viewModel->widthDesktop = $this->widthDesktop;
+        $viewModel->widthTablet  = $this->widthTablet;
+        $viewModel->widthMobile  = $this->widthMobile;
+
         $pageId = (!empty($this->pluginFrontConfig['pageId'])) ? $this->pluginFrontConfig['pageId'] : 0;
         $viewModel->pageId = $pageId;
         $viewModel->pluginXmlDbKey = $this->pluginXmlDbKey;
@@ -264,11 +273,12 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 $datasPage = $melisPage->getDatasPage($pageId, 'saved');
             }
         }
-            
+
+
         $datasPageTree = array();
         if (!empty($datasPage))
             $datasPageTree = $datasPage->getMelisPageTree()->getArrayCopy();
-            
+
         // Attach this event if datas must come from somewhere else and override
         $eventParams = array(
             'pageId' => $pageId,
@@ -284,10 +294,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $datasPageTree = $melisEngineGeneralService->sendEvent('melistemplating_plugin_get_datas_db', $eventParams);
         $datasPageTree = $datasPageTree['actualDatasPageTree'];
             
-        /*    echo '<pre>';
-         print_r($datasPageTree);
-         echo '</pre>';
-         */
+
         if (!$valueSetted)
         {
             $xmlPage = $datasPageTree['page_content'];
@@ -308,6 +315,22 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                     }
                 }
             }
+        }
+    }
+
+    protected function getPluginWidths()
+    {
+        $xml = simplexml_load_string($this->pluginXmlDbValue);
+        if ($xml)
+        {
+            if (!empty($xml->width_desktop))
+                $this->widthDesktop = (string) $xml->width_desktop;
+
+            if (!empty($xml->width_tablet))
+                $this->widthTablet = (string) $xml->width_tablet;
+
+            if (!empty($xml->width_mobile))
+                $this->widthMobile = (string) $xml->width_mobile;
         }
     }
     
@@ -379,8 +402,15 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             // merge with DB values
             $this->getPluginValueFromDb();
+            $this->getPluginWidths();
+
             $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
-            
+
+            // add plugin widths configuration
+            $this->pluginConfig['front']['widthDesktop'] = $this->widthDesktop;
+            $this->pluginConfig['front']['widthTablet']  = $this->widthTablet;
+            $this->pluginConfig['front']['widthMobile']  = $this->widthMobile;
+
             // merging with GET
             $parameters = $request->getQuery()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
@@ -413,12 +443,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         }
         
         $this->pluginConfig['front'] = $finalConfig;
+
         
         if (!empty($this->pluginConfig['front']))
             $this->pluginFrontConfig = $this->pluginConfig['front'];
             
         $this->pluginBackConfig = $this->translateAppConfig($this->defaultPluginConfig['melis']);
-        
+
         // Getting JS/CSS files for auto adding in front and back if necessary
         $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
         $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
