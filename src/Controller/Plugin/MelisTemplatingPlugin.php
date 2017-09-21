@@ -33,16 +33,16 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     protected $pluginName;
     
     // When used in page mode with content saved in DB
-    protected $pluginXmlDbKey = '';
+    protected $pluginXmlDbKey   = '';
     protected $pluginXmlDbValue = '';
     
-    protected $pluginHardcoded = true;
-    protected $fromDragDropZone = false;
+    protected $pluginHardcoded    = true;
+    protected $fromDragDropZone   = false;
     protected $encapsulatedPlugin = true;
     
-    protected $pluginConfig = array();
+    protected $pluginConfig      = array();
     protected $pluginFrontConfig = array();
-    protected $pluginBackConfig = array();
+    protected $pluginBackConfig  = array();
     
     protected $renderMode;
     protected $previewMode;
@@ -50,11 +50,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     protected $defaultPluginConfig = array();
     protected $updatesPluginConfig = array();
     
-    protected $fullTemplateList = array();
+    protected $fullTemplateList    = array();
 
-    protected $widthDesktop;
-    protected $widthTablet;
-    protected $widthMobile;
+    protected $widthDesktop = 100;
+    protected $widthTablet  = 100;
+    protected $widthMobile  = 100;
 
     protected $serviceLocator;
     protected $eventManager;
@@ -406,11 +406,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
             $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
 
-            // add plugin widths configuration
-            $this->pluginConfig['front']['widthDesktop'] = $this->widthDesktop;
-            $this->pluginConfig['front']['widthTablet']  = $this->widthTablet;
-            $this->pluginConfig['front']['widthMobile']  = $this->widthMobile;
-
             // merging with GET
             $parameters = $request->getQuery()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
@@ -423,6 +418,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             $finalConfig = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults);
             $finalConfig = $this->translateAppConfig($finalConfig);
         }
+
+        // add plugin widths configuration
+        $finalConfig['widthDesktop'] = $this->widthDesktop;
+        $finalConfig['widthTablet']  = $this->widthTablet;
+        $finalConfig['widthMobile']  = $this->widthMobile;
         
         // Getting the final config for templatePath
         if (is_array($finalConfig['template_path']))
