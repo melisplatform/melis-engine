@@ -128,6 +128,18 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         return array();
     }
     
+    public function loadGetDataPluginConfig()
+    {
+        $request = $this->getServiceLocator()->get('request');
+        return $request->getQuery()->toArray();
+    }
+    
+    public function loadPostDataPluginConfig()
+    {
+        $request = $this->getServiceLocator()->get('request');
+        return $request->getPost()->toArray();
+    }
+    
     // Automatically called when saving the final config, should be overriden in plugins
     public function savePluginConfigToXml($parameters)
     {
@@ -201,11 +213,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             $this->getPluginConfigs($generatePluginId);
             
-            /**
-             * TEMPORARY: DIACTIVATING COMMERCE PLUGINS
-             * $this->configPluginKey == 'meliscommerce'
-             */
-            if ($this->renderMode == 'front' || $this->previewMode || $this->configPluginKey == 'meliscommerce')
+            if ($this->renderMode == 'front' || $this->previewMode)
                 $view = $this->sendViewResult($this->front());
             else
             {
@@ -383,18 +391,24 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             // merge with DB values
             $this->getPluginValueFromDb();
-            $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
+            /* $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig()); */
+            $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
             
-            // merging with GET
+            /* // merging with GET
             $parameters = $request->getQuery()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
-            $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults);
+            $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults); */
+            // Updating config with GET
+            $parametersResults = $this->formatGetPostInArray($this->loadGetDataPluginConfig());
+            $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $parametersResults);
             
-            // merging with POST
+            /* // merging with POST
             $parameters = $request->getPost()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
-            
-            $finalConfig = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults);
+            $finalConfig = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults); */
+            // Updating config with POST
+            $parametersResults = $this->formatGetPostInArray($this->loadPostDataPluginConfig());
+            $finalConfig = $this->updateFrontConfig($this->pluginConfig['front'], $parametersResults);
             $finalConfig = $this->translateAppConfig($finalConfig);
         }
         
@@ -432,6 +446,37 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
         }
     }
+    
+    public function updateFrontConfig($pluginConfig, $newPluginConfig)
+    {
+        if (!empty($newPluginConfig))
+        {
+            foreach ($pluginConfig As $key => $val)
+            {
+                if (isset($newPluginConfig[$key]))
+                {
+                    if (is_array($val) && is_array($newPluginConfig[$key]))
+                    {
+                        if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key])))
+                        {
+                            $pluginConfig[$key] = $newPluginConfig[$key];
+                        }
+                        else
+                        {
+                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
+                        }
+                    }
+                    else
+                    {
+                        $pluginConfig[$key] = $newPluginConfig[$key];
+                    }
+                }
+            }
+        }
+        
+        return $pluginConfig;
+    }
+    
     
     public function savePluginRessources($keyRessource, $array)
     {
