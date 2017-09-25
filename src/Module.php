@@ -14,11 +14,13 @@ use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Stdlib\ArrayUtils;
 
+use MelisEngine\Listener\MelisEngineTreeServiceMicroServiceListener;
 
 class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
+        
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
@@ -36,14 +38,16 @@ class Module
                 {
                     $eventManager->getSharedManager()->attach(__NAMESPACE__,
                         MvcEvent::EVENT_DISPATCH, function($e) {
-                        				$e->getTarget()->layout('layout/layoutEngine');
-                        });
+            				$e->getTarget()->layout('layout/layoutEngine');
+                    });
                 }
             }
         }
         
         $this->createTranslations($e);
         
+        // attach Listener here
+        $eventManager->attach(new MelisEngineTreeServiceMicroServiceListener());
     }
     
     public function init(ModuleManager $mm)
@@ -55,7 +59,8 @@ class Module
     	$config = array();
     	$configFiles = array(
     			include __DIR__ . '/../config/module.config.php',
-    			include __DIR__ . '/../config/diagnostic.config.php'
+    			include __DIR__ . '/../config/diagnostic.config.php',
+    	        include __DIR__ . '/../config/app.microservice.php'
     	);
     	
     	foreach ($configFiles as $file) {
