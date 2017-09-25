@@ -19,4 +19,18 @@ class MelisPageStyleTable extends MelisGenericTable
 		$this->idField = 'pstyle_id';
 	}
 	
+	public function savePageStyle($pageStyle, $pageId = null)
+	{
+	    if (!is_null($pageId))
+	    {
+	        $this->tableGateway->update($pageStyle, array('pstyle_page_id' => $pageId));
+	    }
+	    else
+	    {
+	        $this->tableGateway->insert($pageStyle);
+	        $pageId = $this->tableGateway->lastInsertValue;
+	    }
+	    
+	    return $pageId;
+	}
 }

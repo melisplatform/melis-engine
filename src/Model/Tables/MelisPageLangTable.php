@@ -18,4 +18,19 @@ class MelisPageLangTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'plang_id';
 	}
+	
+	public function savePageLang($pageLang, $pageId = null)
+	{
+	    if (!is_null($pageId))
+	    {
+	        $this->tableGateway->update($pageLang, array('plang_page_id' => $pageId));
+	    }
+	    else
+	    {
+	        $this->tableGateway->insert($pageLang);
+	        $pageId = $this->tableGateway->lastInsertValue;
+	    }
+	    
+	    return $pageId;
+	}
 }
