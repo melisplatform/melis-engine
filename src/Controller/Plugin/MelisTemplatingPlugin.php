@@ -563,9 +563,9 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
                 $model['view']->setVariables(array(
-                    'widthDesktop' => $this->widthDesktop,
-                    'widthTablet'  => $this->widthTablet,
-                    'widthMobile'  => $this->widthMobile,
+                    'widthDesktop' => 'plugin-width-lg-'.round($this->widthDesktop),
+                    'widthTablet'  => 'plugin-width-md-'.round($this->widthTablet),
+                    'widthMobile'  => 'plugin-width-xs-'.round($this->widthMobile),
                 ));
 
             }

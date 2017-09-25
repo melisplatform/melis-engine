@@ -21,6 +21,7 @@ return array(
 			'MelisEngine\Service\MelisTreeServiceInterface' => 'MelisEngine\Service\MelisTreeService',
 		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService',
 		    'MelisEngine\Service\MelisEngineStyleInterface' => 'MelisEngine\Service\MelisEngineStyleService'
+		    
 		),
 		'aliases' => array(
 			'MelisEngineTablePlatformIds' => 'MelisEngine\Model\Tables\MelisPlatformIdsTable',
@@ -38,6 +39,10 @@ return array(
 		    'MelisEngineTableStyle' => 'MelisEngine\Model\Tables\MelisCmsStyleTable',
 		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
+            
+		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
+            'MelisPageService' => 'MelisEngine\Service\MelisPageService',
+            'MelisTreeService' => 'MelisEngine\Service\MelisTreeService',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
