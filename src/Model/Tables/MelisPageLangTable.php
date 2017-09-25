@@ -33,4 +33,16 @@ class MelisPageLangTable extends MelisGenericTable
 	    
 	    return $pageId;
 	}
+	
+	public function getPageLanguageById($pageId, $langId)
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->columns(array('*'));
+	    $select->where('plang_page_id ='.$pageId);
+	    $select->where('plang_lang_id ='.$langId);
+	    
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    return $resultSet;
+	}
 }
