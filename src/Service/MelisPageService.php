@@ -105,4 +105,60 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 
 	    return $results;
 	}
+	
+	/**
+	 * This function return all Page languages version 
+	 * 
+	 * @param int $pageId, Page id
+	 * 
+	 * @return MelisPage[]||array
+	 */
+	public function getPageLanguageList($pageId)
+	{
+	    // Retrieving the list of Page languages
+	    $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+	    $pageLang = $pageLangTbl->getEntryByField('plang_page_id', $pageId)->current();
+	    
+	    $pagesData = array();
+	    
+	    if (!empty($pageLang))
+	    {
+	        $pageInitialId = $pageLang->plang_page_id_initial;
+	        
+	        $pages = $pageLangTbl->getEntryByField('plang_page_id_initial', $pageInitialId);
+	        
+	        foreach ($pages As $val)
+	        {
+	            $pageData = $this->getDatasPage($val->plang_page_id);
+	            
+	            array_push($pagesData, $pageData);
+	        }
+	    }
+	    
+	    return $pagesData;
+	}
+	
+	/**
+	 * This function retrieve Page using pageid and langid
+	 * 
+	 * @param int $pageId, Page id
+	 * @param int $langId, Id of the Cms language
+	 * 
+	 * @return MelisPage||array
+	 */
+	public function getPageLanguageById($pageId, $langId) 
+	{
+	    // Retrieving the list of Page languages
+	    $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+	    $pageLang = $pageLangTbl->getPageLanguageById($pageId, $langId)->current();
+	    
+	    $pagesData = array();
+	    
+	    if (!empty($pageLang))
+	    {
+	        $pagesData = $this->getDatasPage($pageLang->plang_page_id);
+	    }
+	    
+	    return $pagesData;
+	}
 }

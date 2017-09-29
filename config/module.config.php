@@ -21,6 +21,7 @@ return array(
 			'MelisEngine\Service\MelisTreeServiceInterface' => 'MelisEngine\Service\MelisTreeService',
 		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService',
 		    'MelisEngine\Service\MelisEngineStyleInterface' => 'MelisEngine\Service\MelisEngineStyleService'
+		    
 		),
 		'aliases' => array(
 			'MelisEngineTablePlatformIds' => 'MelisEngine\Model\Tables\MelisPlatformIdsTable',
@@ -38,6 +39,10 @@ return array(
 		    'MelisEngineTableStyle' => 'MelisEngine\Model\Tables\MelisCmsStyleTable',
 		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
+            
+		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
+            'MelisPageService' => 'MelisEngine\Service\MelisPageService',
+            'MelisTreeService' => 'MelisEngine\Service\MelisTreeService',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
@@ -116,6 +121,25 @@ return array(
             'plugins' => array(
                 'exception_handler' => array('throw_exceptions' => false),
             ),
+        ),
+        'meliscms_page' => array(
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => array(
+                'name'    => 'Filesystem',
+                'options' => array(
+                    'ttl' => 0, // 24hrs
+                    'namespace' => 'meliscms_page',
+                    'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
+                ),
+            ),
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => false),
+                'Serializer'
+            ),
+            'ttls' => array(
+                // add a specific ttl for a specific cache key (found via regexp)
+                // 'my_cache_key' => 60,
+            )
         ),
     ),
 );
