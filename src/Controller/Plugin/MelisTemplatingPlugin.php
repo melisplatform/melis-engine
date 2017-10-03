@@ -56,6 +56,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     protected $widthTablet  = 100;
     protected $widthMobile  = 100;
 
+    protected $pluginContainerId = null;
+
     protected $serviceLocator;
     protected $eventManager;
     
@@ -104,9 +106,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $viewModel->fromDragDropZone   = $this->fromDragDropZone;
         $viewModel->encapsulatedPlugin = $this->encapsulatedPlugin;
 
-        $viewModel->widthDesktop = $this->widthDesktop;
-        $viewModel->widthTablet  = $this->widthTablet;
-        $viewModel->widthMobile  = $this->widthMobile;
+        $viewModel->widthDesktop      = $this->widthDesktop;
+        $viewModel->widthTablet       = $this->widthTablet;
+        $viewModel->widthMobile       = $this->widthMobile;
+        $viewModel->pluginContainerId = $this->pluginContainerId;
 
         $pageId = (!empty($this->pluginFrontConfig['pageId'])) ? $this->pluginFrontConfig['pageId'] : 0;
         $viewModel->pageId = $pageId;
@@ -331,6 +334,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
             if (!empty($xml->width_mobile))
                 $this->widthMobile = (string) $xml->width_mobile;
+
+            if (!empty($xml->attributes()->plugin_container_id))
+                $this->pluginContainerId = (string) $xml->attributes()->plugin_container_id;
+
         }
     }
     
@@ -420,9 +427,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         }
 
         // add plugin widths configuration
-        $finalConfig['widthDesktop'] = $this->widthDesktop;
-        $finalConfig['widthTablet']  = $this->widthTablet;
-        $finalConfig['widthMobile']  = $this->widthMobile;
+        $finalConfig['widthDesktop']      = $this->widthDesktop;
+        $finalConfig['widthTablet']       = $this->widthTablet;
+        $finalConfig['widthMobile']       = $this->widthMobile;
+        $finalConfig['pluginContainerId'] = $this->pluginContainerId;
         
         // Getting the final config for templatePath
         if (is_array($finalConfig['template_path']))
@@ -563,9 +571,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
                 $model['view']->setVariables(array(
-                    'widthDesktop' => 'plugin-width-lg-'.round($this->widthDesktop),
-                    'widthTablet'  => 'plugin-width-md-'.round($this->widthTablet),
-                    'widthMobile'  => 'plugin-width-xs-'.round($this->widthMobile),
+                    'widthDesktop'      => 'plugin-width-lg-'.round($this->widthDesktop),
+                    'widthTablet'       => 'plugin-width-md-'.round($this->widthTablet),
+                    'widthMobile'       => 'plugin-width-xs-'.round($this->widthMobile),
+                    'pluginContainerId' => $this->pluginContainerId
                 ));
 
             }
