@@ -326,14 +326,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $xml = simplexml_load_string($this->pluginXmlDbValue);
         if ($xml)
         {
-            if (!empty($xml->width_desktop))
-                $this->widthDesktop = (string) $xml->width_desktop;
+            if(!empty($xml->attributes()->width_desktop))
+                $this->widthDesktop = (string) $xml->attributes()->width_desktop;
 
-            if (!empty($xml->width_tablet))
-                $this->widthTablet = (string) $xml->width_tablet;
+            if(!empty($xml->attributes()->width_tablet))
+                $this->widthTablet  = (string) $xml->attributes()->width_tablet;
 
-            if (!empty($xml->width_mobile))
-                $this->widthMobile = (string) $xml->width_mobile;
+            if(!empty($xml->attributes()->width_mobile))
+                $this->widthMobile  = (string) $xml->attributes()->width_mobile;
 
             if (!empty($xml->attributes()->plugin_container_id))
                 $this->pluginContainerId = (string) $xml->attributes()->plugin_container_id;
