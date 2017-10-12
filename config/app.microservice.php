@@ -29,7 +29,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '10',
+										'data-type' => 'int',
 									),
 								),
 							),
@@ -82,7 +83,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '10',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -97,7 +99,8 @@ return array(
 										'id' => 'publishedOnly',
 										'value' => '',
 										'class' => '',
-										'placeholder' => '0 or 1',
+										'placeholder' => '0',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -157,7 +160,7 @@ return array(
 						'elements' => array(
 							array(
 								'spec' => array(
-									'name' => 'idPage',
+									'name' => 'idPage ',
 									'type' => 'Text',
 									'options' => array(
 										'label' => 'idPage',
@@ -166,7 +169,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '10',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -181,7 +185,8 @@ return array(
 										'id' => 'type',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter type',
+										'placeholder' => 'published',
+										'data-type' => 'string'
 									),
 								),
 							),
@@ -251,7 +256,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -266,7 +272,8 @@ return array(
 										'id' => 'typeLinkOnly',
 										'value' => '',
 										'class' => '',
-										'placeholder' => '0 or 1',
+										'placeholder' => '1',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -281,7 +288,8 @@ return array(
 										'id' => 'allPages',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'true or false',
+										'placeholder' => 'true',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -368,7 +376,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -383,7 +392,8 @@ return array(
 										'id' => 'absolute',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'true or false',
+										'placeholder' => 'false',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -451,7 +461,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -501,7 +512,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -552,7 +564,8 @@ return array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter idPage',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -567,7 +580,8 @@ return array(
 										'id' => 'publishedOnly',
 										'value' => '',
 										'class' => '',
-										'placeholder' => '0 or 1',
+										'placeholder' => '1',
+										'data-type' => 'bool'
 									),
 								),
 							),
