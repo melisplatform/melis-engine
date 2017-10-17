@@ -54,4 +54,21 @@ class MelisSiteDomainTable extends MelisGenericTable
 	     
 	    return $resultSet;
 	}
+
+	public function getSitesByEnv($env = null)
+    {
+        $select = $this->tableGateway->getSql()->select();
+
+        $select->columns(array('*'));
+
+        if(is_null($env) && !empty($env)) {
+            $select->where->equalTo('sdom_env', $env);
+        }
+
+        $select->group('sdom_env');
+
+        $resultSet = $this->tableGateway->selectWith($select);
+
+        return $resultSet;
+    }
 }

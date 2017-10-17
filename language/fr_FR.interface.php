@@ -20,5 +20,8 @@
 	    'tr_melis_engine_search_remove_index_failed' => 'KO: Impossible de supprimer l\'indexe de la page ID %s, L\'indexe peut ne pas exister',
 	    
 	    'tr_melis_engine_search_optimize' => 'OK: Indexe optimisé',
+
+        'tr_melis_engine_sites' => 'Site',
+        'tr_melis_engine_sites_select' => 'Select a site',
 	);
 ?>

@@ -77,6 +77,7 @@ return array(
     'form_elements' => array(
         'factories' => array(
     		'MelisEnginePluginTemplateSelect' => 'MelisEngine\Form\Factory\PluginTemplateSelectFactory',
+    		'MelisEngineSiteSelect'           => 'MelisEngine\Form\Factory\SitesSelectFactory',
         ),
     ),
     'view_manager' => array(
