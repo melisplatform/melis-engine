@@ -20,5 +20,8 @@
 	    'tr_melis_engine_search_remove_index_failed'  => 'KO: Unable to remove index for page ID %s, index may not be existing',
 	    
 	    'tr_melis_engine_search_optimize' => 'OK: Index optimized',
+
+        'tr_melis_engine_sites' => 'Site',
+        'tr_melis_engine_sites_select' => 'Select a site',
 	);
 ?>

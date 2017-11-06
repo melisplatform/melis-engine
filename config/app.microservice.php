@@ -23,13 +23,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '10',
+										'data-type' => 'int',
 									),
 								),
 							),
@@ -40,10 +41,10 @@ return array(
 								'required' => true,
 								'validators' => array(
 									array(
-										'name' => 'NotEmpty',
+										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter id of a page'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -76,13 +77,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '10',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -91,13 +93,14 @@ return array(
 									'name' => 'publishedOnly',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Published only',
+										'label' => 'publishedOnly',
 									),
 									'attributes' => array(
 										'id' => 'publishedOnly',
 										'value' => '',
 										'class' => '',
-										'placeholder' => '0 or 1',
+										'placeholder' => '0',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -111,7 +114,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'Page Id must be an integer'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -129,7 +132,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter id of a page'
+												\Zend\Validator\NotEmpty::IS_EMPTY => '0 or 1' 
 											),
 										),
 									),
@@ -157,16 +160,17 @@ return array(
 						'elements' => array(
 							array(
 								'spec' => array(
-									'name' => 'idPage',
+									'name' => 'idPage ',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '10',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -182,6 +186,7 @@ return array(
 										'value' => '',
 										'class' => '',
 										'placeholder' => 'published',
+										'data-type' => 'string'
 									),
 								),
 							),
@@ -213,7 +218,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter id of a page'
+												\Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter type'
 											),
 										),
 									),
@@ -245,13 +250,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -267,6 +273,7 @@ return array(
 										'value' => '',
 										'class' => '',
 										'placeholder' => '1',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -275,13 +282,14 @@ return array(
 									'name' => 'allPages',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'All Pages',
+										'label' => 'allPages',
 									),
 									'attributes' => array(
 										'id' => 'allPages',
 										'value' => '',
 										'class' => '',
 										'placeholder' => 'true',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -292,10 +300,10 @@ return array(
 								'required' => true,
 								'validators' => array(
 									array(
-										'name' => 'NotEmpty',
+										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter id of a page'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -362,13 +370,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -384,6 +393,7 @@ return array(
 										'value' => '',
 										'class' => '',
 										'placeholder' => 'false',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -397,7 +407,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'Page Id must be an integer'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -445,13 +455,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -465,7 +476,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'Page Id must be an integer'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -495,13 +506,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -515,7 +527,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'Page Id must be an integer'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -546,13 +558,14 @@ return array(
 									'name' => 'idPage',
 									'type' => 'Text',
 									'options' => array(
-										'label' => 'Page Id',
+										'label' => 'idPage',
 									),
 									'attributes' => array(
 										'id' => 'idPage',
 										'value' => '',
 										'class' => '',
-										'placeholder' => 'Enter Page Id',
+										'placeholder' => '3',
+										'data-type' => 'int'
 									),
 								),
 							),
@@ -568,6 +581,7 @@ return array(
 										'value' => '',
 										'class' => '',
 										'placeholder' => '1',
+										'data-type' => 'bool'
 									),
 								),
 							),
@@ -581,7 +595,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'Page Id must be an integer'
+												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
