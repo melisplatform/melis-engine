@@ -582,6 +582,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             return $model['view'];
         }
     }
+
+    public function removePlugin($value)
+    {
+        $this->removePlugin = $value;
+    }
     
     public function setPluginHardcoded($value)
     {
@@ -638,6 +643,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         return $data;
     }
 
+
     /**
      * Returns the class name of the set type and width value
      * @param $type
@@ -661,4 +667,5 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
         return $className;
     }
+
 }
