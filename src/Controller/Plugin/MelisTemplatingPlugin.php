@@ -574,7 +574,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                     'widthDesktop'      => $this->convertToCssClass('desktop', $this->widthDesktop),
                     'widthTablet'       => $this->convertToCssClass('tablet', $this->widthTablet),
                     'widthMobile'       => $this->convertToCssClass('mobile', $this->widthMobile),
-                    'pluginContainerId' => $this->pluginContainerId
+                    'pluginContainerId' => $this->pluginContainerId,
+                    'fromDragDropZone'  => $this->fromDragDropZone
                 ));
 
             }
@@ -655,13 +656,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $className = null;
         switch($type) {
             case 'desktop':
-                $className = 'plugin-width-lg-' .number_format( round( (float) $width, 2), 2, '-', ',');
+                $className = 'plugin-width-lg-' .number_format( (float) $width, 2, '-', ',');
                 break;
             case 'tablet':
-                $className = 'plugin-width-md-' .number_format( round( (float) $width, 2), 2, '-', ',');
+                $className = 'plugin-width-md-' .number_format( (float) $width, 2, '-', ',');
                 break;
             case 'mobile':
-                $className = 'plugin-width-xs-' .number_format( round( (float) $width, 2), 2, '-', ',');
+                $className = 'plugin-width-xs-' .number_format( (float) $width, 2, '-', ',');
                 break;
         }
 
