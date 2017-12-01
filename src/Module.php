@@ -17,6 +17,10 @@ use Zend\Stdlib\ArrayUtils;
 use MelisEngine\Listener\MelisEngineTreeServiceMicroServiceListener;
 use MelisEngine\Listener\MelisEngineMicroServicePageServiceListener;
 
+/**
+ * Class Module
+ * @package MelisEngine
+ */
 class Module
 {
     public function onBootstrap(MvcEvent $e)
