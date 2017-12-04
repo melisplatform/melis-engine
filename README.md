@@ -84,6 +84,8 @@ Melis Platform offers a plugin system for edition of pages.
 All plugins are built on the ZF2 Controller plugin system, and all plugins must extend this class too as it provides many default and awaited methods.  
 File: /melis-engine/src/Controller/Plugin/MelisTemplatingPlugin.php  
 
+**[See Full documentation on templating plugins here](https://www.melistechnology.com/MelisTechnology/resources/documentation/front-office/create-a-templating-plugin/Principle)**
+
 
 ## Authors
 
