@@ -47,9 +47,12 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
 
                     set_time_limit(0);
                     $content = file_get_contents($uri);
+                    $content = str_replace('href="', 'href="'.$uri.'', $content);
+                    $content = str_replace('src="', 'src="'.$uri.'', $content);
 
                     $pageTree = $results->getMelisPageTree();
                     $pageTree->page_content = $content;
+                    $pageTree->page_uri = $uri;
 
                     $results->getMelisPageTree = $pageTree;
 
