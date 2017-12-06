@@ -571,16 +571,22 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
                 $model['view']->setVariables(array(
-                    'widthDesktop'      => 'plugin-width-lg-'.round($this->widthDesktop),
-                    'widthTablet'       => 'plugin-width-md-'.round($this->widthTablet),
-                    'widthMobile'       => 'plugin-width-xs-'.round($this->widthMobile),
-                    'pluginContainerId' => $this->pluginContainerId
+                    'widthDesktop'      => $this->convertToCssClass('desktop', $this->widthDesktop),
+                    'widthTablet'       => $this->convertToCssClass('tablet', $this->widthTablet),
+                    'widthMobile'       => $this->convertToCssClass('mobile', $this->widthMobile),
+                    'pluginContainerId' => $this->pluginContainerId,
+                    'fromDragDropZone'  => $this->fromDragDropZone
                 ));
 
             }
 
             return $model['view'];
         }
+    }
+
+    public function removePlugin($value)
+    {
+        $this->removePlugin = $value;
     }
     
     public function setPluginHardcoded($value)
@@ -637,4 +643,30 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         
         return $data;
     }
+
+
+    /**
+     * Returns the class name of the set type and width value
+     * @param $type
+     * @param $width
+     * @return null|string
+     */
+    public function convertToCssClass($type, $width)
+    {
+        $className = null;
+        switch($type) {
+            case 'desktop':
+                $className = 'plugin-width-lg-' .number_format( (float) $width, 2, '-', ',');
+                break;
+            case 'tablet':
+                $className = 'plugin-width-md-' .number_format( (float) $width, 2, '-', ',');
+                break;
+            case 'mobile':
+                $className = 'plugin-width-xs-' .number_format( (float) $width, 2, '-', ',');
+                break;
+        }
+
+        return $className;
+    }
+
 }
