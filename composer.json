@@ -25,7 +25,8 @@
     "module"
   ],
   "extra": {
-    "module-name": "MelisEngine"
+    "module-name": "MelisEngine",
+    "dbdeploy": true
   },
   "require": {
     "php": "^5.5 || ^7.0",
