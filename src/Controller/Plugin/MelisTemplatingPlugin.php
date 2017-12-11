@@ -426,7 +426,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             /* $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig()); */
             $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
-            
+
             /* // merging with GET
             $parameters = $request->getQuery()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
@@ -434,7 +434,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             // Updating config with GET
             $parametersResults = $this->formatGetPostInArray($this->loadGetDataPluginConfig());
             $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $parametersResults);
-            
             /* // merging with POST
             $parameters = $request->getPost()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
@@ -491,29 +490,34 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         if (!empty($newPluginConfig))
         {
-            foreach ($pluginConfig As $key => $val)
-            {
-                if (isset($newPluginConfig[$key]))
-                {
-                    if (is_array($val) && is_array($newPluginConfig[$key]))
-                    {
-                        if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key])))
-                        {
+            foreach($pluginConfig AS $key => $val){
+                if(isset($newPluginConfig[$key])){
+                    $pluginConfig[$key] = $newPluginConfig[$key];
+                }else{
+                    if(is_array($val) && !empty($val)){
+                        $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
+                    }else{
+                        if(isset($newPluginConfig[$key])) {
                             $pluginConfig[$key] = $newPluginConfig[$key];
                         }
-                        else
-                        {
-                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
-                        }
-                    }
-                    else
-                    {
-                        $pluginConfig[$key] = $newPluginConfig[$key];
                     }
                 }
             }
+            /*foreach ($pluginConfig As $key => $val)
+            {
+                if (isset($newPluginConfig[$key])) {
+                    if (is_array($val) && is_array($newPluginConfig[$key])) {
+                        if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key]))) {
+                            $pluginConfig[$key] = $newPluginConfig[$key];
+                        } else {
+                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
+                        }
+                    } else {
+                        $pluginConfig[$key] = $newPluginConfig[$key];
+                    }
+                }
+            }*/
         }
-        
         return $pluginConfig;
     }
     
