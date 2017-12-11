@@ -20,7 +20,7 @@ class MelisSiteDomainTable extends MelisGenericTable
 		$this->cacheResults = true;
 	}
 
-	/**
+	 /**
      * @param string $search
      * @param array $searchableColumns
      * @param string $orderBy
@@ -33,6 +33,9 @@ class MelisSiteDomainTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
+
+        $select->join('melis_cms_site', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',
+		        array('*'), $select::JOIN_LEFT);
 
         if(!empty($searchableColumns) && !empty($search)) {
             foreach($searchableColumns as $column) {
