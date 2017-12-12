@@ -29,7 +29,7 @@ class MelisSiteDomainTable extends MelisGenericTable
      * @param null $limit
      * @return mixed
      */
-    public function getData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
+    public function getData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null, $siteId = '')
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
@@ -42,6 +42,10 @@ class MelisSiteDomainTable extends MelisGenericTable
                 $select->where->or->like($column, '%'.$search.'%');
             }
         }
+
+        if(!empty($siteId)) {
+        	$select->where(array("melis_cms_site.site_id" => $siteId));
+    	}
 
         if(!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);
