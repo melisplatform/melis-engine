@@ -505,7 +505,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             foreach ($pluginConfig As $key => $val)
             {
-                if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params'))))
+                if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'input_filter'))))
                 {
                     /*
                      * Checking if the key is exisitng on the new config
@@ -539,7 +539,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                     {
                         if (is_array($val))
                         {
-                            //$pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
+                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
                         }
                     }
                 }
