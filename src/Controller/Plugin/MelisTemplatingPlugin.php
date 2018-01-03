@@ -499,46 +499,52 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     public function updateFrontConfig($pluginConfig, $newPluginConfig)
     {
-        
         if (!empty($newPluginConfig))
         {
+            /**
+             * 
+             * @var Ambiguous $excludeParams
+             */
+            $excludeParams = (!empty($pluginConfig['sub_plugins_params'])) ? $pluginConfig['sub_plugins_params'] : array();
+            
             foreach ($pluginConfig As $key => $val)
             {
-                /*
-                 * Checking if the key is exisitng on the new config
-                 */
-                if (isset($newPluginConfig[$key])) 
+                if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'forms'))))
                 {
-                    if (is_array($val) && is_array($newPluginConfig[$key])) 
+                    /*
+                     * Checking if the key is exisitng on the new config
+                     */
+                    if (isset($newPluginConfig[$key])) 
                     {
-                        /**
-                         * Checking if the value are the same interger array
-                         * this will override the current 
-                         * 
-                         * else the key of the array is a associative
-                         */
-                        if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key])))
+                        
+                        if (is_array($val) && is_array($newPluginConfig[$key])) 
                         {
-                            $pluginConfig[$key] = $newPluginConfig[$key];
+                            /**
+                             * Checking if the value are the same interger array
+                             * this will override the current 
+                             * 
+                             * else the key of the array is a associative
+                             */
+                            if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key])))
+                            {
+                                $pluginConfig[$key] = $newPluginConfig[$key];
+                            } 
+                            else 
+                            {
+                                $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
+                            }
                         } 
                         else 
-                        {
-                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
-                        }
-                    } 
-                    else 
-                    {
-                        if (!is_array($val))
                         {
                             $pluginConfig[$key] = $newPluginConfig[$key];
                         }
                     }
-                }
-                else 
-                {
-                    if (is_array($val))
+                    else 
                     {
-                        $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
+                        if (is_array($val))
+                        {
+                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
+                        }
                     }
                 }
             }
@@ -626,12 +632,17 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             $variables = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
             
+            $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+            
             foreach ($variables as $keyVar => $valueVar)
+            {
+                // Sub plugin needs to render first before assigning to plugin viewmodel
                 if ($valueVar instanceof ViewModel)
-                    $model->addChild($valueVar, $keyVar);
-                else
-                    $model->$keyVar = $valueVar;
-                        
+                    $valueVar = $viewRender->render($valueVar);
+                    
+                $model->$keyVar = $valueVar;
+            }
+            
             if (!empty($this->pluginFrontConfig['template_path']))
             {
                 $config = $this->getServiceLocator()->get('config');
