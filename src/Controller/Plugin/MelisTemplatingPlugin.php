@@ -501,10 +501,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         if (!empty($newPluginConfig))
         {
-            /**
-             * 
-             * @var Ambiguous $excludeParams
-             */
             $excludeParams = (!empty($pluginConfig['sub_plugins_params'])) ? $pluginConfig['sub_plugins_params'] : array();
             
             foreach ($pluginConfig As $key => $val)
