@@ -36,8 +36,8 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
                 $results = isset($params['results']) ? $params['results']    : null;
 
                 if($module == 'MelisEngine' &&
-                   $service == 'MelisPageService' &&
-                   $method  == 'getDatasPage') {
+                    $service == 'MelisPageService' &&
+                    $method  == 'getDatasPage') {
 
                     $pageId = (int) $post['idPage'];
 
