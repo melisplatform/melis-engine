@@ -35,28 +35,31 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
                 $post    = isset($params['post'])    ? $params['post']    : null;
                 $results = isset($params['results']) ? $params['results']    : null;
 
-//                if($module == 'MelisEngine' &&
-//                   $service == 'MelisPageService' &&
-//                   $method  == 'getDatasPage') {
-//
-//                    $pageId = (int) $post['idPage'];
-//
-//                    $treeSvc = $sm->get('MelisEngineTree');
-//                    $uri     = $treeSvc->getPageLink($pageId, true);
-//                    $uri     = substr($uri, 0, strlen($uri)-1);
-//
-//                    set_time_limit(0);
-//                    $content = file_get_contents($uri);
-//                    $content = str_replace('href="', 'href="'.$uri.'', $content);
-//                    $content = str_replace('src="', 'src="'.$uri.'', $content);
-//
-//                    $pageTree = $results->getMelisPageTree();
-//                    $pageTree->page_content = $content;
-//                    $pageTree->page_uri = $uri;
-//
-//                    $results->getMelisPageTree = $pageTree;
-//
-//                }
+                if($module == 'MelisEngine' &&
+                   $service == 'MelisPageService' &&
+                   $method  == 'getDatasPage') {
+
+                    $pageId = (int) $post['idPage'];
+
+                    $treeSvc = $sm->get('MelisEngineTree');
+                    $uri     = $treeSvc->getPageLink($pageId, true);
+                    $uri     = substr($uri, 0, strlen($uri)-1);
+                    $domain  = $_SERVER['HTTP_ORIGIN'];
+
+                    set_time_limit(0);
+
+                    $content = file_get_contents($domain . '/' . $uri  . $pageId  );
+
+                    $content = str_replace('href="', 'href="'.$uri.'', $content);
+                    $content = str_replace('src="', 'src="'.$uri.'', $content);
+
+                    $pageTree = $results->getMelisPageTree();
+                    $pageTree->page_content = $content;
+                    $pageTree->page_uri = $uri;
+
+                    $results->getMelisPageTree = $pageTree;
+
+                }
 
                 return array(
                     'module'  => $module,
