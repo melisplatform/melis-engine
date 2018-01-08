@@ -43,12 +43,15 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
 
                     $treeSvc = $sm->get('MelisEngineTree');
                     $uri     = $treeSvc->getPageLink($pageId, true);
-                    $uri     = substr($uri, 0, strlen($uri)-1);
+
+                    $scheme  = parse_url($uri, PHP_URL_SCHEME);
+                    $domain  = $scheme.'://'.parse_url($uri, PHP_URL_HOST);
+
 
                     set_time_limit(0);
                     $content = file_get_contents($uri);
-                    $content = str_replace('href="', 'href="'.$uri.'', $content);
-                    $content = str_replace('src="', 'src="'.$uri.'', $content);
+                    $content = str_replace('href="', 'href="'.$domain.'', $content);
+                    $content = str_replace('src="', 'src="'.$domain.'', $content);
 
                     $pageTree = $results->getMelisPageTree();
                     $pageTree->page_content = $content;
