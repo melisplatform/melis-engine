@@ -66,7 +66,8 @@ class Module
     	$configFiles = array(
     			include __DIR__ . '/../config/module.config.php',
     			include __DIR__ . '/../config/diagnostic.config.php',
-    	        include __DIR__ . '/../config/app.microservice.php'
+    	        include __DIR__ . '/../config/app.microservice.php',
+    	        include __DIR__ . '/../config/app.install.php'
     	);
     	
     	foreach ($configFiles as $file) {

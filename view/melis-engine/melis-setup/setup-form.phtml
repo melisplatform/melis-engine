@@ -1,0 +1,37 @@
+<?php
+$form   = $this->form;
+
+$name   = $form['attributes']['name'];
+$frmId  = $form['attributes']['id'];
+$method = $form['attributes']['method'];
+
+$elements = $form['elements'];
+?>
+<h3>MelisEngine Setup</h3>
+<form  name="<?= $name ?>" id="<?= $frmId ?>" method="<?= $method ?>" >
+    <div class="environment-cont entry">
+        <?php for($i = 0; $i < count($elements); $i++):?>
+            <?php
+            $input = $elements[$i]['spec'];
+            $name  = $input['name'];
+            $type  = $input['type'];
+            $label = $input['options']['label'];
+
+            $toolTip     = $input['options']['tooltip'];
+            $inputId     = $input['attributes']['id'];
+            $placeholder = $input['attributes']['placeholder'];
+
+            ?>
+            <div class="form-group">
+                <label><?= $this->translate($label); ?>
+                    <i class="fa fa-info-circle fa-lg pull-right" data-toggle="tooltip" data-placement="left" title="<?= $this->translate($toolTip) ?>" data-original-title=""></i>
+                </label>
+                <input type="<?= $type ?>" name="<?= $name ?>" class="form-control" placeholder="<?= $this->translate($placeholder); ?>"  required>
+            </div>
+
+        <?php endfor;?>
+    </div>
+    <?php if($this->btnStatus == false ) :?>
+        <button id="melis-core-start-setup-btn" type="submit" >Start setup</button>
+    <?php endif;?>
+</form>
