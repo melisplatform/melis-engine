@@ -12,27 +12,18 @@ namespace MelisEngine\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-use Zend\Validator\File\Size;
-use Zend\Validator\File\IsImage;
-use Zend\Validator\File\Upload;
-use Zend\File\Transfer\Adapter\Http;
-use Zend\Session\Container;
 
 class MelisSetupController extends AbstractActionController
 {
     public function setupFormAction()
     {
-
-        $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $form = $coreConfig->getItem('melis_engine_setup/forms/melis_installer_platform_id');
-
         $request = $this->getRequest();
 
         //startSetup button indicator
         $btnStatus = (bool) $request->getQuery()->get('btnStatus');
 
         $view = new ViewModel();
-        $view->form = $form;
+        $view->form = $this->getForm();
         $view->setTerminal(true);
         $view->btnStatus = $btnStatus;
         return $view;
@@ -46,51 +37,51 @@ class MelisSetupController extends AbstractActionController
         $title   = 'tr_install_setup_title';
         $errors  = array();
 
-        $request = $this->getRequest();
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
 
-        if($request->isPost()){
+        $form = $this->getForm();
+        $form->setData($data);
 
-            //Services
-            $tablePlatformIds = $this->getServiceLocator()->get('MelisEngineTablePlatformIds');
-
-            //FormData
-            $platformData = $request->getPost();
-
-            if(!empty($platformData)){
-
-                $pageIdStart   = $platformData->get('pids_page_id_start');
-                $pageIdCurrent = $platformData->get('pids_page_id_current');
-                $pageIdEnd     = $platformData->get('pids_page_id_end');
-                $tplIdStart    = $platformData->get('pids_tpl_id_start');
-                $tplIdCurrent  = $platformData->get('pids_tpl_id_current');
-                $tplIdEnd      = $platformData->get('pids_tpl_id_end');
+        //Services
+        $tablePlatformIds = $this->getServiceLocator()->get('MelisEngineTablePlatformIds');
 
 
-                // Getting current Platform
-                $environmentName = getenv('MELIS_PLATFORM');
-                $tablePlatform   = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-                $platform        = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
+        if(!empty($platformData)){
 
-                //Save platformData
-                $tablePlatformIds->save(array(
+            $pageIdStart   = $form->get('pids_page_id_start');
+            $pageIdCurrent = $form->get('pids_page_id_current');
+            $pageIdEnd     = $form->get('pids_page_id_end');
+            $tplIdStart    = $form->get('pids_tpl_id_start');
+            $tplIdCurrent  = $form->get('pids_tpl_id_current');
+            $tplIdEnd      = $form->get('pids_tpl_id_end');
 
-                    'pids_page_id_start'    => $pageIdStart,
-                    'pids_page_id_current'  => $pageIdCurrent,
-                    'pids_page_id_end'      => $pageIdEnd,
-                    'pids_tpl_id_start'     => $tplIdStart,
-                    'pids_tpl_id_current'   => $tplIdCurrent,
-                    'pids_tpl_id_end'       => $tplIdEnd
-                ));
-                $success = 1;
-                $message = 'tr_install_setup_message_ok';
-            }
 
+            // Getting current Platform
+            $environmentName = getenv('MELIS_PLATFORM');
+            $tablePlatform   = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+            $platform        = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
+
+            //Save platformData
+            $tablePlatformIds->save(array(
+
+                'pids_page_id_start'    => $pageIdStart,
+                'pids_page_id_current'  => $pageIdCurrent,
+                'pids_page_id_end'      => $pageIdEnd,
+                'pids_tpl_id_start'     => $tplIdStart,
+                'pids_tpl_id_current'   => $tplIdCurrent,
+                'pids_tpl_id_end'       => $tplIdEnd
+            ));
+            $success = 1;
+            $message = 'tr_install_setup_message_ok';
         }
+
+
 
         $response = array(
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
-            'errors'  => $errors
+            'errors'  => $errors,
+            'form'    => 'melis_installer_platform_data'
         );
 
         return new JsonModel($response);
@@ -107,5 +98,41 @@ class MelisSetupController extends AbstractActionController
 
         return $melisTool;
 
+    }
+    /**
+     * Create a form from the configuration
+     * @param $formConfig
+     * @return \Zend\Form\ElementInterface
+     */
+    private function getForm()
+    {
+        $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $form = $coreConfig->getItem('melis_engine_setup/forms/melis_installer_platform_data');
+
+        $factory = new \Zend\Form\Factory();
+        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory->setFormElementManager($formElements);
+        $form = $factory->createForm($form);
+
+        return $form;
+
+    }
+    private function formatErrorMessage($errors = array())
+    {
+        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $appConfigForm = $melisMelisCoreConfig->getItem('melis_engine_setup/forms/melis_installer_platform_data');
+        $appConfigForm = $appConfigForm['elements'];
+
+        foreach ($errors as $keyError => $valueError)
+        {
+            foreach ($appConfigForm as $keyForm => $valueForm)
+            {
+                if ($valueForm['spec']['name'] == $keyError &&
+                    !empty($valueForm['spec']['options']['label']))
+                    $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+            }
+        }
+
+        return $errors;
     }
 }
