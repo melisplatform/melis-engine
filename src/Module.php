@@ -96,6 +96,7 @@ class Module
     	if (!empty($locale)){
     	    $translationType = array(
     	        'interface',
+    	        'install',
     	    );
     	    
     	    $translationList = array();
