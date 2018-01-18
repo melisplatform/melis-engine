@@ -115,7 +115,7 @@ return array(
                                 array(
                                     'name' => 'IsInt',
                                     'options' => array(
-                                        'message' => array(
+                                        'messages' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_start must be an Integer'
                                         ),
                                     ),
@@ -141,7 +141,7 @@ return array(
                                 array(
                                     'name' => 'IsInt',
                                     'options' => array(
-                                        'message' => array(
+                                        'messages' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_current must be an Integer'
                                         ),
                                     ),
@@ -167,7 +167,7 @@ return array(
                                 array(
                                     'name' => 'IsInt',
                                     'options' => array(
-                                        'message' => array(
+                                        'messages' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_end must be an Integer'
                                         ),
                                     ),
@@ -193,7 +193,7 @@ return array(
                                 array(
                                     'name' => 'IsInt',
                                     'options' => array(
-                                        'message' => array(
+                                        'messages' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_tpl_id_start must be an Integer'
                                         ),
                                     ),
@@ -219,7 +219,7 @@ return array(
                                 array(
                                     'name' => 'IsInt',
                                     'options' => array(
-                                        'message' => array(
+                                        'messages' => array(
                                             \Zend\I18n\Validator\IsInt::INVALID => 'pids_tpl_id_current must be an Integer'
                                         ),
                                     ),
@@ -245,7 +245,7 @@ return array(
                                 array(
                                     'name' => 'IsInt',
                                     'options' => array(
-                                        'message' => array(
+                                        'messages' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_tpl_id_end must be an Integer'
                                         ),
                                     ),
