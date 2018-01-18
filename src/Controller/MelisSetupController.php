@@ -45,8 +45,12 @@ class MelisSetupController extends AbstractActionController
         //Services
         $tablePlatformIds = $this->getServiceLocator()->get('MelisEngineTablePlatformIds');
 
+        if($form->isValid()) {
 
-        if(!empty($platformData)){
+            $container = new \Zend\Session\Container('melismodules');
+            $installerModuleConfigurationSuccess = isset($container['module_configuration']['success']) ?
+                (bool) $container['module_configuration']['success'] : false;
+
 
             $pageIdStart   = $form->get('pids_page_id_start');
             $pageIdCurrent = $form->get('pids_page_id_current');
@@ -62,19 +66,24 @@ class MelisSetupController extends AbstractActionController
             $platform        = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
 
             //Save platformData
-            $tablePlatformIds->save(array(
+            if($installerModuleConfigurationSuccess) {
+                $tablePlatformIds->save(array(
 
-                'pids_page_id_start'    => $pageIdStart,
-                'pids_page_id_current'  => $pageIdCurrent,
-                'pids_page_id_end'      => $pageIdEnd,
-                'pids_tpl_id_start'     => $tplIdStart,
-                'pids_tpl_id_current'   => $tplIdCurrent,
-                'pids_tpl_id_end'       => $tplIdEnd
-            ));
-            $success = 1;
-            $message = 'tr_install_setup_message_ok';
+                    'pids_page_id_start'    => $pageIdStart,
+                    'pids_page_id_current'  => $pageIdCurrent,
+                    'pids_page_id_end'      => $pageIdEnd,
+                    'pids_tpl_id_start'     => $tplIdStart,
+                    'pids_tpl_id_current'   => $tplIdCurrent,
+                    'pids_tpl_id_end'       => $tplIdEnd
+                ));
+                $success = 1;
+                $message = 'tr_install_setup_message_ok';
+            }
+            
         }
-
+        else {
+            $errors = $this->formatErrorMessage($form->getMessages());
+        }
 
 
         $response = array(
