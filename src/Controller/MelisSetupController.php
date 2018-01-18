@@ -80,21 +80,48 @@ class MelisSetupController extends AbstractActionController
                 $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
                 $tableSite       = $this->getServiceLocator()->get('MelisEngineTableSite');
 
+                $cmsSiteSrv = $this->getServiceLocator()->get('MelisCmsSiteService');
+
                 $container = new \Zend\Session\Container('melisinstaller');
                 $selectedSite = isset($container['site_module']['site']) ? $container['site_module']['site'] : null;
 
+                $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
+                $siteId = 1;
                 if($selectedSite)  {
                     if($selectedSite == 'NewSite') {
 
+                        $dataSite = array(
+                            'site_name' => $selectedSite['cms_data']['web_form']['website_name']
+                        );
+
+                        $dataDomain = array(
+                            'sdom_env' => $environmentName,
+                            'sdom_scheme' => 'http',
+                            'sdom_domain' => $environments
+                        );
+
+                        $dataSiteLang = $selectedSite['cms_data']['web_lang'];
+
+                        $genSiteModule = true;
+
+                        $siteModule = getenv('MELIS_MODULE');
+
+                        $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, array(), $dataSiteLang, null, $genSiteModule, $siteModule);
+
+                        if ($saveSiteResult['success']){
+                            $siteId = $saveSiteResult['site_id'];
+                        }
                     }
                 }
-
-                $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
 
                 if($environments) {
                     foreach($environments as $sitePlatform => $siteDomains) {
                         foreach($siteDomains as $siteDomain) {
 
+                            unset($siteDomain['app_interface_conf']);
+
+                            $siteDomain['sdom_site_id'] = $siteId;
+                            $tableSiteDomain->save($siteDomain);
                         }
                     }
                 }
