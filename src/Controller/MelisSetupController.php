@@ -76,10 +76,23 @@ class MelisSetupController extends AbstractActionController
                     'pids_tpl_id_current'   => $tplIdCurrent,
                     'pids_tpl_id_end'       => $tplIdEnd
                 ));
+
+                $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
+                $tableSite       = $this->getServiceLocator()->get('MelisEngineTableSite');
+
+                $container = new \Zend\Session\Container('melisinstaller');
+                $selectedSite = isset($container['site_module']['site']) ? $container['site_module']['site'] : null;
+
+                if($selectedSite)  {
+                    if($selectedSite == 'NewSite') {
+
+                    }
+                }
+
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
             }
-            
+
         }
         else {
             $errors = $this->formatErrorMessage($form->getMessages());
