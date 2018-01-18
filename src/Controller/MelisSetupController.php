@@ -89,6 +89,16 @@ class MelisSetupController extends AbstractActionController
                     }
                 }
 
+                $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
+
+                if($environments) {
+                    foreach($environments as $sitePlatform => $siteDomains) {
+                        foreach($siteDomains as $siteDomain) {
+
+                        }
+                    }
+                }
+
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
             }
