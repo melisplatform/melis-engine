@@ -120,6 +120,14 @@ return array(
                                         ),
                                     ),
                                 ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_page_id_start must not be empty',
+                                        ),
+                                    ),
+                                ),
                             ),
                             'filters'  => array(
                                 array('name' => 'StripTags'),
@@ -135,6 +143,14 @@ return array(
                                     'options' => array(
                                         'message' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_current must be an Integer'
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_page_id_current must not be empty',
                                         ),
                                     ),
                                 ),
@@ -156,6 +172,14 @@ return array(
                                         ),
                                     ),
                                 ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_page_id_end must not be empty',
+                                        ),
+                                    ),
+                                ),
                             ),
                             'filters'  => array(
                                 array('name' => 'StripTags'),
@@ -171,6 +195,14 @@ return array(
                                     'options' => array(
                                         'message' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_tpl_id_start must be an Integer'
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_tpl_id_start must not be empty',
                                         ),
                                     ),
                                 ),
@@ -192,6 +224,14 @@ return array(
                                         ),
                                     ),
                                 ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_tpl_id_current must not be empty',
+                                        ),
+                                    ),
+                                ),
                             ),
                             'filters'  => array(
                                 array('name' => 'StripTags'),
@@ -207,6 +247,14 @@ return array(
                                     'options' => array(
                                         'message' => array(
                                             \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_tpl_id_end must be an Integer'
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_tpl_id_end must not be empty',
                                         ),
                                     ),
                                 ),
