@@ -253,6 +253,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     protected function getPluginValueFromDb()
     {
+        
         $this->pluginXmlDbValue = '';
         $xmlPage = '';
         $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
@@ -653,7 +654,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
                 
-                $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model));
+                $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
 
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
