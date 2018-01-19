@@ -10,6 +10,81 @@
 return array(
     'router' => array(
         'routes' => array(
+            'melis-backoffice' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/melis[/]',
+                ),
+                'child_routes' => array(
+                    'application-MelisEngine' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => 'MelisEngine',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'MelisEngine\Controller',
+                                'controller'    => 'MelisSetup',
+                                'action'        => 'setup-form',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'default' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/[:controller[/:action]]',
+                                    'constraints' => array(
+                                        'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    ),
+                                    'defaults' => array(
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            /*
+             * This route will handle the
+             * alone setup of a module
+             */
+            'setup-melis-engine' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/MelisEngine',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MelisEngine\Controller',
+                        'controller'    => 'MelisSetup',
+                        'action'        => 'setup-form',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+//
+                            ),
+                        ),
+                    ),
+                    'setup' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/setup',
+                            'defaults' => array(
+                                'controller' => 'MelisEngine\Controller\MelisSetup',
+                                'action' => 'setup-form',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ),
     ),
     'translator' => array(
@@ -75,6 +150,11 @@ return array(
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
         )
+    ),
+    'controllers' => array(
+        'invokables' => array(
+            'MelisEngine\Controller\MelisSetup' => 'MelisEngine\Controller\MelisSetupController',
+        ),
     ),
     'form_elements' => array(
         'factories' => array(
