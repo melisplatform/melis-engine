@@ -47,9 +47,13 @@ class MelisSetupController extends AbstractActionController
 
         if($form->isValid()) {
 
-            $container = new \Zend\Session\Container('melismodules');
-            $installerModuleConfigurationSuccess = isset($container['module_configuration']['success']) ?
-                (bool) $container['module_configuration']['success'] : false;
+            $container = new \Zend\Session\Container('melis_modules_configuration_status');
+            $hasErrors = false;
+
+            foreach($container->getArrayCopy() as $module) {
+                if(!$module)
+                    $hasErrors = true;
+            }
 
 
             $pageIdStart   = $form->get('pids_page_id_start')->getValue();
@@ -66,7 +70,7 @@ class MelisSetupController extends AbstractActionController
             $platform        = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
 
             //Save platformData
-            if($installerModuleConfigurationSuccess) {
+            if(false === $hasErrors) {
                 $tablePlatformIds->save(array(
 
                     'pids_page_id_start'    => $pageIdStart,
