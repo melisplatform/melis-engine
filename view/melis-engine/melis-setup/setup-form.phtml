@@ -6,6 +6,7 @@ foreach($form->getElements() as $element => $attributes)  {
     $el =  $form->get((string) $element);
     $label=$el->getLabel();
     $attributes = $el->getAttributes();
+    $value = $el->getValue();
 
 }
 echo $this->form()->openTag($form);

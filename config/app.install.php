@@ -22,7 +22,7 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_page_id_start',
-                                    'value' => '',
+                                    'value' => '1',
                                     'placeholder' => '1',
                                 )
                             )
@@ -37,7 +37,7 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_page_id_current',
-                                    'value' => '',
+                                    'value' => '1',
                                     'placeholder' => '1',
                                     'class' => 'form-control',
                                 ),
@@ -54,7 +54,7 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_page_id_current',
-                                    'value' => '',
+                                    'value' => '1000',
                                     'placeholder' => '1000',
                                     'class' => 'form-control',
                                 ),
@@ -70,7 +70,7 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_start',
-                                    'value' => '',
+                                    'value' => '1',
                                     'placeholder' => '1',
                                     'class' => 'form-control',
                                 ),
@@ -86,7 +86,7 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_current',
-                                    'value' => '',
+                                    'value' => '1',
                                     'placeholder' => '1',
                                 )
                             )
@@ -101,7 +101,7 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_end',
-                                    'value' => '',
+                                    'value' => '1000',
                                     'placeholder' => '1000',
                                 )
                             )
