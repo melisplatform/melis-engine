@@ -52,12 +52,12 @@ class MelisSetupController extends AbstractActionController
                 (bool) $container['module_configuration']['success'] : false;
 
 
-            $pageIdStart   = $form->get('pids_page_id_start');
-            $pageIdCurrent = $form->get('pids_page_id_current');
-            $pageIdEnd     = $form->get('pids_page_id_end');
-            $tplIdStart    = $form->get('pids_tpl_id_start');
-            $tplIdCurrent  = $form->get('pids_tpl_id_current');
-            $tplIdEnd      = $form->get('pids_tpl_id_end');
+            $pageIdStart   = $form->get('pids_page_id_start')->getValue();
+            $pageIdCurrent = $form->get('pids_page_id_current')->getValue();;
+            $pageIdEnd     = $form->get('pids_page_id_end')->getValue();;
+            $tplIdStart    = $form->get('pids_tpl_id_start')->getValue();;
+            $tplIdCurrent  = $form->get('pids_tpl_id_current')->getValue();;
+            $tplIdEnd      = $form->get('pids_tpl_id_end')->getValue();;
 
 
             // Getting current Platform
@@ -128,6 +128,7 @@ class MelisSetupController extends AbstractActionController
 
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
+                $container['module_configuration_status'] = (bool) $success;
             }
 
         }
