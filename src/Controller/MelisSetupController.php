@@ -52,6 +52,8 @@ class MelisSetupController extends AbstractActionController
                 (bool) $container['module_configuration']['success'] : false;
 
 
+            $scheme        = $form->get('sdom_scheme');
+            $siteDomain    = $form->get('sdom_domain');
             $pageIdStart   = $form->get('pids_page_id_start');
             $pageIdCurrent = $form->get('pids_page_id_current');
             $pageIdEnd     = $form->get('pids_page_id_end');
@@ -96,8 +98,8 @@ class MelisSetupController extends AbstractActionController
 
                         $dataDomain = array(
                             'sdom_env' => $environmentName,
-                            'sdom_scheme' => 'http',
-                            'sdom_domain' => $environments
+                            'sdom_scheme' => $scheme,
+                            'sdom_domain' => $siteDomain
                         );
 
                         $dataSiteLang = $selectedSite['cms_data']['web_lang'];
