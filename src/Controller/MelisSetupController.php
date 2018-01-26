@@ -47,17 +47,24 @@ class MelisSetupController extends AbstractActionController
 
         if($form->isValid()) {
 
-            $container = new \Zend\Session\Container('melismodules');
-            $installerModuleConfigurationSuccess = isset($container['module_configuration']['success']) ?
-                (bool) $container['module_configuration']['success'] : false;
+            $container = new \Zend\Session\Container('melis_modules_configuration_status');
+            $hasErrors = false;
+
+            foreach($container->getArrayCopy() as $module) {
+                if(!$module)
+                    $hasErrors = true;
+            }
 
 
-            $pageIdStart   = $form->get('pids_page_id_start');
-            $pageIdCurrent = $form->get('pids_page_id_current');
-            $pageIdEnd     = $form->get('pids_page_id_end');
-            $tplIdStart    = $form->get('pids_tpl_id_start');
-            $tplIdCurrent  = $form->get('pids_tpl_id_current');
-            $tplIdEnd      = $form->get('pids_tpl_id_end');
+
+            $scheme        = $form->get('sdom_scheme')->getValue();
+            $siteDomain    = $form->get('sdom_domain')->getValue();
+            $pageIdStart   = $form->get('pids_page_id_start')->getValue();
+            $pageIdCurrent = $form->get('pids_page_id_current')->getValue();
+            $pageIdEnd     = $form->get('pids_page_id_end')->getValue();
+            $tplIdStart    = $form->get('pids_tpl_id_start')->getValue();
+            $tplIdCurrent  = $form->get('pids_tpl_id_current')->getValue();
+            $tplIdEnd      = $form->get('pids_tpl_id_end')->getValue();
 
 
             // Getting current Platform
@@ -66,7 +73,7 @@ class MelisSetupController extends AbstractActionController
             $platform        = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
 
             //Save platformData
-            if($installerModuleConfigurationSuccess) {
+            if(false === $hasErrors) {
                 $tablePlatformIds->save(array(
 
                     'pids_page_id_start'    => $pageIdStart,
@@ -96,8 +103,8 @@ class MelisSetupController extends AbstractActionController
 
                         $dataDomain = array(
                             'sdom_env' => $environmentName,
-                            'sdom_scheme' => 'http',
-                            'sdom_domain' => $environments
+                            'sdom_scheme' => $scheme,
+                            'sdom_domain' => $siteDomain
                         );
 
                         $dataSiteLang = $selectedSite['cms_data']['web_lang'];
@@ -128,6 +135,7 @@ class MelisSetupController extends AbstractActionController
 
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
+                $container['module_configuration_status'] = (bool) $success;
             }
 
         }
