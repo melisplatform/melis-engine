@@ -371,7 +371,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
             } // end file_exists
             else {
-                $this->tmpLogs .= 'KO ' . $this->translate('tr_melis_engine_search_create_temp_folder_fail') . PHP_EOL . '<br/>';
+                $this->tmpLogs .= 'KO ' . $translator->translate('tr_melis_engine_search_create_temp_folder_fail') . PHP_EOL . '<br/>';
             }
 
         }
