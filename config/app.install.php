@@ -15,32 +15,34 @@ return array(
                         array(
                             'spec' => array(
                                 'name' => 'sdom_scheme',
-                                'type' => 'text',
+                                'type' => 'Zend\Form\Element\Select',
                                 'options' => array(
                                     'label' => 'tr_meliscms_tool_site_scheme',
-                                    'tooltip' => 'tr_meliscms_tool_site_scheme info',
+                                    'tooltip' => 'tr_meliscms_tool_site_scheme tooltip',
+                                    'value_options' => array(
+                                        'http' => 'http://',
+                                        'https' => 'https://',
+                                    ),
                                 ),
                                 'attributes' => array(
-                                    'id' => 'sdom_scheme',
-                                    'value' => 'http',
-                                    'placeholder' => 'http',
-                                    'class' => 'form-control',
+                                    'id' => 'id_sdom_scheme',
+                                    'value' => '',
+                                    'required' => 'required',
                                 ),
                             ),
                         ),
                         array(
                             'spec' => array(
                                 'name' => 'sdom_domain',
-                                'type' => 'text',
+                                'type' => 'MelisText',
                                 'options' => array(
                                     'label' => 'tr_meliscms_tool_site_domain',
-                                    'tooltip' => 'tr_meliscms_tool_site_domain toolti[',
+                                    'tooltip' => 'tr_meliscms_tool_site_domain tooltip',
                                 ),
                                 'attributes' => array(
-                                    'id' => 'sdom_domain',
-                                    'value' => 'sample.com',
-                                    'placeholder' => 'sample.com',
-                                    'class' => 'form-control',
+                                    'id' => 'id_sdom_domain',
+                                    'value' => '',
+                                    'required' => 'required',
                                 ),
                             ),
                         ),
@@ -140,15 +142,16 @@ return array(
                         ),
                     ), // end elements
                     'input_filter' => array(
-                        'sdom_scheme' => array(
-                            'name'     => 'sdom_scheme',
-                            'required' => true,
+                        'pids_id' => array(
+                            'name'     => 'pids_page_id_start',
+                            'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'NotEmpty',
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_scheme_install_empty',
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -158,15 +161,15 @@ return array(
                                 array('name' => 'StringTrim'),
                             ),
                         ),
-                        'sdom_domain' => array(
-                            'name'     => 'sdom_domain',
+                        'pids_name_select' => array(
+                            'name'     => 'pids_name_select',
                             'required' => true,
                             'validators' => array(
                                 array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_domain_install_sdom_domain_empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -181,10 +184,21 @@ return array(
                             'required' => true,
                             'validators' => array(
                                 array(
-                                    'name' => 'IsInt',
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 11,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_start must be an Integer'
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -192,7 +206,8 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_page_id_start must not be empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+
                                         ),
                                     ),
                                 ),
@@ -207,10 +222,21 @@ return array(
                             'required' => true,
                             'validators' => array(
                                 array(
-                                    'name' => 'IsInt',
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 11,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_current must be an Integer'
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -218,7 +244,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_page_id_current must not be empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -233,10 +259,21 @@ return array(
                             'required' => true,
                             'validators' => array(
                                 array(
-                                    'name' => 'IsInt',
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 11,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_page_id_end must be an Integer'
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -244,7 +281,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_page_id_end must not be empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -259,10 +296,21 @@ return array(
                             'required' => true,
                             'validators' => array(
                                 array(
-                                    'name' => 'IsInt',
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 11,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_tpl_id_start must be an Integer'
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -270,7 +318,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_tpl_id_start must not be empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -285,10 +333,21 @@ return array(
                             'required' => true,
                             'validators' => array(
                                 array(
-                                    'name' => 'IsInt',
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 11,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\I18n\Validator\IsInt::INVALID => 'pids_tpl_id_current must be an Integer'
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -296,7 +355,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_tpl_id_current must not be empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -311,10 +370,21 @@ return array(
                             'required' => true,
                             'validators' => array(
                                 array(
-                                    'name' => 'IsInt',
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 11,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\I18n\Validator\IsInt::NOT_INT => 'pids_tpl_id_end must be an Integer'
+                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Zend\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -322,7 +392,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'pids_tpl_id_end must not be empty',
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -332,7 +402,60 @@ return array(
                                 array('name' => 'StringTrim'),
                             ),
                         ),
-                    ), // end input_filter
+                        'sdom_scheme' => array(
+                            'name'     => 'sdom_scheme',
+                            'required' => true,
+                            'validators' => array(
+                                array(
+                                    'name'    => 'InArray',
+                                    'options' => array(
+                                        'haystack' => array('http', 'https'),
+                                        'messages' => array(
+                                            \Zend\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscms_tool_site_scheme_invalid_selection',
+                                        ),
+                                    )
+                                ),
+                                array(
+                                    'name'    => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_site_scheme_error_empty',
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                            ),
+                        ),
+                        'sdom_domain' => array(
+                            'name'     => 'sdom_domain',
+                            'required' => true,
+                            'validators' => array(
+                                array(
+                                    'name'    => 'StringLength',
+                                    'options' => array(
+                                        'encoding' => 'UTF-8',
+                                        'max'      => 50,
+                                        'messages' => array(
+                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_site_domain_error_long',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'name' => 'NotEmpty',
+                                    'options' => array(
+                                        'messages' => array(
+                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_site_domain_error_empty',
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                    ),
                 ), // end melis_installer_platform_id
             ),
         ),
