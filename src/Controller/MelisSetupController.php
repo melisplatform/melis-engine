@@ -94,6 +94,7 @@ class MelisSetupController extends AbstractActionController
 
                 $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
                 $siteId = 1;
+
                 if($selectedSite)  {
                     if($selectedSite == 'NewSite') {
 
@@ -121,17 +122,8 @@ class MelisSetupController extends AbstractActionController
                     }
                 }
 
-                if($environments) {
-                    foreach($environments as $sitePlatform => $siteDomains) {
-                        foreach($siteDomains as $siteDomain) {
+                $this->saveCmsSiteDomain($scheme, $siteDomain);
 
-                            unset($siteDomain['app_interface_conf']);
-
-                            $siteDomain['sdom_site_id'] = $siteId;
-                            $tableSiteDomain->save($siteDomain);
-                        }
-                    }
-                }
 
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
@@ -168,7 +160,6 @@ class MelisSetupController extends AbstractActionController
     }
     /**
      * Create a form from the configuration
-     * @param $formConfig
      * @return \Zend\Form\ElementInterface
      */
     private function getForm()
@@ -201,5 +192,49 @@ class MelisSetupController extends AbstractActionController
         }
 
         return $errors;
+    }
+
+    private function saveCmsSiteDomain($scheme, $site)
+    {
+        $container = new \Zend\Session\Container('melisinstaller');
+
+        // default platform
+        $environments       = $container['environments'];
+        $defaultEnvironment = $environments['default_environment'];
+        $siteCtr            = 1;
+
+        if($defaultEnvironment) {
+
+            $defaultPlatformData[$siteCtr-1] = array(
+                'sdom_site_id' => $siteCtr,
+                'sdom_env'     => getenv('MELIS_PLATFORM'),
+                'sdom_scheme'  => $scheme,
+                'sdom_domain'  => $site
+            );
+
+            $platforms     = $environments['new'];
+            $platformsData = array();
+
+            if($platforms) {
+                foreach($platforms as $platform) {
+                    $platformsData[] = array(
+                        'sdom_site_id' => $siteCtr,
+                        'sdom_env'     => $platform[0]['sdom_env'],
+                        'sdom_scheme'  => $platform[0]['sdom_scheme'],
+                        'sdom_domain'  => $platform[0]['sdom_domain']
+                    );
+                }
+            }
+
+            $platformsData = array_merge($defaultPlatformData, $platformsData);
+
+            $siteDomainTable = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
+
+            foreach($platformsData as $data) {
+                $siteDomainTable->save($data);
+            }
+
+        }
+
     }
 }
