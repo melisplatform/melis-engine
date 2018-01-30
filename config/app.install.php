@@ -17,8 +17,8 @@ return array(
                                 'name' => 'sdom_scheme',
                                 'type' => 'text',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_sdom_scheme',
-                                    'tooltip' => 'tr_melis_installer_sdom_scheme_info',
+                                    'label' => 'tr_meliscms_tool_site_scheme',
+                                    'tooltip' => 'tr_meliscms_tool_site_scheme info',
                                 ),
                                 'attributes' => array(
                                     'id' => 'sdom_scheme',
@@ -33,8 +33,8 @@ return array(
                                 'name' => 'sdom_domain',
                                 'type' => 'text',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_sdom_domain',
-                                    'tooltip' => 'tr_melis_installer_sdom_domain_info',
+                                    'label' => 'tr_meliscms_tool_site_domain',
+                                    'tooltip' => 'tr_meliscms_tool_site_domain toolti[',
                                 ),
                                 'attributes' => array(
                                     'id' => 'sdom_domain',
@@ -49,8 +49,8 @@ return array(
                                 'name' => 'pids_page_id_start',
                                 'type' => 'MelisText',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_pids_page_id_start',
-                                    'tooltip' => 'tr_melis_installer_pids_page_id_start_info',
+                                    'label' => 'tr_meliscms_tool_platform_pids_page_id_start',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_page_id_start tooltip',
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_page_id_start',
@@ -64,8 +64,8 @@ return array(
                                 'name' => 'pids_page_id_current',
                                 'type' => 'MelisText',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_pids_page_id_current',
-                                    'tooltip' => 'tr_melis_installer_pids_page_id_current_info',
+                                    'label' => 'tr_meliscms_tool_platform_pids_page_id_current',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_page_id_current tooltip',
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_page_id_current',
@@ -81,11 +81,11 @@ return array(
                                 'name' => 'pids_page_id_end',
                                 'type' => 'MelisText',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_pids_page_id_end',
-                                    'tooltip' => 'tr_melis_installer_pids_page_id_end_info',
+                                    'label' => 'tr_meliscms_tool_platform_pids_page_id_end',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_page_id_end tooltip',
                                 ),
                                 'attributes' => array(
-                                    'id' => 'pids_page_id_current',
+                                    'id' => 'pids_page_id_end',
                                     'value' => '1000',
                                     'placeholder' => '1000',
                                     'class' => 'form-control',
@@ -97,8 +97,8 @@ return array(
                                 'name' => 'pids_tpl_id_start',
                                 'type' => 'MelisText',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_pids_tpl_id_start',
-                                    'tooltip' => 'tr_melis_installer_pids_tpl_id_start_info',
+                                    'label' => 'tr_meliscms_tool_platform_pids_tpl_id_start',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_tpl_id_start tooltip',
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_start',
@@ -113,8 +113,8 @@ return array(
                                 'name' => 'pids_tpl_id_current',
                                 'type' => 'MelisText',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_pids_tpl_id_current',
-                                    'tooltip' => 'tr_melis_installer_pids_tpl_id_current_info',
+                                    'label' => 'tr_meliscms_tool_platform_pids_tpl_id_current',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_tpl_id_current tooltip',
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_current',
@@ -128,8 +128,8 @@ return array(
                                 'name' => 'pids_tpl_id_end',
                                 'type' => 'MelisText',
                                 'options' => array(
-                                    'label' => 'tr_melis_installer_pids_tpl_id_end',
-                                    'tooltip' => 'tr_melis_installer_pids_tpl_id_end_info',
+                                    'label' => 'tr_meliscms_tool_platform_pids_tpl_id_end',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_tpl_id_end info',
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_end',
