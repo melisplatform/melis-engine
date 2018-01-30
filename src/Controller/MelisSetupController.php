@@ -212,7 +212,7 @@ class MelisSetupController extends AbstractActionController
                 'sdom_domain'  => $site
             );
 
-            $platforms     = $environments['new'];
+            $platforms     = isset($environments['new']) ? $environments['new'] : null;
             $platformsData = array();
 
             if($platforms) {
