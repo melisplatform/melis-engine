@@ -131,7 +131,7 @@ return array(
                                 'type' => 'MelisText',
                                 'options' => array(
                                     'label' => 'tr_meliscms_tool_platform_pids_tpl_id_end',
-                                    'tooltip' => 'tr_meliscms_tool_platform_pids_tpl_id_end info',
+                                    'tooltip' => 'tr_meliscms_tool_platform_pids_tpl_id_end tooltip',
                                 ),
                                 'attributes' => array(
                                     'id' => 'pids_tpl_id_end',
@@ -152,24 +152,6 @@ return array(
                                         'messages' => array(
                                             \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
                                             \Zend\Validator\Digits::STRING_EMPTY => '',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            'filters'  => array(
-                                array('name' => 'StripTags'),
-                                array('name' => 'StringTrim'),
-                            ),
-                        ),
-                        'pids_name_select' => array(
-                            'name'     => 'pids_name_select',
-                            'required' => true,
-                            'validators' => array(
-                                array(
-                                    'name' => 'NotEmpty',
-                                    'options' => array(
-                                        'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
