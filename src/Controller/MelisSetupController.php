@@ -55,9 +55,12 @@ class MelisSetupController extends AbstractActionController
                     if (!$module)
                         $hasErrors = true;
                 }
+				
+				$request = $this->getRequest();
+				$uri     = $request->getUri();
+				$scheme  = $uri->getScheme();
+				$siteDomain = $uri->getHost();
 
-                $scheme = $form->get('sdom_scheme')->getValue();
-                $siteDomain = $form->get('sdom_domain')->getValue();
                 $pageIdStart = $form->get('pids_page_id_start')->getValue();
                 $pageIdCurrent = $form->get('pids_page_id_current')->getValue();
                 $pageIdEnd = $form->get('pids_page_id_end')->getValue();
