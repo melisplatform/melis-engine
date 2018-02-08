@@ -12,7 +12,7 @@ namespace MelisEngine\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-
+use Zend\Session\Container;
 class MelisSetupController extends AbstractActionController
 {
     public function setupFormAction()
@@ -21,9 +21,14 @@ class MelisSetupController extends AbstractActionController
 
         //startSetup button indicator
         $btnStatus = (bool) $request->getQuery()->get('btnStatus');
+		
+		$form 		= $this->getForm();
+		$container  = new Container('melis_modules_configuration_status');
+		$formData 	= isset($container['formData']) ? (array) $container['formData'] : null;
+		$form->setData($formData);
 
         $view = new ViewModel();
-        $view->form = $this->getForm();
+        $view->form = $form;
         $view->setTerminal(true);
         $view->btnStatus = $btnStatus;
         return $view;
@@ -78,7 +83,7 @@ class MelisSetupController extends AbstractActionController
         if($form->isValid()) {
 
             try {
-                $container = new \Zend\Session\Container('melis_modules_configuration_status');
+                $container = new Container('melis_modules_configuration_status');
                 $hasErrors = false;
 
                 foreach ($container->getArrayCopy() as $module) {
