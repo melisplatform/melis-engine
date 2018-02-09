@@ -15,61 +15,61 @@ use Zend\View\Model\JsonModel;
 use Zend\Session\Container;
 class MelisSetupController extends AbstractActionController
 {
-    public function setupFormAction()
-    {
-        $request = $this->getRequest();
-
-        //startSetup button indicator
-        $btnStatus = (bool) $request->getQuery()->get('btnStatus');
-		
-		$form 		= $this->getForm();
-		$container  = new Container('melis_modules_configuration_status');
-		$formData 	= isset($container['formData']) ? (array) $container['formData'] : null;
-
-        if($formData)
-            $form->setData($formData);
-
-        $view = new ViewModel();
-        $view->setVariable('form' , $form);
-        $view->setTerminal(true);
-        $view->btnStatus = $btnStatus;
-        return $view;
-
-    }
+//    public function setupFormAction()
+//    {
+//        $request = $this->getRequest();
+//
+//        //startSetup button indicator
+//        $btnStatus = (bool) $request->getQuery()->get('btnStatus');
+//
+//		$form 		= $this->getForm();
+//		$container  = new Container('melis_modules_configuration_status');
+//		$formData 	= isset($container['formData']) ? (array) $container['formData'] : null;
+//
+//        if($formData)
+//            $form->setData($formData);
+//
+//        $view = new ViewModel();
+//        $view->setVariable('form' , $form);
+//        $view->setTerminal(true);
+//        $view->btnStatus = $btnStatus;
+//        return $view;
+//
+//    }
 	
-	public function setupValidateDataAction()
-	{
-		$success = 0;
-        $message = 'tr_install_setup_message_ko';
-        $errors  = array();
-		
-		$data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
-		
-		$form = $this->getForm();
-        $form->setData($data);
-		
-		if($form->isValid()) {
-			$success = 1;
-			$message = 'tr_install_setup_message_ok';
-		}
-		else {
-			$errors = $this->formatErrorMessage($form->getMessages());
-		}
-		
-		
-        $response = array(
-            'success' => $success,
-            'message' => $this->getTool()->getTranslation($message),
-            'errors'  => $errors,
-            'form'    => 'melis_installer_platform_data'
-        );
-
-        return new JsonModel($response);
-	}
+//	public function setupValidateDataAction()
+//	{
+//		$success = 1;
+//        $message = 'tr_install_setup_message_ko';
+//        $errors  = array();
+//
+//		$data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
+//
+//		$form = $this->getForm();
+//        $form->setData($data);
+//
+//		if($form->isValid()) {
+//			$success = 1;
+//			$message = 'tr_install_setup_message_ok';
+//		}
+//		else {
+//			$errors = $this->formatErrorMessage($form->getMessages());
+//		}
+//
+//
+//        $response = array(
+//            'success' => $success,
+//            'message' => $this->getTool()->getTranslation($message),
+//            'errors'  => $errors,
+//            'form'    => 'melis_installer_platform_data'
+//        );
+//
+//        return new JsonModel($response);
+//	}
 
     public function setupResultAction()
     {
-        $success = 0;
+        $success = 1;
         $message = 'tr_install_setup_message_ko';
         $title   = 'tr_install_setup_title';
         $errors  = array();
@@ -82,7 +82,7 @@ class MelisSetupController extends AbstractActionController
         //Services
         $tablePlatformIds = $this->getServiceLocator()->get('MelisEngineTablePlatformIds');
 
-        if($form->isValid()) {
+      //  if($form->isValid()) {
 
             try {
                 $container = new Container('melis_modules_configuration_status');
@@ -173,10 +173,10 @@ class MelisSetupController extends AbstractActionController
                 $errors = $e->getMessage();
             }
 
-        }
-        else {
-            $errors = $this->formatErrorMessage($form->getMessages());
-        }
+       // }
+//        else {
+//            $errors = $this->formatErrorMessage($form->getMessages());
+//        }
 
 
         $response = array(
