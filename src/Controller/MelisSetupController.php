@@ -153,7 +153,7 @@ class MelisSetupController extends AbstractActionController
 
                             $siteModule = getenv('MELIS_MODULE');
 
-                            $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, array(), $dataSiteLang, null, $genSiteModule, $siteModule);
+                           // $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, array(), $dataSiteLang, null, $genSiteModule, $siteModule);
 
                             if ($saveSiteResult['success']) {
                                 $siteId = $saveSiteResult['site_id'];
@@ -161,7 +161,7 @@ class MelisSetupController extends AbstractActionController
                         }
                     }
 
-                    $this->saveCmsSiteDomain($scheme, $siteDomain);
+                  //  $this->saveCmsSiteDomain($scheme, $siteDomain);
 
 
                     $success = 1;
