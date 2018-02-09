@@ -25,10 +25,12 @@ class MelisSetupController extends AbstractActionController
 		$form 		= $this->getForm();
 		$container  = new Container('melis_modules_configuration_status');
 		$formData 	= isset($container['formData']) ? (array) $container['formData'] : null;
-		$form->setData($formData);
+
+        if($formData)
+            $form->setData($formData);
 
         $view = new ViewModel();
-        $view->form = $form;
+        $view->setVariable('form' , $form);
         $view->setTerminal(true);
         $view->btnStatus = $btnStatus;
         return $view;
