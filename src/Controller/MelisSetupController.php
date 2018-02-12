@@ -126,6 +126,43 @@ class MelisSetupController extends AbstractActionController
                     $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
                     $tableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
 
+                    $container = new \Zend\Session\Container('melisinstaller');
+                    $container = $container->getArrayCopy();
+                    $cmsSiteSrv = $this->getServiceLocator()->get('MelisCmsSiteService');
+
+                    $selectedSite = isset($container['site_module']['site']) ? $container['site_module']['site'] : null;
+
+                    $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
+                    $siteId = 1;
+
+                    if ($selectedSite) {
+                        if ($selectedSite == 'NewSite') {
+
+                            $dataSite = array(
+                                'site_name' => isset($container['site_module']['website_name']) ? $container['site_module']['website_name'] : null
+                            );
+
+                            $dataDomain = array(
+                                'sdom_env' => $environmentName,
+                                'sdom_scheme' => $scheme,
+                                'sdom_domain' => $siteDomain
+                            );
+
+                            $dataSiteLang = $container['site_module']['language'];
+
+                            $genSiteModule = true;
+
+                            $siteModule = getenv('MELIS_MODULE');
+
+                            $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, array(), $dataSiteLang, null, $genSiteModule, $siteModule);
+
+                            if ($saveSiteResult['success']) {
+                                $siteId = $saveSiteResult['site_id'];
+                            }
+                        }
+                    }
+
+                    $this->saveCmsSiteDomain($scheme, $siteDomain);
 
                     $success = 1;
                     $message = 'tr_install_setup_message_ok';
