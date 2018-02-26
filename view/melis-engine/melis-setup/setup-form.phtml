@@ -1,0 +1,18 @@
+
+<h3>MelisEngine Setup</h3>
+<?php
+
+foreach($form->getElements() as $element => $attributes)  {
+    $el =  $form->get((string) $element);
+    $label=$el->getLabel();
+    $attributes = $el->getAttributes();
+    if($attributes && isset($attributes['text-required'])) {
+        $dataType = $this->translate($attributes['text-required']);
+        $form->get((string) $element)->setLabel($label.' '.$dataType.'');
+    }
+    $value = $el->getValue();
+
+}
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+echo $this->form()->closeTag();

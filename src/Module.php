@@ -15,7 +15,12 @@ use Zend\ModuleManager\ModuleManager;
 use Zend\Stdlib\ArrayUtils;
 
 use MelisEngine\Listener\MelisEngineTreeServiceMicroServiceListener;
+use MelisEngine\Listener\MelisEngineMicroServicePageServiceListener;
 
+/**
+ * Class Module
+ * @package MelisEngine
+ */
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -48,6 +53,7 @@ class Module
         
         // attach Listener here
         $eventManager->attach(new MelisEngineTreeServiceMicroServiceListener());
+        $eventManager->attach(new MelisEngineMicroServicePageServiceListener());
     }
     
     public function init(ModuleManager $mm)
@@ -60,7 +66,8 @@ class Module
     	$configFiles = array(
     			include __DIR__ . '/../config/module.config.php',
     			include __DIR__ . '/../config/diagnostic.config.php',
-    	        include __DIR__ . '/../config/app.microservice.php'
+    	        include __DIR__ . '/../config/app.microservice.php',
+    	        include __DIR__ . '/../config/app.install.php'
     	);
     	
     	foreach ($configFiles as $file) {
@@ -89,6 +96,7 @@ class Module
     	if (!empty($locale)){
     	    $translationType = array(
     	        'interface',
+    	        'install',
     	    );
     	    
     	    $translationList = array();

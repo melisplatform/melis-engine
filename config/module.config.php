@@ -10,6 +10,81 @@
 return array(
     'router' => array(
         'routes' => array(
+            'melis-backoffice' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/melis[/]',
+                ),
+                'child_routes' => array(
+                    'application-MelisEngine' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => 'MelisEngine',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'MelisEngine\Controller',
+                                'controller'    => 'MelisSetup',
+                                'action'        => 'setup-form',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'default' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/[:controller[/:action]]',
+                                    'constraints' => array(
+                                        'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    ),
+                                    'defaults' => array(
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            /*
+             * This route will handle the
+             * alone setup of a module
+             */
+            'setup-melis-engine' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/MelisEngine',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MelisEngine\Controller',
+                        'controller'    => 'MelisSetup',
+                        'action'        => 'setup-form',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+//
+                            ),
+                        ),
+                    ),
+                    'setup' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/setup',
+                            'defaults' => array(
+                                'controller' => 'MelisEngine\Controller\MelisSetup',
+                                'action' => 'setup-form',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ),
     ),
     'translator' => array(
@@ -39,6 +114,7 @@ return array(
 		    'MelisEngineTableStyle' => 'MelisEngine\Model\Tables\MelisCmsStyleTable',
 		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
+            'MelisEngineTableRobot' => 'MelisEngine\Model\Tables\MelisCmsSiteRobotTable',
             
 		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
             'MelisPageService' => 'MelisEngine\Service\MelisPageService',
@@ -69,14 +145,21 @@ return array(
             'MelisEngine\Model\Tables\MelisCmsStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsStyleTableFactory',
             'MelisEngine\Model\Tables\MelisPageStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisPageStyleTableFactory',
             'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
+            'MelisEngine\Model\Tables\MelisCmsSiteRobotTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteRobotTableFactory',
 		),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
         )
     ),
+    'controllers' => array(
+        'invokables' => array(
+            'MelisEngine\Controller\MelisSetup' => 'MelisEngine\Controller\MelisSetupController',
+        ),
+    ),
     'form_elements' => array(
         'factories' => array(
     		'MelisEnginePluginTemplateSelect' => 'MelisEngine\Form\Factory\PluginTemplateSelectFactory',
+    		'MelisEngineSiteSelect'           => 'MelisEngine\Form\Factory\SitesSelectFactory',
         ),
     ),
     'view_manager' => array(
