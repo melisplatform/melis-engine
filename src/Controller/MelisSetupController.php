@@ -159,10 +159,12 @@ class MelisSetupController extends AbstractActionController
                             if ($saveSiteResult['success']) {
                                 $siteId = $saveSiteResult['site_id'];
                             }
+                        }else{
+                            $this->saveCmsSiteDomain($scheme, $siteDomain);
                         }
                     }
 
-                    $this->saveCmsSiteDomain($scheme, $siteDomain);
+
 
                     $success = 1;
                     $message = 'tr_install_setup_message_ok';
