@@ -52,7 +52,7 @@ class MelisTemplateTable extends MelisGenericTable
         return $resultSet;
     }
 
-    public function getData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
+    public function getData($search = '', $siteId = null,  $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
@@ -65,6 +65,9 @@ class MelisTemplateTable extends MelisGenericTable
             }
         }
 
+        if(!empty($siteId) && !is_null($siteId)){
+            $select->where->equalTo("tpl_site_id", $siteId);
+        }
 
         if(!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);

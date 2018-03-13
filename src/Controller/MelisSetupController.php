@@ -12,27 +12,64 @@ namespace MelisEngine\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-
+use Zend\Session\Container;
 class MelisSetupController extends AbstractActionController
 {
-    public function setupFormAction()
-    {
-        $request = $this->getRequest();
-
-        //startSetup button indicator
-        $btnStatus = (bool) $request->getQuery()->get('btnStatus');
-
-        $view = new ViewModel();
-        $view->form = $this->getForm();
-        $view->setTerminal(true);
-        $view->btnStatus = $btnStatus;
-        return $view;
-
-    }
+//    public function setupFormAction()
+//    {
+//        $request = $this->getRequest();
+//
+//        //startSetup button indicator
+//        $btnStatus = (bool) $request->getQuery()->get('btnStatus');
+//
+//		$form 		= $this->getForm();
+//		$container  = new Container('melis_modules_configuration_status');
+//		$formData 	= isset($container['formData']) ? (array) $container['formData'] : null;
+//
+//        if($formData)
+//            $form->setData($formData);
+//
+//        $view = new ViewModel();
+//        $view->setVariable('form' , $form);
+//        $view->setTerminal(true);
+//        $view->btnStatus = $btnStatus;
+//        return $view;
+//
+//    }
+	
+//	public function setupValidateDataAction()
+//	{
+//		$success = 1;
+//        $message = 'tr_install_setup_message_ko';
+//        $errors  = array();
+//
+//		$data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
+//
+//		$form = $this->getForm();
+//        $form->setData($data);
+//
+//		if($form->isValid()) {
+//			$success = 1;
+//			$message = 'tr_install_setup_message_ok';
+//		}
+//		else {
+//			$errors = $this->formatErrorMessage($form->getMessages());
+//		}
+//
+//
+//        $response = array(
+//            'success' => $success,
+//            'message' => $this->getTool()->getTranslation($message),
+//            'errors'  => $errors,
+//            'form'    => 'melis_installer_platform_data'
+//        );
+//
+//        return new JsonModel($response);
+//	}
 
     public function setupResultAction()
     {
-        $success = 0;
+        $success = 1;
         $message = 'tr_install_setup_message_ko';
         $title   = 'tr_install_setup_title';
         $errors  = array();
@@ -45,103 +82,103 @@ class MelisSetupController extends AbstractActionController
         //Services
         $tablePlatformIds = $this->getServiceLocator()->get('MelisEngineTablePlatformIds');
 
-        if($form->isValid()) {
+      //  if($form->isValid()) {
 
-            $container = new \Zend\Session\Container('melis_modules_configuration_status');
-            $hasErrors = false;
+            try {
+                $container = new Container('melis_modules_configuration_status');
+                $hasErrors = false;
 
-            foreach($container->getArrayCopy() as $module) {
-                if(!$module)
-                    $hasErrors = true;
-            }
+                foreach ($container->getArrayCopy() as $module) {
+                    if (!$module)
+                        $hasErrors = true;
+                }
+				
+				$request = $this->getRequest();
+				$uri     = $request->getUri();
+				$scheme  = $uri->getScheme();
+				$siteDomain = $uri->getHost();
+
+                $pageIdStart = $form->get('pids_page_id_start')->getValue();
+                $pageIdCurrent = $form->get('pids_page_id_current')->getValue();
+                $pageIdEnd = $form->get('pids_page_id_end')->getValue();
+                $tplIdStart = $form->get('pids_tpl_id_start')->getValue();
+                $tplIdCurrent = $form->get('pids_tpl_id_current')->getValue();
+                $tplIdEnd = $form->get('pids_tpl_id_end')->getValue();
 
 
+                // Getting current Platform
+                $environmentName = getenv('MELIS_PLATFORM');
+                $tablePlatform = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+                $platform = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
 
-            $scheme        = $form->get('sdom_scheme')->getValue();
-            $siteDomain    = $form->get('sdom_domain')->getValue();
-            $pageIdStart   = $form->get('pids_page_id_start')->getValue();
-            $pageIdCurrent = $form->get('pids_page_id_current')->getValue();
-            $pageIdEnd     = $form->get('pids_page_id_end')->getValue();
-            $tplIdStart    = $form->get('pids_tpl_id_start')->getValue();
-            $tplIdCurrent  = $form->get('pids_tpl_id_current')->getValue();
-            $tplIdEnd      = $form->get('pids_tpl_id_end')->getValue();
+                //Save platformData
+                if (false === $hasErrors) {
+                    $tablePlatformIds->save(array(
 
+                        'pids_page_id_start' => $pageIdStart,
+                        'pids_page_id_current' => $pageIdCurrent,
+                        'pids_page_id_end' => $pageIdEnd,
+                        'pids_tpl_id_start' => $tplIdStart,
+                        'pids_tpl_id_current' => $tplIdCurrent,
+                        'pids_tpl_id_end' => $tplIdEnd
+                    ));
 
-            // Getting current Platform
-            $environmentName = getenv('MELIS_PLATFORM');
-            $tablePlatform   = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-            $platform        = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
+                    $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
+                    $tableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
 
-            //Save platformData
-            if(false === $hasErrors) {
-                $tablePlatformIds->save(array(
+                    $container = new \Zend\Session\Container('melisinstaller');
+                    $container = $container->getArrayCopy();
+                    $cmsSiteSrv = $this->getServiceLocator()->get('MelisCmsSiteService');
 
-                    'pids_page_id_start'    => $pageIdStart,
-                    'pids_page_id_current'  => $pageIdCurrent,
-                    'pids_page_id_end'      => $pageIdEnd,
-                    'pids_tpl_id_start'     => $tplIdStart,
-                    'pids_tpl_id_current'   => $tplIdCurrent,
-                    'pids_tpl_id_end'       => $tplIdEnd
-                ));
+                    $selectedSite = isset($container['site_module']['site']) ? $container['site_module']['site'] : null;
 
-                $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
-                $tableSite       = $this->getServiceLocator()->get('MelisEngineTableSite');
+                    $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
+                    $siteId = 1;
 
-                $cmsSiteSrv = $this->getServiceLocator()->get('MelisCmsSiteService');
+                    if ($selectedSite) {
+                        if ($selectedSite == 'NewSite') {
 
-                $container = new \Zend\Session\Container('melisinstaller');
-                $selectedSite = isset($container['site_module']['site']) ? $container['site_module']['site'] : null;
+                            $dataSite = array(
+                                'site_name' => isset($container['site_module']['website_name']) ? $container['site_module']['website_name'] : null
+                            );
 
-                $environments = isset($container['environments']['new']) ? $container['environments']['new'] : null;
-                $siteId = 1;
-                if($selectedSite)  {
-                    if($selectedSite == 'NewSite') {
+                            $dataDomain = array(
+                                'sdom_env' => $environmentName,
+                                'sdom_scheme' => $scheme,
+                                'sdom_domain' => $siteDomain
+                            );
 
-                        $dataSite = array(
-                            'site_name' => $selectedSite['cms_data']['web_form']['website_name']
-                        );
+                            $dataSiteLang = $container['site_module']['language'];
 
-                        $dataDomain = array(
-                            'sdom_env' => $environmentName,
-                            'sdom_scheme' => $scheme,
-                            'sdom_domain' => $siteDomain
-                        );
+                            $genSiteModule = true;
 
-                        $dataSiteLang = $selectedSite['cms_data']['web_lang'];
+                            $siteModule = getenv('MELIS_MODULE');
 
-                        $genSiteModule = true;
+                            $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, array(), $dataSiteLang, null, $genSiteModule, $siteModule);
 
-                        $siteModule = getenv('MELIS_MODULE');
-
-                        $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, array(), $dataSiteLang, null, $genSiteModule, $siteModule);
-
-                        if ($saveSiteResult['success']){
-                            $siteId = $saveSiteResult['site_id'];
+                            if ($saveSiteResult['success']) {
+                                $siteId = $saveSiteResult['site_id'];
+                            }
+                        }else{
+                            $this->saveCmsSiteDomain($scheme, $siteDomain);
                         }
                     }
+
+
+
+                    $success = 1;
+                    $message = 'tr_install_setup_message_ok';
+                    $container['module_configuration_status'] = (bool)$success;
                 }
-
-                if($environments) {
-                    foreach($environments as $sitePlatform => $siteDomains) {
-                        foreach($siteDomains as $siteDomain) {
-
-                            unset($siteDomain['app_interface_conf']);
-
-                            $siteDomain['sdom_site_id'] = $siteId;
-                            $tableSiteDomain->save($siteDomain);
-                        }
-                    }
-                }
-
-                $success = 1;
-                $message = 'tr_install_setup_message_ok';
-                $container['module_configuration_status'] = (bool) $success;
+            }
+            catch(\Exception $e) {
+                $errors = $e->getMessage();
             }
 
-        }
-        else {
-            $errors = $this->formatErrorMessage($form->getMessages());
-        }
+       // }
+//        else {
+//            $errors = $this->formatErrorMessage($form->getMessages());
+//        }
 
 
         $response = array(
@@ -168,7 +205,6 @@ class MelisSetupController extends AbstractActionController
     }
     /**
      * Create a form from the configuration
-     * @param $formConfig
      * @return \Zend\Form\ElementInterface
      */
     private function getForm()
@@ -201,5 +237,49 @@ class MelisSetupController extends AbstractActionController
         }
 
         return $errors;
+    }
+
+    private function saveCmsSiteDomain($scheme, $site)
+    {
+        $container = new \Zend\Session\Container('melisinstaller');
+
+        // default platform
+        $environments       = $container['environments'];
+        $defaultEnvironment = $environments['default_environment'];
+        $siteCtr            = 1;
+
+        if($defaultEnvironment) {
+
+            $defaultPlatformData[$siteCtr-1] = array(
+                'sdom_site_id' => $siteCtr,
+                'sdom_env'     => getenv('MELIS_PLATFORM'),
+                'sdom_scheme'  => $scheme,
+                'sdom_domain'  => $site
+            );
+
+            $platforms     = isset($environments['new']) ? $environments['new'] : null;
+            $platformsData = array();
+
+            if($platforms) {
+                foreach($platforms as $platform) {
+                    $platformsData[] = array(
+                        'sdom_site_id' => $siteCtr,
+                        'sdom_env'     => $platform[0]['sdom_env'],
+                        'sdom_scheme'  => $platform[0]['sdom_scheme'],
+                        'sdom_domain'  => $platform[0]['sdom_domain']
+                    );
+                }
+            }
+
+            $platformsData = array_merge($defaultPlatformData, $platformsData);
+
+            $siteDomainTable = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
+
+            foreach($platformsData as $data) {
+                $siteDomainTable->save($data);
+            }
+
+        }
+
     }
 }
