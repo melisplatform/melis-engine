@@ -41,6 +41,24 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		
 		return $datasPage;
 	}
+    public function getAllPages($idPage)
+    {
+        $pages = [];
+        $children = $this->getPageChildren($idPage)->toArray();
+
+        foreach($children as $idx => $child) {
+
+            if($child['tree_father_page_id'] == '-1') {
+                $pages[$idx] = $child;
+            }
+            else {
+                $pages['children'][$idx] = array_merge($child, $this->getAllPages($child['tree_page_id']));
+            }
+
+        }
+
+        return $pages;
+    }
 	
 	/**
 	 * Gets the father page of a specific page
