@@ -242,6 +242,44 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         return $xmlContent;
     }
+    public function createIndexRec($pageId, $index)
+    {
+        $pages = new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceLocator(), $pageId, 'front');
+        $pages = $pages->getChildrenRecursive($pageId);
+
+        if($pages) {
+
+            foreach($pages as $idx => $page) {
+
+                $pageId = (int) $page['idPage'] ?? null;
+                $pageStat = $page['pageStat'];
+
+                if($pageId) {
+                    if($pageStat){
+                        $this->totalCount++;
+
+                        $indexData =  $index->find('page_id:' . $pageId);
+                        $tmpData = array();
+                        foreach($indexData as $data) {
+                            $index->delete($data->id);
+                        }
+
+                        // Add Index
+                        $index->addDocument($this->createDocument(array(
+                            'page_id' => $pageId,
+                            'page_name' => $page['label'],
+                        )));
+                    }
+
+                    if($page['pages']) {
+                        $this->createIndexRec($pageId, $index);
+                    }
+                }
+            }
+        }
+
+        return $this->totalCount;
+    }
 
     /**
      * Create index with a content of a specific page
@@ -252,6 +290,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      */
     protected function createIndexForPage($lucenePath, $pageId, $exclude = array())
     {
+
         $totalPage = 1;
         $this->unreachableCount = 0;
         $pagePub = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
@@ -275,61 +314,13 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                 $index = Lucene::create($lucenePath.'/generated');
                 $doc   = new Document();
 
-                // create index for the provided page id
+                //create index for the provided page id
                 $index->addDocument($this->createDocument(array(
                     'page_id' => $pageData->page_id,
                     'page_name' => $pageData->page_name,
                 )));
 
-                // for the page id child pages
-                foreach($pages as $page) {
-
-                    // this would prevent on creating a duplicate index entry for the specific index
-                    if(!in_array($page['idPage'], $exclude)) {
-                        $indexData =  $index->find('page_id:' . $page['idPage']);
-                        $tmpData = array();
-                        foreach($indexData as $data) {
-                            $index->delete($data->id);
-                        }
-
-                        // Add Index
-                        $index->addDocument($this->createDocument(array(
-                            'page_id' => $page['idPage'],
-                            'page_name' => $page['label'],
-                        )));
-
-                        // add child page index
-                        if(isset($page['pages']) && !empty($page['pages'])) {
-
-                            foreach($page['pages'] as $childPage) {
-                                if(!in_array($childPage['idPage'], $exclude)) {
-                                    $index->addDocument($this->createDocument(array(
-                                        'page_id' => $childPage['idPage'],
-                                        'page_name' => $childPage['label'],
-                                    )));
-                                    $totalPage++;
-                                }
-
-                                     // add grand child page index
-                                if(isset($childPage['pages']) && !empty($childPage['pages'])) {
-                                
-                                    foreach($childPage['pages'] as $grandChildPage) {
-                                        if(!in_array($grandChildPage['idPage'], $exclude)) {
-                                            $index->addDocument($this->createDocument(array(
-                                                'page_id' => $grandChildPage['idPage'],
-                                                'page_name' => $grandChildPage['label'],
-                                            )));
-                                            $totalPage++;
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        $totalPage++;
-                    }
-
-                } // end foreach
+                $totalPage = $this->createIndexRec($pageId, $index );
 
                 $index->commit();
                 $difference = ($totalPage - $this->unreachableCount);
