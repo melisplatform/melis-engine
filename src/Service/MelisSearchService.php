@@ -306,7 +306,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         //if there is no page in page published get it in the pagesaved
         if(!$pageData){
-            $pagedata = $pageSave->getEntryById((int) $pageId)->current();
+            $pageData = $pageSave->getEntryById((int) $pageId)->current();
         }
 
         if($pageData) {
