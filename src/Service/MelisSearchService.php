@@ -331,9 +331,12 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                         'page_id' => $pageData->page_id,
                         'page_name' => $pageData->page_name,
                     )));
+                    $totalPage = $this->createIndexRec($pageId, $index,$exclude ) + 1;
+                }else{
+
+                    $totalPage = $this->createIndexRec($pageId, $index , $exclude);
                 }
-                
-                $totalPage = $this->createIndexRec($pageId, $index,$exclude );
+
 
                 $index->commit();
                 $difference = ($totalPage - $this->unreachableCount);
