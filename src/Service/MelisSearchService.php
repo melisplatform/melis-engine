@@ -242,7 +242,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         return $xmlContent;
     }
-    public function createIndexRec($pageId, $index)
+    public function createIndexRec($pageId, $index, $exclude)
     {
         $pages = new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceLocator(), $pageId, 'front');
         $pages = $pages->getChildrenRecursive($pageId);
@@ -254,27 +254,31 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                 $pageId = (int) $page['idPage'] ?? null;
                 $pageStat = $page['pageStat'];
 
-                if($pageId) {
-                    if($pageStat){
-                        $this->totalCount++;
+                if(!in_array($pageId,$exclude)){
 
-                        $indexData =  $index->find('page_id:' . $pageId);
-                        $tmpData = array();
-                        foreach($indexData as $data) {
-                            $index->delete($data->id);
+                    if($pageId) {
+                        if($pageStat){
+                            $this->totalCount++;
+
+                            $indexData =  $index->find('page_id:' . $pageId);
+                            $tmpData = array();
+                            foreach($indexData as $data) {
+                                $index->delete($data->id);
+                            }
+
+                            // Add Index
+                            $index->addDocument($this->createDocument(array(
+                                'page_id' => $pageId,
+                                'page_name' => $page['label'],
+                            )));
                         }
 
-                        // Add Index
-                        $index->addDocument($this->createDocument(array(
-                            'page_id' => $pageId,
-                            'page_name' => $page['label'],
-                        )));
-                    }
-
-                    if($page['pages']) {
-                        $this->createIndexRec($pageId, $index);
+                        if($page['pages']) {
+                            $this->createIndexRec($pageId, $index, $exclude);
+                        }
                     }
                 }
+
             }
         }
 
@@ -294,10 +298,16 @@ class MelisSearchService implements ServiceLocatorAwareInterface
         $totalPage = 1;
         $this->unreachableCount = 0;
         $pagePub = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
+        $pageSave  = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
         $enginePage = $this->getServiceLocator()->get('MelisEngineTree');
         $translator = $this->getServiceLocator()->get('translator');
 
         $pageData = $pagePub->getEntryById((int) $pageId)->current();
+
+        //if there is no page in page published get it in the pagesaved
+        if(!$pageData){
+            $pagedata = $pageSave->getEntryById((int) $pageId)->current();
+        }
 
         if($pageData) {
 
@@ -314,13 +324,16 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                 $index = Lucene::create($lucenePath.'/generated');
                 $doc   = new Document();
 
-                //create index for the provided page id
-                $index->addDocument($this->createDocument(array(
-                    'page_id' => $pageData->page_id,
-                    'page_name' => $pageData->page_name,
-                )));
-
-                $totalPage = $this->createIndexRec($pageId, $index );
+                //Only for published pages
+                if($pageData->page_status){
+                    //create index for the provided page id
+                    $index->addDocument($this->createDocument(array(
+                        'page_id' => $pageData->page_id,
+                        'page_name' => $pageData->page_name,
+                    )));
+                }
+                
+                $totalPage = $this->createIndexRec($pageId, $index,$exclude );
 
                 $index->commit();
                 $difference = ($totalPage - $this->unreachableCount);
