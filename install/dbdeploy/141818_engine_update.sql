@@ -1,0 +1,2 @@
+ALTER TABLE `melis_cms_page_published` ADD `page_search_type` VARCHAR(60) NOT NULL DEFAULT 'tr_meliscms_page_tab_properties_search_type_option1' AFTER `page_last_user_id`;
+ALTER TABLE `melis_cms_page_saved` ADD `page_search_type` VARCHAR(60) NOT NULL DEFAULT 'tr_meliscms_page_tab_properties_search_type_option1' AFTER `page_last_user_id`;
