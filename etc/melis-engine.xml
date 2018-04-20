@@ -1,0 +1,12 @@
+<melis-engine>
+	<package_info>
+		<mp_title>Melis Engine</mp_title>
+		<mp_subtitle>The module that interacts with the page and tree system of MelisCms.</mp_subtitle>
+		<mp_description>
+			MelisEngine is a module that contains all services needed to access the tree and page system of MelisCms.<br />
+			It is used both by MelisFront and MelisCms to render the pages and a lot more.<br />
+		</mp_description>
+		<mp_maintainers>melisplatform</mp_maintainers>
+		<mp_group>Melis Cms</mp_group>
+	</package_info>
+</melis-engine>
