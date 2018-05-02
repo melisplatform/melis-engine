@@ -23,5 +23,8 @@
 
         'tr_melis_engine_sites' => 'Site',
         'tr_melis_engine_sites_select' => 'Select a site',
+
+        //Indexing
+        'tr_melis_engine_search_create_index_no_sub_pages' => 'Impossible de créer l\'index, la page n\'a pas de sous-pages'
 	);
 ?>

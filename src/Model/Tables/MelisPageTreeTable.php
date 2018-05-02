@@ -226,7 +226,6 @@ class MelisPageTreeTable extends MelisGenericTable
 
 	    $sql = $this->tableGateway->getSql();
 	    $raw = $sql->getSqlstringForSqlObject($select);
-// 	    echo '<br>'. $raw;
         $resultSet = $this->tableGateway->selectWith($select);
 
         return $resultSet;

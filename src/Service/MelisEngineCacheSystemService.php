@@ -125,21 +125,14 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	    if ($this->getRenderMode() != 'front' && !$getForce)
 	        return null;
 	    
-	//    $ttl = $this->getTtlByKey($confCache, $cacheKey);
 	    $active = $this->isCacheConfActive($confCache);
 	    if ($active)
 	    {
 	        $cache = $this->getServiceLocator()->get($confCache);
-	    //    $cache->getOptions()->setTtl($ttl);
 
-	    //    $config =  $this->getServiceLocator()->get('config');
-	    //    $cache = StorageFactory::factory($config['caches'][$confCache]);
-	    //    $cache->getOptions()->setTtl($ttl);
-	       
 	        if ($cache->hasItem($cacheKey))
 	        {
 	            $itemValue = $cache->getItem($cacheKey);
-	    //        unset($cache);
 	            return $itemValue;
 	        }
 	    }
@@ -160,17 +153,10 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	    if ($this->getRenderMode() != 'front')
 	        return;
 
-	//    $ttl = $this->getTtlByKey($confCache, $cacheKey);
 	    $active = $this->isCacheConfActive($confCache);
 	    if ($active)
 	    {
 	        $cache = $this->getServiceLocator()->get($confCache);
-	     //   $cache->setOptions(array('ttl' => $ttl));
-	    
-
-	   //     $config =  $this->getServiceLocator()->get('config');
-	   //    $cache = StorageFactory::factory($config['caches'][$confCache]); 
-	        
 	        $cache->setItem($cacheKey, $results);
 	        unset($cache);
 	    }

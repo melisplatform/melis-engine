@@ -2,6 +2,9 @@
 return array(
     'plugins' => array(
         'melis_engine_setup' => array(
+            'conf' => array(
+                'rightsDisplay' => 'none'
+            ),
             'forms' => array(
                 'melis_installer_platform_data' => array(
                     'attributes' => array(
