@@ -95,8 +95,9 @@ return array(
 			'MelisEngine\Service\MelisPageServiceInterface' => 'MelisEngine\Service\MelisPageService',
 			'MelisEngine\Service\MelisTreeServiceInterface' => 'MelisEngine\Service\MelisTreeService',
 		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService',
-		    'MelisEngine\Service\MelisEngineStyleInterface' => 'MelisEngine\Service\MelisEngineStyleService'
-		    
+		    'MelisEngine\Service\MelisEngineStyleInterface' => 'MelisEngine\Service\MelisEngineStyleService',
+		    'MelisEngine\Service\MelisEngineLangInterface' => 'MelisEngine\Service\MelisEngineLangService'
+
 		),
 		'aliases' => array(
 			'MelisEngineTablePlatformIds' => 'MelisEngine\Model\Tables\MelisPlatformIdsTable',
@@ -119,6 +120,7 @@ return array(
 		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
             'MelisPageService' => 'MelisEngine\Service\MelisPageService',
             'MelisTreeService' => 'MelisEngine\Service\MelisTreeService',
+            'MelisEngineLangService' => 'MelisEngine\Service\MelisEngineLangService',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
@@ -128,7 +130,8 @@ return array(
             'MelisEngineSendMail' => 'MelisEngine\Service\Factory\MelisEngineSendMailServiceFactory',
 			'MelisEngineCacheSystem' => 'MelisEngine\Service\Factory\MelisEngineCacheSystemServiceFactory',
 			'MelisEngineStyle' => 'MelisEngine\Service\Factory\MelisEngineStyleServiceFactory',
-            
+			'MelisEngineLang' => 'MelisEngine\Service\Factory\MelisEngineLangServiceFactory',
+
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageTreeTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageTreeTableFactory',
@@ -183,6 +186,20 @@ return array(
     ),
     'caches' => array(
         'engine_page_services' => array( 
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => array(
+                'name'    => 'Memory',
+                'options' => array('ttl' => 0, 'namespace' => 'melisengine'),
+            ),
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => false),
+            ),
+            'ttls' => array(
+                // add a specific ttl for a specific cache key
+                // 'my_cache_key' => 60,
+            )
+        ),
+        'engine_lang_services' => array(
             'active' => true, // activate or deactivate Melis Cache for this conf
             'adapter' => array(
                 'name'    => 'Memory',
