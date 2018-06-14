@@ -89,12 +89,12 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
                 $this->createDir($lucenePath);
 
-                $this->tmpLogs = $this->createIndexForPage($lucenePath, $pageId, $exclude);
+                $this->tmpLogs = $this->createIndexForPages($lucenePath, $pageId, $exclude);
             }
             else {
                 $this->changePermission($lucenePath);
 
-                $this->tmpLogs = $this->createIndexForPage($lucenePath, $pageId, $exclude);
+                $this->tmpLogs = $this->createIndexForPages($lucenePath, $pageId, $exclude);
 
             }
         }
@@ -242,6 +242,79 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         return $xmlContent;
     }
+    public function createIndexRec($pageId, $index, $exclude)
+    {
+
+        //Services
+        $pageService = $this->getServiceLocator()->get('MelisEnginePage');
+
+        //page Search type value
+        $opt1 = 'tr_meliscms_page_tab_properties_search_type_option1';
+        $opt2 = 'tr_meliscms_page_tab_properties_search_type_option2';
+        $opt3 = 'tr_meliscms_page_tab_properties_search_type_option3';
+
+        /*
+         * Get the children of the page
+         */
+
+        $pages = $this->melisFrontNav()->getAllSubpages($pageId);
+        if($pages) {
+
+            foreach($pages as $idx => $page) {
+
+                $pageId   = (int) $page['idPage'] ?? null;
+                $pageStat = $page['pageStat'];
+
+                //Get page search type
+                $pageSearchType = $page['pageSearchType'];
+
+                if(!in_array($pageId,$exclude)){
+
+                    if($pageId) {
+                        //If page is published
+                        if($pageStat){
+
+                            if($pageSearchType == $opt1 || $pageSearchType == $opt2) {
+
+                                $this->totalCount++;
+                                $indexData =  $index->find('page_id:' . $pageId);
+                                $tmpData = array();
+
+                                foreach($indexData as $data) {
+                                    $index->delete($data->id);
+                                }
+
+                                // Add Index
+                                $index->addDocument($this->createDocument(array(
+                                    'page_id' => $pageId,
+                                    'page_name' => $page['label'],
+                                )));
+
+                            }
+
+                            if($pageSearchType == $opt1){
+                                if($page['pages']) {
+                                    $this->createIndexRec($pageId, $index, $exclude);
+                                }
+                            }
+
+                        }
+                        //For unpublished pages
+                        else{
+                            if($pageSearchType == $opt1){
+                                if($page['pages']) {
+                                    $this->createIndexRec($pageId, $index, $exclude);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return $this->totalCount;
+    }
 
     /**
      * Create index with a content of a specific page
@@ -249,87 +322,89 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      * @param string $lucenePath
      * @param int $pageId
      * @param array $exclude
+     * @return status
      */
-    protected function createIndexForPage($lucenePath, $pageId, $exclude = array())
-    {
-        $totalPage = 1;
-        $this->unreachableCount = 0;
-        $pagePub = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
-        $enginePage = $this->getServiceLocator()->get('MelisEngineTree');
-        $translator = $this->getServiceLocator()->get('translator');
 
+    protected function createIndexForPages($lucenePath, $pageId, $exclude = array())
+    {
+        $indexingStatus         = [];
+        $totalPage              = 0;
+        $this->unreachableCount = 0;
+        $pageSearchType         = null;
+        $pageStatus             = null;
+        $searchOpt              = array(
+            'tr_meliscms_page_tab_properties_search_type_option1',
+            'tr_meliscms_page_tab_properties_search_type_option2',
+            'tr_meliscms_page_tab_properties_search_type_option3'
+        );
+
+        //Services
+        $pagePub     = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
+        $pageSaved   = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+        $enginePage  = $this->getServiceLocator()->get('MelisEngineTree');
+        $translator  = $this->getServiceLocator()->get('translator');
+
+        /*
+         * Get data first in page published table
+         */
         $pageData = $pagePub->getEntryById((int) $pageId)->current();
 
-        if($pageData) {
+        //set pageStatus
+        $pageStatus = $pageData->page_status;
 
+
+
+        // if page is in the published table 
+        if($pageData){
+            $tmpData = $pageData;
+            //if pageStatus is offline || 0 
+            if(!$pageStatus){
+                $pageData = $pageSaved->getEntryById((int) $pageId)->current();
+                //Return to original data if no drafted data
+                if(empty($pageData))
+                    $pageData = $tmpData;
+            }
+
+            //set PageSearchType
+            $pageSearchType = $pageData->page_search_type;
+
+            //Start indexing 
             // index and tmp index path
-            $this->tmpLogs .= 'OK ' . $translator->translate('tr_melis_engine_search_create_temp_folder') . PHP_EOL . '<br/>';
+
             $this->createDir($lucenePath.'/generated');
+
             if(file_exists($lucenePath.'/generated')) {
+
                 // make sure to clear it first before adding new indexes
                 $this->clearIndex($lucenePath.'/generated');
-
-                $pages = new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceLocator(), $pageId, 'front');
-                $pages = $pages->getChildrenRecursive($pageId);
 
                 $index = Lucene::create($lucenePath.'/generated');
                 $doc   = new Document();
 
-                // create index for the provided page id
-                $index->addDocument($this->createDocument(array(
-                    'page_id' => $pageData->page_id,
-                    'page_name' => $pageData->page_name,
-                )));
+                //index published page only
+                if($pageStatus){
+                   
+                     //for indexing the page
+                    if($pageSearchType == $searchOpt[0] || $pageSearchType == $searchOpt[1]){
 
-                // for the page id child pages
-                foreach($pages as $page) {
-
-                    // this would prevent on creating a duplicate index entry for the specific index
-                    if(!in_array($page['idPage'], $exclude)) {
-                        $indexData =  $index->find('page_id:' . $page['idPage']);
-                        $tmpData = array();
-                        foreach($indexData as $data) {
-                            $index->delete($data->id);
-                        }
-
-                        // Add Index
+                        //Add the parentPage
                         $index->addDocument($this->createDocument(array(
-                            'page_id' => $page['idPage'],
-                            'page_name' => $page['label'],
+                            'page_id'   => $pageData->page_id,
+                            'page_name' => $pageData->page_name,
                         )));
-
-                        // add child page index
-                        if(isset($page['pages']) && !empty($page['pages'])) {
-
-                            foreach($page['pages'] as $childPage) {
-                                if(!in_array($childPage['idPage'], $exclude)) {
-                                    $index->addDocument($this->createDocument(array(
-                                        'page_id' => $childPage['idPage'],
-                                        'page_name' => $childPage['label'],
-                                    )));
-                                    $totalPage++;
-                                }
-
-                                     // add grand child page index
-                                if(isset($childPage['pages']) && !empty($childPage['pages'])) {
-                                
-                                    foreach($childPage['pages'] as $grandChildPage) {
-                                        if(!in_array($grandChildPage['idPage'], $exclude)) {
-                                            $index->addDocument($this->createDocument(array(
-                                                'page_id' => $grandChildPage['idPage'],
-                                                'page_name' => $grandChildPage['label'],
-                                            )));
-                                            $totalPage++;
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        $totalPage++;
                     }
+                    $totalPage += 1;
+                }
 
-                } // end foreach
+                //For indexing the subpages
+                if($pageSearchType == $searchOpt[0]){
+                    $this->tmpLogs .= 'OK ' . $translator->translate('tr_melis_engine_search_create_temp_folder') . PHP_EOL . '<br/>';
+                    $totalPage += $this->createIndexRec($pageId, $index,$exclude);
+                }else{
+                    
+                     $this->tmpLogs .= 'KO ' . sprintf($translator->translate('tr_melis_engine_search_create_index'), $pageId) . $translator->translate('tr_melis_engine_search_create_index_fail_page_not_exists') . PHP_EOL . '<br/>';
+                    return  $this->tmpLogs;
+                }
 
                 $index->commit();
                 $difference = ($totalPage - $this->unreachableCount);
@@ -368,20 +443,20 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                     }
                 }
 
-
-            } // end file_exists
+            }
             else {
                 $this->tmpLogs .= 'KO ' . $translator->translate('tr_melis_engine_search_create_temp_folder_fail') . PHP_EOL . '<br/>';
             }
-
+            
         }
-        else {
+        else{
             $this->tmpLogs .= 'KO ' . sprintf($translator->translate('tr_melis_engine_search_create_index'), $pageId) . $translator->translate('tr_melis_engine_search_create_index_fail_page_not_exists') . PHP_EOL . '<br/>';
         }
 
         return $this->tmpLogs;
     }
 
+    
     /**
      * Returns a document class that will be added in the index
      * @param array $data
@@ -658,6 +733,14 @@ class MelisSearchService implements ServiceLocatorAwareInterface
         }
 
         return $valid;
+    }
+
+    /**
+     * @return \MelisFront\Navigation\MelisFrontNavigation
+     */
+    protected function melisFrontNav()
+    {
+        return new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceLocator(), $pageId, 'front');
     }
 
 

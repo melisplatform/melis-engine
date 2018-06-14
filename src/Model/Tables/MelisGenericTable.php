@@ -171,7 +171,6 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
         $resultSet->buffer();
         $this->_selectedValues = $resultSet;
 
-        //return $resultSet = $this->getSelectedValues();
         return $resultSet;
 
     }

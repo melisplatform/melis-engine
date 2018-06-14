@@ -40,8 +40,6 @@ class MelisEngineTreeServiceMicroServiceListener extends MelisCoreGeneralListene
 
                    $results = $results;
 
-                   // print_r($results);
-                   
                 }
                 else if($module == 'MelisEngine' && $service == 'MelisTreeService' && $method == 'getPageFather') {
                     $results = $results;
