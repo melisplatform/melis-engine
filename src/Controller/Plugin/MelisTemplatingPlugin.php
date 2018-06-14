@@ -708,10 +708,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     public function getFormData()
     {
-        $data     = null;
-        
         // formats the configuration into single array, in order to fill-out the forms with the current pluginFrontConfig value
-        $configData  = function($arr, $data = []) use (&$configData) {
+        $configData  = function($arr, $data, $configData){
             foreach($arr as $key => $items) {
                 if(is_array($items)) {
                     foreach($items as $childKey => $childItems) {
@@ -719,7 +717,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                             $data[$childKey] = $childItems;
                         }
                     }
-                    $configData($items, $data);
+                    $configData($items, $data, $configData);
                 }
                 else {
                     $data[$key] = $items;
@@ -727,9 +725,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             }
             return $data;
         };
-        $data = $configData($this->pluginFrontConfig);
         
-        return $data;
+        return $configData($this->pluginFrontConfig, [], $configData);
     }
 
 
