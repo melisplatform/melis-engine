@@ -29,6 +29,7 @@ class MelisTemplateTable extends MelisGenericTable
     public function getSortedTemplates()
     {
         $select = new Select('melis_cms_template');
+        $select->order('tpl_zf2_website_folder ASC');
         $select->order('tpl_name ASC');
 
         $resultSet = $this->tableGateway->selectWith($select);
