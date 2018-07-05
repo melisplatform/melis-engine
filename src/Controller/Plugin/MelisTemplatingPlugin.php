@@ -754,4 +754,166 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         return $className;
     }
 
+    /**
+     * This method will re-order the form fields
+     *
+     * @param $appConfigForm
+     * @param $formReorderKey
+     * @return array
+     */
+    public function getFormMergedAndOrdered($appConfigForm, $formReorderKey)
+    {
+        $reorderedConfigForm = $this->getOrderFormsConfig($formReorderKey);
+
+        if (!empty($appConfigForm) && !empty($appConfigForm['elements']))
+        {
+            $elements = $appConfigForm['elements'];
+            /*
+             * Reverse order so we can take only the last definition of fields
+             * in case some fields are redefined in other modules
+             */
+            krsort($elements);
+
+            $inputFilters = array();
+            if (!empty($appConfigForm['input_filter']))
+                $inputFilters = $appConfigForm['input_filter'];
+
+            // Reorder of elements
+            $elementsReordered = array();
+
+            // We first reorder elements depending on order defined.
+            if(isset($reorderedConfigForm['elements'])) {
+                foreach ($reorderedConfigForm['elements'] as $orderElement)
+                {
+                    // find the element in original config
+                    foreach ($elements as $keyElement => $element)
+                    {
+                        if ($element['spec']['name'] == $orderElement['spec']['name'])
+                        {
+                            array_push($elementsReordered, $element);
+
+                            // delete all elements with this name, we have the last one already
+                            foreach ($elements as $keyElementtmp => $elementTmp)
+                            {
+                                if ($elementTmp['spec']['name'] == $orderElement['spec']['name'])
+                                    unset($elements[$keyElementtmp]);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Reput elements in good order
+            $elementsFound = array();
+            $oldElementsReordered = array();
+
+            // We add items at the end that are in the config but not present in the custom order
+            // and avoid those present more than once
+            foreach ($elements as $keyElement => $element)
+            {
+                if (!in_array($element['spec']['name'], $elementsFound))
+                {
+                    array_push($oldElementsReordered, $element);
+                    array_push($elementsFound, $element['spec']['name']);
+                }
+                else
+                    continue;
+            }
+
+            krsort($oldElementsReordered);
+
+            $elementsReordered = array_merge($elementsReordered, $oldElementsReordered);
+
+            // Elements are now well merged and ready
+            $appConfigForm['elements'] = $elementsReordered;
+        }
+
+        // Let's merge well input_filters
+        if (!empty($appConfigForm) && !empty($appConfigForm['input_filter']))
+        {
+            $inputFilters = $appConfigForm['input_filter'];
+            $newInputFilters = array();
+
+            foreach ($inputFilters as $keyInputFilter => $inputFilter)
+            {
+                if (!empty($inputFilter['validators']))
+                {
+                    $newValidators = array();
+                    $foundValidators = array();
+                    $validators = $inputFilter['validators'];
+                    krsort($validators);
+
+                    foreach ($validators as $validator)
+                    {
+                        if (empty($foundValidators[$validator['name']]))
+                        {
+                            // Validator not yet added
+                            array_push($newValidators, $validator);
+                            $foundValidators[$validator['name']] = 1;
+                        }
+                    }
+
+                    krsort($newValidators);
+                    $inputFilter['validators'] = $newValidators;
+                }
+
+                if (!empty($inputFilter['filters']))
+                {
+                    $newFilters = array();
+                    $foundFilters = array();
+                    $filters = $inputFilter['filters'];
+                    krsort($filters);
+
+                    foreach ($filters as $filter)
+                    {
+                        if (empty($foundFilters[$filter['name']]))
+                        {
+                            // Validator not yet added
+                            array_push($newFilters, $filter);
+                            $foundFilters[$filter['name']] = 1;
+                        }
+                    }
+
+                    krsort($newFilters);
+                    $inputFilter['filters'] = $newFilters;
+                }
+
+                array_push($newInputFilters, $inputFilter);
+
+            }
+
+            $appConfigForm['input_filter'] = $newInputFilters;
+
+            /*
+             * Reverse order so we can take only the last definition of fields
+             * in case some fields are redefined in other modules
+             */
+            //    krsort($elements);
+        }
+
+
+        return $appConfigForm;
+    }
+
+    /**
+     * Retrieving Order forms from config
+     *
+     * @param array - Form order config from application config
+     * @return array
+     */
+    public function getOrderFormsConfig($keyForm)
+    {
+        $config = $this->getServiceLocator()->get('config');
+        if (!empty($config['forms_ordering']))
+            $array = $config['forms_ordering'];
+        else
+            $array = array();
+
+        if (!empty($array[$keyForm]))
+            return $array[$keyForm];
+        else
+            return array();
+    }
+
 }
