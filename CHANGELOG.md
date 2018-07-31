@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 ### Added  
 
 ### Changed   
-* composer.json and dependencies  
+* updated composer.json and dependencies
+* Melis Cms Style: will only list available style per site
+
 
 ### Removed  
 
