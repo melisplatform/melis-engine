@@ -232,10 +232,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                     {
                         if (!empty($datasSite) && $datasSite->site_main_page_id == $page->page_id)
                             continue;
-            
-                        if (!empty($page->pseo_meta_title))
-                            $namePage = $page->pseo_meta_title;
-                        else
+
                             $namePage = $page->page_name;
     
                         $seoUrl .= $namePage . '/';

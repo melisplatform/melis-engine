@@ -1,0 +1,1 @@
+ALTER TABLE `melis_cms_style` ADD `style_site_id` INT NOT NULL AFTER `style_id`;
