@@ -213,6 +213,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
      */
     public function getPagedData(array $options, $fixedCriteria = null)
     {
+
         $select = $this->tableGateway->getSql()->select();
         $result = $this->tableGateway->select();
 
@@ -285,7 +286,6 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
         $raw = $sql->getSqlstringForSqlObject($select);
 
         return $resultSet;
-
     }
 
 
