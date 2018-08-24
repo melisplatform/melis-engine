@@ -209,10 +209,11 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
      *       )
      * @param array $options
      * @param array $fixedCriteria (optional)
-     * @return array
+     * @return \Zend\Db\ResultSet\ResultSetInterface
      */
     public function getPagedData(array $options, $fixedCriteria = null)
     {
+
         $select = $this->tableGateway->getSql()->select();
         $result = $this->tableGateway->select();
 
@@ -226,6 +227,8 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
         $limit = (int) $options['limit'] === -1 ? $this->getTotalData() : (int) $options['limit'];
 
         $columns = $options['columns'];
+
+        $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_style.style_site_id', $select::SQL_STAR, $select::JOIN_LEFT);
 
         // check if there's an extra variable that should be included in the query
         $dateFilter = $options['date_filter'];
@@ -243,26 +246,20 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
             $p = new PredicateSet();
             $filters = array();
             $likes = array();
-            foreach($columns as $colKeys)
-            {
+            foreach($columns as $colKeys) {
                 $likes[] = new Like($colKeys, '%'.$whereValue.'%');
             }
 
-            if(!empty($dateFilterSql))
-            {
+            if(!empty($dateFilterSql)) {
                 $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Zend\Db\Sql\Predicate\Expression($dateFilterSql));
             }
-            else
-            {
+            else {
                 $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
             }
             $fixedWhere = array(new PredicateSet(array(new Operator('', '=', ''))));
-            if(is_null($fixedCriteria))
-            {
+            if(is_null($fixedCriteria)) {
                 $select->where($filters);
-            }
-            else
-            {
+            } else {
                 $select->where(array(
                     $fixedWhere,
                     $filters,
@@ -276,10 +273,8 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
         if(!empty($order))
             $select->order($order . ' ' . $orderDir);
 
-
         $getCount = $this->tableGateway->selectWith($select);
         $this->setCurrentDataCount((int) $getCount->count());
-
 
         // this is used in paginations
         $select->limit($limit);
@@ -291,7 +286,6 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
         $raw = $sql->getSqlstringForSqlObject($select);
 
         return $resultSet;
-
     }
 
 
