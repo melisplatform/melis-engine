@@ -148,9 +148,9 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 * @param mixed $results
 	 * @return void
 	 */
-	public function setCacheByKey($cacheKey, $confCache, $results)
+	public function setCacheByKey($cacheKey, $confCache, $results, $getForce = false)
 	{
-	    if ($this->getRenderMode() != 'front')
+	    if ($this->getRenderMode() != 'front' && !$getForce)
 	        return;
 
 	    $active = $this->isCacheConfActive($confCache);
