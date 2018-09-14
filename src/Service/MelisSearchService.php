@@ -23,6 +23,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     public $serviceLocator;
     protected $tmpLogs;
     protected $unreachableCount = 0;
+    protected $totalCount;
     /**
      * Output encoding
      */
@@ -203,7 +204,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     protected function setSearchResultsAsXml($searchValue, $searchResults)
     {
         $pagePublishTable = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
-
+        $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+        $cmsLangTbl  = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
         $xmlContent = '<?xml version="1.0" encoding="UTF-8"?>';
         $xmlContent.= '<document type="MelisSearchResults" author="MelisTechnology" version="2.0">';
         $xmlContent.= '<searchQuery>'.$searchValue.'</searchQuery>';
@@ -215,6 +217,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
         foreach($searchResults as $result) {
 
             $pageData = $pagePublishTable->getEntryById($result->page_id)->current();
+            $pageLangId = $pageLangTbl->getEntryByField('plang_page_id',(int) $result->page_id )->current();
+            $pageLangId = $pageLangId->plang_lang_id;
+            $pageLangLocale = $cmsLangTbl->getEntryById($pageLangId)->current();
+            $pageLangLocale = $pageLangLocale->lang_cms_locale;
 
             if($pageData) {
                 $lastEditedDate = $pageData->page_edit_date;
@@ -229,6 +235,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
             $xmlContent .= '    <url>'        . $result->url        .'</url>';
             $xmlContent .= '    <pageId>'     . $result->page_id    .'</pageId>';
             $xmlContent .= '    <pageName>'   . $result->page_name  .'</pageName>';
+            $xmlContent .= '    <pageLangId>'   . $pageLangId  .'</pageLangId>';
+            $xmlContent .= '    <pageLangLocale>'   . $pageLangLocale  .'</pageLangLocale>';
             $xmlContent .= '    <lastPageEdit>' . $lastEditedDate   .'</lastPageEdit>';
             $xmlContent .= '    <description>' .  $description  .'</description>';
             $xmlContent .= '</result>';
@@ -257,7 +265,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
          * Get the children of the page
          */
 
-        $pages = $this->melisFrontNav()->getAllSubpages($pageId);
+        $pages = $this->melisFrontNav($pageId)->getAllSubpages($pageId);
         if($pages) {
 
             foreach($pages as $idx => $page) {
@@ -293,7 +301,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                             }
 
                             if($pageSearchType == $opt1){
-                                if($page['pages']) {
+                                $pages = $page['pages']?? null;
+                                if(!empty($pages)) {
                                     $this->createIndexRec($pageId, $index, $exclude);
                                 }
                             }
@@ -302,7 +311,8 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                         //For unpublished pages
                         else{
                             if($pageSearchType == $opt1){
-                                if($page['pages']) {
+                                $pages = $page['pages']?? null;
+                                if(!empty($pages)) {
                                     $this->createIndexRec($pageId, $index, $exclude);
                                 }
                             }
@@ -473,6 +483,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
             $uri = $enginePage->getPageLink($data['page_id'], true);
             $pattern = '/(http|https)\:\/\/(www\.)?[a-zA-Z0-9-_.]+(\.([a-z.])?)*/';
             $domain = $this->getCurrentDomain();
+            if($domain === '/'){
+             echo  getenv('MELIS_PLATFORM') . " configuration is incorrect or does not exists in db";
+             die;
+           }
             if(!preg_match($pattern, $uri)) {
                 $uri = $domain . $uri;
             }
@@ -738,7 +752,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     /**
      * @return \MelisFront\Navigation\MelisFrontNavigation
      */
-    protected function melisFrontNav()
+    protected function melisFrontNav($pageId)
     {
         return new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceLocator(), $pageId, 'front');
     }
