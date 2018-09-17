@@ -624,6 +624,20 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         else {
             
             $model = new ViewModel();
+            
+            $siteModule = getenv('MELIS_MODULE');
+            $container = new Container('melisplugins');
+            $config = $this->getServiceLocator()->get('config');
+            
+            $model->pluginsLangId = $container['melis-plugins-lang-id'];
+            $model->pluginsLangLocale = $container['melis-plugins-lang-locale'];
+
+            if (!empty($config['site'][$siteModule]['language']['language_id'])) 
+                $model->siteLangId = $config['site'][$siteModule]['language']['language_id'];
+
+            if (!empty($config['site'][$siteModule]['language']['language_locale'])) 
+                $model->siteLangLocale = $config['site'][$siteModule]['language']['language_locale'];
+
             // Send event before creating the view
             $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
             
