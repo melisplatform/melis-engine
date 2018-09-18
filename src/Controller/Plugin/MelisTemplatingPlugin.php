@@ -311,8 +311,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $datasPageTree = $datasPageTree['actualDatasPageTree'];
             
 
-        if (!$valueSetted)
-        {
+        if (!$valueSetted) {
             $xmlPage = $datasPageTree['page_content'];
             $xml = simplexml_load_string($xmlPage);
             
@@ -337,8 +336,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     protected function getPluginWidths()
     {
         $xml = simplexml_load_string($this->pluginXmlDbValue);
-        if ($xml)
-        {
+        if ($xml) {
             if(!empty($xml->attributes()->width_desktop))
                 $this->widthDesktop = (string) $xml->attributes()->width_desktop;
 
@@ -358,23 +356,19 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         $parametersResults = array();
         
-        foreach ($parameters as $key => $value)
-        {
+        foreach ($parameters as $key => $value) {
             $tmp = explode('-', $key);
             if (count($tmp) == 1)
                 $parametersResults[$key] = $value;
-            else
-            {
+            else {
                 $children = array();
                 $lastKey = '';
-                for ($i = count($tmp) - 1; $i >= 0; $i--)
-                {
+                for ($i = count($tmp) - 1; $i >= 0; $i--) {
                     $lastKey = $tmp[$i];
                     
                     if ($i == count($tmp) - 1)
                         $children[$tmp[$i]] = $value;
-                    else
-                    {
+                    else {
                         $arrayTmp = $children;
                         $children = array();
                         $children[$tmp[$i]] = $arrayTmp;
@@ -406,18 +400,15 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
          */
         // merging default with parameters config
         
-        if (!empty($this->updatesPluginConfig['template_path']) && !is_array($this->updatesPluginConfig['template_path']))
-        {
+        if (!empty($this->updatesPluginConfig['template_path']) && !is_array($this->updatesPluginConfig['template_path'])) {
             $this->updatesPluginConfig['template_path'] = array($this->updatesPluginConfig['template_path']);
         }
+        
         $this->pluginConfig['front'] = ArrayUtils::merge($this->defaultPluginConfig['front'], $this->updatesPluginConfig);
         
-        if ($generatePluginId)
-        {
+        if ($generatePluginId) {
             $finalConfig = $this->translateAppConfig($this->pluginConfig['front']);
-        }
-        else
-        {
+        } else {
             $request = $this->getServiceLocator()->get('request');
             
             // merge with DB values
@@ -452,18 +443,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $finalConfig['pluginContainerId'] = $this->pluginContainerId;
         
         // Getting the final config for templatePath
-        if (is_array($finalConfig['template_path']))
-        {
+        if (is_array($finalConfig['template_path'])) {
             $this->fullTemplateList = $finalConfig['template_path'];
             $finalConfig['template_path'] = $finalConfig['template_path'][count($finalConfig['template_path']) - 1];
-        }
-        else
-            $this->fullTemplateList = array($finalConfig['template_path']);
+        } else $this->fullTemplateList = array($finalConfig['template_path']);
             
         // Generate pluginId if needed
-        if ($generatePluginId)
-        {
-            $newPluginId = time();
+        if ($generatePluginId) {$newPluginId = time();
             if (!empty($finalConfig['id']))
                 $newPluginId = $finalConfig['id'] . '_' . $newPluginId;
                 $finalConfig['id'] = $newPluginId;
@@ -500,46 +486,33 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     public function updateFrontConfig($pluginConfig, $newPluginConfig)
     {
-        if (!empty($newPluginConfig))
-        {
+        if (!empty($newPluginConfig)) {
             $excludeParams = (!empty($pluginConfig['sub_plugins_params'])) ? $pluginConfig['sub_plugins_params'] : array();
             
-            foreach ($pluginConfig As $key => $val)
-            {
-                if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'forms'))))
-                {
+            foreach ($pluginConfig As $key => $val) {
+                if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'forms')))) {
                     /*
                      * Checking if the key is exisitng on the new config
                      */
-                    if (isset($newPluginConfig[$key])) 
-                    {
+                    if (isset($newPluginConfig[$key])) {
                         
-                        if (is_array($val) && is_array($newPluginConfig[$key])) 
-                        {
+                        if (is_array($val) && is_array($newPluginConfig[$key])) {
                             /**
                              * Checking if the value are the same interger array
                              * this will override the current 
                              * 
                              * else the key of the array is a associative
                              */
-                            if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key])))
-                            {
+                            if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key]))) {
                                 $pluginConfig[$key] = $newPluginConfig[$key];
-                            } 
-                            else 
-                            {
+                            } else {
                                 $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
                             }
-                        } 
-                        else 
-                        {
+                        } else {
                             $pluginConfig[$key] = $newPluginConfig[$key];
                         }
-                    }
-                    else 
-                    {
-                        if (is_array($val))
-                        {
+                    } else {
+                        if (is_array($val)) {
                             $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
                         }
                     }
@@ -553,18 +526,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     
     public function savePluginRessources($keyRessource, $array)
     {
-        if ($this->getServiceLocator()->get('templating_plugins')->hasItem($keyRessource))
-        {
+        if ($this->getServiceLocator()->get('templating_plugins')->hasItem($keyRessource)) {
             $files = $this->getServiceLocator()->get('templating_plugins')->getItem($keyRessource);
-        }
-        else
-        {
+        } else {
             $files = array('js' => array(), 'css' => array());
         }
         
         if (!empty($array['files']) && !empty($array['files']['js']))
-            foreach ($array['files']['js'] as $key => $value)
-            {
+            foreach ($array['files']['js'] as $key => $value) {
                 if ($value != 'disable')
                     $files['js'][$this->pluginName . '_' . $key] = $value;
             }
@@ -582,17 +551,12 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $translator = $this->getServiceLocator()->get('translator');
         
         $final = array();
-        foreach($array as $key => $value)
-        {
-            if (is_array($value))
-            {
+        foreach($array as $key => $value) {
+            if (is_array($value)) {
                 $children = $this->translateAppConfig($value);
                 $final[$key] = $children;
-            }
-            else
-            {
-                if (substr($value, 0, 3) == 'tr_')
-                {
+            } else {
+                if (substr($value, 0, 3) == 'tr_') {
                     $value = $translator->translate($value);
                 }
                 
@@ -625,10 +589,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             
             $model = new ViewModel();
             
-            $siteModule = getenv('MELIS_MODULE');
-            $container = new Container('melisplugins');
-            $config = $this->getServiceLocator()->get('config');
-
             // Site language for site translations
             $melisEnginLangService = $this->getServiceLocator()->get('MelisEngineLang');
             $siteLang = $melisEnginLangService->getSiteLanguage();
@@ -676,7 +636,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                     'pluginContainerId' => $this->pluginContainerId,
                     'fromDragDropZone'  => $this->fromDragDropZone
                 ));
-
             }
 
             return $model['view'];
