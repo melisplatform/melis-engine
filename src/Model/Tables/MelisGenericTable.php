@@ -228,7 +228,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 
         $columns = $options['columns'];
 
-        $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_style.style_site_id', $select::SQL_STAR, $select::JOIN_LEFT);
+        //$select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_style.style_site_id', $select::SQL_STAR, $select::JOIN_LEFT);
 
         // check if there's an extra variable that should be included in the query
         $dateFilter = $options['date_filter'];
