@@ -140,6 +140,18 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         return array();
     }
     
+    public function loadGetDataPluginConfig()
+    {
+        $request = $this->getServiceLocator()->get('request');
+        return $request->getQuery()->toArray();
+    }
+    
+    public function loadPostDataPluginConfig()
+    {
+        $request = $this->getServiceLocator()->get('request');
+        return $request->getPost()->toArray();
+    }
+    
     // Automatically called when saving the final config, should be overriden in plugins
     public function savePluginConfigToXml($parameters)
     {
@@ -241,6 +253,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     protected function getPluginValueFromDb()
     {
+        
         $this->pluginXmlDbValue = '';
         $xmlPage = '';
         $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
@@ -298,8 +311,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $datasPageTree = $datasPageTree['actualDatasPageTree'];
             
 
-        if (!$valueSetted)
-        {
+        if (!$valueSetted) {
             $xmlPage = $datasPageTree['page_content'];
             $xml = simplexml_load_string($xmlPage);
             
@@ -324,8 +336,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     protected function getPluginWidths()
     {
         $xml = simplexml_load_string($this->pluginXmlDbValue);
-        if ($xml)
-        {
+        if ($xml) {
             if(!empty($xml->attributes()->width_desktop))
                 $this->widthDesktop = (string) $xml->attributes()->width_desktop;
 
@@ -345,23 +356,19 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         $parametersResults = array();
         
-        foreach ($parameters as $key => $value)
-        {
+        foreach ($parameters as $key => $value) {
             $tmp = explode('-', $key);
             if (count($tmp) == 1)
                 $parametersResults[$key] = $value;
-            else
-            {
+            else {
                 $children = array();
                 $lastKey = '';
-                for ($i = count($tmp) - 1; $i >= 0; $i--)
-                {
+                for ($i = count($tmp) - 1; $i >= 0; $i--) {
                     $lastKey = $tmp[$i];
                     
                     if ($i == count($tmp) - 1)
                         $children[$tmp[$i]] = $value;
-                    else
-                    {
+                    else {
                         $arrayTmp = $children;
                         $children = array();
                         $children[$tmp[$i]] = $arrayTmp;
@@ -393,36 +400,39 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
          */
         // merging default with parameters config
         
-        if (!empty($this->updatesPluginConfig['template_path']) && !is_array($this->updatesPluginConfig['template_path']))
-        {
+        if (!empty($this->updatesPluginConfig['template_path']) && !is_array($this->updatesPluginConfig['template_path'])) {
             $this->updatesPluginConfig['template_path'] = array($this->updatesPluginConfig['template_path']);
         }
+        
         $this->pluginConfig['front'] = ArrayUtils::merge($this->defaultPluginConfig['front'], $this->updatesPluginConfig);
         
-        if ($generatePluginId)
-        {
+        if ($generatePluginId) {
             $finalConfig = $this->translateAppConfig($this->pluginConfig['front']);
-        }
-        else
-        {
+        } else {
             $request = $this->getServiceLocator()->get('request');
             
             // merge with DB values
             $this->getPluginValueFromDb();
+            
             $this->getPluginWidths();
+            
+            /* $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig()); */
+            $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
 
-            $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
-
-            // merging with GET
+            /* // merging with GET
             $parameters = $request->getQuery()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
-            $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults);
-            
-            // merging with POST
+            $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults); */
+            // Updating config with GET
+            $parametersResults = $this->formatGetPostInArray($this->loadGetDataPluginConfig());
+            $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $parametersResults);
+            /* // merging with POST
             $parameters = $request->getPost()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
-            
-            $finalConfig = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults);
+            $finalConfig = ArrayUtils::merge($this->pluginConfig['front'], $parametersResults); */
+            // Updating config with POST
+            $parametersResults = $this->formatGetPostInArray($this->loadPostDataPluginConfig());
+            $finalConfig = $this->updateFrontConfig($this->pluginConfig['front'], $parametersResults);
             $finalConfig = $this->translateAppConfig($finalConfig);
         }
 
@@ -433,18 +443,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $finalConfig['pluginContainerId'] = $this->pluginContainerId;
         
         // Getting the final config for templatePath
-        if (is_array($finalConfig['template_path']))
-        {
+        if (is_array($finalConfig['template_path'])) {
             $this->fullTemplateList = $finalConfig['template_path'];
             $finalConfig['template_path'] = $finalConfig['template_path'][count($finalConfig['template_path']) - 1];
-        }
-        else
-            $this->fullTemplateList = array($finalConfig['template_path']);
+        } else $this->fullTemplateList = array($finalConfig['template_path']);
             
         // Generate pluginId if needed
-        if ($generatePluginId)
-        {
-            $newPluginId = time();
+        if ($generatePluginId) {$newPluginId = time();
             if (!empty($finalConfig['id']))
                 $newPluginId = $finalConfig['id'] . '_' . $newPluginId;
                 $finalConfig['id'] = $newPluginId;
@@ -468,20 +473,67 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         }
     }
     
+    /**
+     * Updating the current plugin config values to from 
+     * a new config values
+     * 
+     * This will only update keys that only existing on the 
+     * plugin config array
+     * 
+     * @param array $pluginConfig
+     * @param array $newPluginConfig 
+     * @return array
+     */
+    public function updateFrontConfig($pluginConfig, $newPluginConfig)
+    {
+        if (!empty($newPluginConfig)) {
+            $excludeParams = (!empty($pluginConfig['sub_plugins_params'])) ? $pluginConfig['sub_plugins_params'] : array();
+            
+            foreach ($pluginConfig As $key => $val) {
+                if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'forms')))) {
+                    /*
+                     * Checking if the key is exisitng on the new config
+                     */
+                    if (isset($newPluginConfig[$key])) {
+                        
+                        if (is_array($val) && is_array($newPluginConfig[$key])) {
+                            /**
+                             * Checking if the value are the same interger array
+                             * this will override the current 
+                             * 
+                             * else the key of the array is a associative
+                             */
+                            if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key]))) {
+                                $pluginConfig[$key] = $newPluginConfig[$key];
+                            } else {
+                                $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
+                            }
+                        } else {
+                            $pluginConfig[$key] = $newPluginConfig[$key];
+                        }
+                    } else {
+                        if (is_array($val)) {
+                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $pluginConfig;
+    }
+    
+    
     public function savePluginRessources($keyRessource, $array)
     {
-        if ($this->getServiceLocator()->get('templating_plugins')->hasItem($keyRessource))
-        {
+        if ($this->getServiceLocator()->get('templating_plugins')->hasItem($keyRessource)) {
             $files = $this->getServiceLocator()->get('templating_plugins')->getItem($keyRessource);
-        }
-        else
-        {
+        } else {
             $files = array('js' => array(), 'css' => array());
         }
         
         if (!empty($array['files']) && !empty($array['files']['js']))
-            foreach ($array['files']['js'] as $key => $value)
-            {
+            foreach ($array['files']['js'] as $key => $value) {
                 if ($value != 'disable')
                     $files['js'][$this->pluginName . '_' . $key] = $value;
             }
@@ -499,17 +551,12 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $translator = $this->getServiceLocator()->get('translator');
         
         $final = array();
-        foreach($array as $key => $value)
-        {
-            if (is_array($value))
-            {
+        foreach($array as $key => $value) {
+            if (is_array($value)) {
                 $children = $this->translateAppConfig($value);
                 $final[$key] = $children;
-            }
-            else
-            {
-                if (substr($value, 0, 3) == 'tr_')
-                {
+            } else {
+                if (substr($value, 0, 3) == 'tr_') {
                     $value = $translator->translate($value);
                 }
                 
@@ -541,17 +588,29 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         else {
             
             $model = new ViewModel();
+            
+            // Site language for site translations
+            $melisEnginLangService = $this->getServiceLocator()->get('MelisEngineLang');
+            $siteLang = $melisEnginLangService->getSiteLanguage();
+            $model->siteLangId = $siteLang['langId'];
+            $model->siteLangLocale = $siteLang['langLocale'];
+
             // Send event before creating the view
             $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
             
             $variables = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
             
+            $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+            
             foreach ($variables as $keyVar => $valueVar)
+            {
+                // Sub plugin needs to render first before assigning to plugin viewmodel
                 if ($valueVar instanceof ViewModel)
-                    $model->addChild($valueVar, $keyVar);
-                else
-                    $model->$keyVar = $valueVar;
-                        
+                    $valueVar = $viewRender->render($valueVar);
+                    
+                $model->$keyVar = $valueVar;
+            }
+            
             if (!empty($this->pluginFrontConfig['template_path']))
             {
                 $config = $this->getServiceLocator()->get('config');
@@ -566,7 +625,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
                 
-                $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model));
+                $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
 
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
@@ -577,7 +636,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                     'pluginContainerId' => $this->pluginContainerId,
                     'fromDragDropZone'  => $this->fromDragDropZone
                 ));
-
             }
 
             return $model['view'];
@@ -620,10 +678,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     public function getFormData()
     {
-        $data     = null;
-        
         // formats the configuration into single array, in order to fill-out the forms with the current pluginFrontConfig value
-        $configData  = function($arr, $data = []) use (&$configData) {
+        $configData  = function($arr, $data, $configData){
             foreach($arr as $key => $items) {
                 if(is_array($items)) {
                     foreach($items as $childKey => $childItems) {
@@ -631,7 +687,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                             $data[$childKey] = $childItems;
                         }
                     }
-                    $configData($items, $data);
+                    $configData($items, $data, $configData);
                 }
                 else {
                     $data[$key] = $items;
@@ -639,9 +695,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             }
             return $data;
         };
-        $data = $configData($this->pluginFrontConfig);
         
-        return $data;
+        return $configData($this->pluginFrontConfig, [], $configData);
     }
 
 
@@ -667,6 +722,168 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         }
 
         return $className;
+    }
+
+    /**
+     * This method will re-order the form fields
+     *
+     * @param $appConfigForm
+     * @param $formReorderKey
+     * @return array
+     */
+    public function getFormMergedAndOrdered($appConfigForm, $formReorderKey)
+    {
+        $reorderedConfigForm = $this->getOrderFormsConfig($formReorderKey);
+
+        if (!empty($appConfigForm) && !empty($appConfigForm['elements']))
+        {
+            $elements = $appConfigForm['elements'];
+            /*
+             * Reverse order so we can take only the last definition of fields
+             * in case some fields are redefined in other modules
+             */
+            krsort($elements);
+
+            $inputFilters = array();
+            if (!empty($appConfigForm['input_filter']))
+                $inputFilters = $appConfigForm['input_filter'];
+
+            // Reorder of elements
+            $elementsReordered = array();
+
+            // We first reorder elements depending on order defined.
+            if(isset($reorderedConfigForm['elements'])) {
+                foreach ($reorderedConfigForm['elements'] as $orderElement)
+                {
+                    // find the element in original config
+                    foreach ($elements as $keyElement => $element)
+                    {
+                        if ($element['spec']['name'] == $orderElement['spec']['name'])
+                        {
+                            array_push($elementsReordered, $element);
+
+                            // delete all elements with this name, we have the last one already
+                            foreach ($elements as $keyElementtmp => $elementTmp)
+                            {
+                                if ($elementTmp['spec']['name'] == $orderElement['spec']['name'])
+                                    unset($elements[$keyElementtmp]);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Reput elements in good order
+            $elementsFound = array();
+            $oldElementsReordered = array();
+
+            // We add items at the end that are in the config but not present in the custom order
+            // and avoid those present more than once
+            foreach ($elements as $keyElement => $element)
+            {
+                if (!in_array($element['spec']['name'], $elementsFound))
+                {
+                    array_push($oldElementsReordered, $element);
+                    array_push($elementsFound, $element['spec']['name']);
+                }
+                else
+                    continue;
+            }
+
+            krsort($oldElementsReordered);
+
+            $elementsReordered = array_merge($elementsReordered, $oldElementsReordered);
+
+            // Elements are now well merged and ready
+            $appConfigForm['elements'] = $elementsReordered;
+        }
+
+        // Let's merge well input_filters
+        if (!empty($appConfigForm) && !empty($appConfigForm['input_filter']))
+        {
+            $inputFilters = $appConfigForm['input_filter'];
+            $newInputFilters = array();
+
+            foreach ($inputFilters as $keyInputFilter => $inputFilter)
+            {
+                if (!empty($inputFilter['validators']))
+                {
+                    $newValidators = array();
+                    $foundValidators = array();
+                    $validators = $inputFilter['validators'];
+                    krsort($validators);
+
+                    foreach ($validators as $validator)
+                    {
+                        if (empty($foundValidators[$validator['name']]))
+                        {
+                            // Validator not yet added
+                            array_push($newValidators, $validator);
+                            $foundValidators[$validator['name']] = 1;
+                        }
+                    }
+
+                    krsort($newValidators);
+                    $inputFilter['validators'] = $newValidators;
+                }
+
+                if (!empty($inputFilter['filters']))
+                {
+                    $newFilters = array();
+                    $foundFilters = array();
+                    $filters = $inputFilter['filters'];
+                    krsort($filters);
+
+                    foreach ($filters as $filter)
+                    {
+                        if (empty($foundFilters[$filter['name']]))
+                        {
+                            // Validator not yet added
+                            array_push($newFilters, $filter);
+                            $foundFilters[$filter['name']] = 1;
+                        }
+                    }
+
+                    krsort($newFilters);
+                    $inputFilter['filters'] = $newFilters;
+                }
+
+                array_push($newInputFilters, $inputFilter);
+
+            }
+
+            $appConfigForm['input_filter'] = $newInputFilters;
+
+            /*
+             * Reverse order so we can take only the last definition of fields
+             * in case some fields are redefined in other modules
+             */
+            //    krsort($elements);
+        }
+
+
+        return $appConfigForm;
+    }
+
+    /**
+     * Retrieving Order forms from config
+     *
+     * @param array - Form order config from application config
+     * @return array
+     */
+    public function getOrderFormsConfig($keyForm)
+    {
+        $config = $this->getServiceLocator()->get('config');
+        if (!empty($config['forms_ordering']))
+            $array = $config['forms_ordering'];
+        else
+            $array = array();
+
+        if (!empty($array[$keyForm]))
+            return $array[$keyForm];
+        else
+            return array();
     }
 
 }
