@@ -38,7 +38,7 @@ class MelisCmsStyleTable extends MelisGenericTable
 	    return $resultSet;
 	}
 
-    /**
+	 /**
      * @param string $search
      * @param array $searchableColumns
      * @param string $orderBy
@@ -47,12 +47,12 @@ class MelisCmsStyleTable extends MelisGenericTable
      * @param null $limit
      * @return mixed
      */
-    public function getStyleList($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
+    public function getStyleList($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = 0)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
 
-        $select->join('melis_cms_site', 'site_id = style_site_id', array(), $select::JOIN_LEFT);
+        $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_style.style_site_id', array('*'), $select::JOIN_LEFT);
 
         if(!empty($searchableColumns) && !empty($search)) {
             foreach($searchableColumns as $column) {
@@ -64,16 +64,12 @@ class MelisCmsStyleTable extends MelisGenericTable
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
-        $getCount = $this->tableGateway->selectWith($select);
-        // set current data count for pagination
-        $this->setCurrentDataCount((int) $getCount->count());
-
-        if(!empty($limit)) {
-            $select->limit($limit);
+        if(!is_null($limit)) {
+            $select->limit((int) $limit);
         }
 
         if(!empty($start)) {
-            $select->offset($start);
+            $select->offset((int) $start);
         }
 
         $resultSet = $this->tableGateway->selectWith($select);
