@@ -37,4 +37,42 @@ class MelisCmsStyleTable extends MelisGenericTable
 	    
 	    return $resultSet;
 	}
+
+	 /**
+     * @param string $search
+     * @param array $searchableColumns
+     * @param string $orderBy
+     * @param string $orderDirection
+     * @param int $start
+     * @param null $limit
+     * @return mixed
+     */
+    public function getStyleList($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = 0)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(array('*'));
+
+        $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_style.style_site_id', array('*'), $select::JOIN_LEFT);
+
+        if(!empty($searchableColumns) && !empty($search)) {
+            foreach($searchableColumns as $column) {
+                $select->where->or->like($column, '%'.$search.'%');
+            }
+        }
+
+        if(!empty($orderBy)) {
+            $select->order($orderBy . ' ' . $orderDirection);
+        }
+
+        if(!is_null($limit)) {
+            $select->limit((int) $limit);
+        }
+
+        if(!empty($start)) {
+            $select->offset((int) $start);
+        }
+
+        $resultSet = $this->tableGateway->selectWith($select);
+        return $resultSet;
+    }
 }
