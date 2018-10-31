@@ -625,7 +625,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
                 
-                $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+            $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+            
+            // Plugin config datas 
+            $model['view']->pluginConfig = $this->pluginFrontConfig;
 
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
