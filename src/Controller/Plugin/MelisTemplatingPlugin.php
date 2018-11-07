@@ -224,7 +224,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             $this->updatesPluginConfig = $updatesPluginConfig;
             
             $this->getPluginConfigs($generatePluginId);
-            
+
             if ($this->renderMode == 'front' || $this->previewMode)
                 $view = $this->sendViewResult($this->front());
             else
@@ -232,13 +232,22 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 $viewFront = $this->sendViewResult($this->front());
                 
                 $view = $this->back();
-                
+
                 if ($view InstanceOf ViewModel)
                 {
                     $viewRender = $this->getServiceLocator()->get('ViewRenderer');
                     $viewFrontRendered = $viewRender->render($viewFront);
                     
                     $view->viewFront = $viewFrontRendered;
+
+                    foreach ($viewFront->getVariables() as $keyVar => $valueVar)
+                    {
+                        // Sub plugin needs to render first before assigning to plugin viewmodel
+                        if ($valueVar instanceof ViewModel)
+                            $valueVar = $viewRender->render($valueVar);
+
+                        $view->$keyVar = $valueVar;
+                    }
                 }
                 else
                     $view = $viewFront;
@@ -625,7 +634,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
                 
-                $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+            $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+
+            // Plugin config datas
+            $model['view']->pluginConfig = $this->pluginFrontConfig;
 
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
