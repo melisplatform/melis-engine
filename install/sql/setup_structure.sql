@@ -55,6 +55,7 @@ COMMENT = 'Relation between pages and lang';
 CREATE TABLE IF NOT EXISTS `melis_cms_site` (
   `site_id` INT(11) NOT NULL AUTO_INCREMENT,
   `site_name` VARCHAR(45) NOT NULL,
+  `site_label` VARCHAR (100) NOT NULL,
   `site_main_page_id` INT(11) NOT NULL,
   PRIMARY KEY (`site_id`))
 ENGINE = InnoDB

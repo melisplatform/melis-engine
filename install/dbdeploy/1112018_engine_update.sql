@@ -1,0 +1,1 @@
+ALTER TABLE `melis_cms_site` ADD `site_label` VARCHAR(100) NOT NULL AFTER `site_main_page_id`;
