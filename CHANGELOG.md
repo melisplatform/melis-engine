@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]  
 ### Added  
+* Added dbdeploy update sql
 
 ### Changed   
 
