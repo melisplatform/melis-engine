@@ -139,7 +139,10 @@ class MelisSetupController extends AbstractActionController
                         if ($selectedSite == 'NewSite') {
 
                             $dataSite = array(
-                                'site_name' => isset($container['site_module']['website_name']) ? $container['site_module']['website_name'] : null
+                                # Site Module name
+                                'site_name' => isset($container['site_module']['website_module']) ? $container['site_module']['website_module'] : null,
+                                # Site Label
+                                'site_label' => isset($container['site_module']['website_name']) ? $container['site_module']['website_name'] : null,
                             );
 
                             $dataDomain = array(
