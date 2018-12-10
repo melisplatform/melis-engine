@@ -1,0 +1,1 @@
+ALTER TABLE `melis_cms_page_seo` ADD `pseo_canonical` TEXT NULL;
