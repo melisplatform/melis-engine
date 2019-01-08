@@ -206,6 +206,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
         $pagePublishTable = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
         $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
         $cmsLangTbl  = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $pageTreeSvc = $this->getServiceLocator()->get('MelisEngineTree');
         $xmlContent = '<?xml version="1.0" encoding="UTF-8"?>';
         $xmlContent.= '<document type="MelisSearchResults" author="MelisTechnology" version="2.0">';
         $xmlContent.= '<searchQuery>'.$searchValue.'</searchQuery>';
@@ -218,6 +219,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
             $pageData = $pagePublishTable->getEntryById($result->page_id)->current();
             $pageLangId = $pageLangTbl->getEntryByField('plang_page_id',(int) $result->page_id )->current();
+            $pageUrl    = $pageTreeSvc->getPageLink($result->page_id,true);
             $pageLangId = $pageLangId->plang_lang_id;
             $pageLangLocale = $cmsLangTbl->getEntryById($pageLangId)->current();
             $pageLangLocale = $pageLangLocale->lang_cms_locale;
@@ -232,7 +234,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
             $xmlContent .= '<result>';
             $xmlContent .= '    <score>' . round($result->score, 2, PHP_ROUND_HALF_EVEN) . '</score>';
             $xmlContent .= '    <pageStatus>' . $pageStatus         .'</pageStatus>';
-            $xmlContent .= '    <url>'        . $result->url        .'</url>';
+            $xmlContent .= '    <url>'        . $pageUrl        .'</url>';
             $xmlContent .= '    <pageId>'     . $result->page_id    .'</pageId>';
             $xmlContent .= '    <pageName>'   . $result->page_name  .'</pageName>';
             $xmlContent .= '    <pageLangId>'   . $pageLangId  .'</pageLangId>';
@@ -491,7 +493,12 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                 $uri = $domain . $uri;
             }
 
-            $pageContent = $this->getUrlContent($uri);
+            #$pageContent = $this->getUrlContent($uri) -- old ;
+
+            $pageId = $data['page_id'] ?? null;
+            $pageData  = $pageSvc->getDatasPage($pageId);
+            $melisPageTree  = $pageData->getMelisPageTree();
+            $pageContent = $melisPageTree->page_content;
 
             if($pageContent) {
 
@@ -499,7 +506,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
                 $doc->addField(Document\Field::Keyword('url', $uri));
                 $doc->addField(Document\Field::Keyword('page_id', $data['page_id']));
                 $doc->addField(Document\Field::Keyword('page_name', $data['page_name']));
-                $doc->addField(Document\Field::UnStored('contents', $enginePage->cleanString($pageContent), self::ENCODING));
+                $doc->addField(Document\Field::UnStored('contents', $pageContent));
 
 
                 $this->tmpLogs .= 'OK ' . sprintf($translator->translate('tr_melis_engine_search_create_index'), $data['page_id']) . sprintf($translator->translate('tr_melis_engine_search_create_index_success'), $uri) . PHP_EOL . '<br/>';
