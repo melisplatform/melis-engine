@@ -479,7 +479,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     {
         $enginePage = $this->getServiceLocator()->get('MelisEngineTree');
         $translator = $this->getServiceLocator()->get('translator');
-
+        $pageSvc    = $this->getServiceLocator()->get('MelisEnginePage');
         $doc = new Document();
         if(is_array($data)) {
             $uri = $enginePage->getPageLink($data['page_id'], true);
