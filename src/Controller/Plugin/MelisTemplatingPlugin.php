@@ -31,7 +31,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     // the key of the configuration in the app.plugins.php
     protected $configPluginKey;
     protected $pluginName;
-    
+
     // When used in page mode with content saved in DB
     protected $pluginXmlDbKey   = '';
     protected $pluginXmlDbValue = '';
@@ -474,10 +474,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
         // Getting JS/CSS files for auto adding in front and back if necessary
         $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
-        $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
+//        $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
         if ($this->renderMode == 'melis')
         {
-            $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
+//            $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
             $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
         }
     }
@@ -540,19 +540,37 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         } else {
             $files = array('js' => array(), 'css' => array());
         }
-        
+
         if (!empty($array['files']) && !empty($array['files']['js']))
             foreach ($array['files']['js'] as $key => $value) {
                 if ($value != 'disable')
                     $files['js'][$this->pluginName . '_' . $key] = $value;
             }
-        
+
         if (!empty($array['files']) && !empty($array['files']['css']))
             foreach ($array['files']['css'] as $key => $value)
                 if ($value != 'disable')
                     $files['css'][$this->pluginName . '_' . $key] = $value;
-                    
+
+        /**
+         * check if js or css are already in the file list
+         */
+        if(!empty($files)){
+            $tempArray = array();
+            foreach($files as $key => $val){
+                foreach($val as $k => $v) {
+                    if (!in_array($v, $tempArray)) {
+                        array_push($tempArray, $v);
+                    } else {
+                        //remove the file
+                        unset($files[$key][$k]);
+                    }
+                }
+            }
+        }
+
         $this->getServiceLocator()->get('templating_plugins')->setItem($keyRessource, $files);
+
     }
     
     public function translateAppConfig($array)
