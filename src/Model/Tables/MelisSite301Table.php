@@ -24,7 +24,7 @@ class MelisSite301Table extends MelisGenericTable
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
         $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_site_301.s301_site_id',
-            array('site_name'), $select::JOIN_LEFT);
+            array('site_name','site_label'), $select::JOIN_LEFT);
 
         if(!empty($searchableColumns) && !empty($search)) {
             foreach($searchableColumns as $column) {
