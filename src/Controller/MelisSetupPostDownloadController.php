@@ -58,21 +58,22 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     public function validateFormAction()
     {
         $success = false;
-        $message = 'tr_install_setup_message_ko';
+        $message = 'tr_install_setup_message_ok';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
-
-        $form = $this->getForm();
-        $form->setData($data);
-
-        if ($form->isValid()) {
-            $success = true;
-            $message = 'tr_install_setup_message_ok';
-        } else {
-            $errors = $this->formatErrorMessage($form->getMessages());
-        }
-
+//        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
+//
+//        $form = $this->getForm();
+//        $form->setData($data);
+//
+//        if ($form->isValid()) {
+//            $success = true;
+//            $message = 'tr_install_setup_message_ok';
+//        } else {
+//            $errors = $this->formatErrorMessage($form->getMessages());
+//        }
+        // no validation
+        $success = true;
         $response = [
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
