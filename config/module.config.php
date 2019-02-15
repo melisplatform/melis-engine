@@ -157,6 +157,9 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'MelisEngine\Controller\MelisSetup' => 'MelisEngine\Controller\MelisSetupController',
+            //updated installer
+            'MelisEngine\Controller\MelisSetupPostDownload' => 'MelisEngine\Controller\MelisSetupPostDownloadController',
+            'MelisEngine\Controller\Setup\MelisSetupPostUpdate'   => 'MelisEngine\Controller\MelisSetupPostUpdateController',
         ),
     ),
     'form_elements' => array(
