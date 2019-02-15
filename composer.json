@@ -36,7 +36,7 @@
     "ext-json": "*",
     "ext-pdo_mysql": "*",
     "justinrainbow/json-schema": "5.2.1",
-    "melisplatform/melis-core": "^3.03",
+    "melisplatform/melis-core": "^3.0",
     "melisplatform/melis-front": "^3.0",
     "melisplatform/zendsearch": "~2.0.0"
   },
