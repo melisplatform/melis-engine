@@ -317,33 +317,42 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Returns all the data from the selected column
-     * @param String $filter
+     * Returns the data that matches the filters for the
+     * selected column(s), & site (only when provided)
+     *
+     * Site format:
+     *  [
+     *     'columnName' => (string) table's column name for the site,
+     *     'id' => (int|string) site's id
+     *  ]
+     *
+     * @param $filter
      * @param array $columns
-     * @return Array
+     * @param array $site
+     * @return \Zend\Db\ResultSet\ResultSetInterface
      */
-    public function getDataForExport($filter, $columns = array())
+    public function getDataForExport($filter, $columns = [], array $site = [])
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('*'));
+        $select->columns(['*']);
 
-        $w = new Where();
-        $filters = array();
-        $likes = array();
+        if (!empty($filter) && is_string($filter)) {
+            $likes = [];
+            foreach ($columns as $columnKeys) {
+                $likes[] = new Like($columnKeys, '%' . $filter . '%');
+            }
 
-        foreach($columns as $columnKeys)
-        {
-            $likes[] = new Like($columnKeys, '%'.$filter.'%');
+            $filters = [new PredicateSet($likes, PredicateSet::COMBINED_BY_OR)];
+            $select->where($filters);
         }
 
-        $filters = array(new PredicateSet($likes, PredicateSet::COMBINED_BY_OR));
-
-        $select->where($filters);
+        if (!empty($site['id']) && !empty($site['columnName'])) {
+            $select->where->equalTo($site['columnName'], $site['id']);
+        }
 
         $resultSet = $this->tableGateway->selectWith($select);
 
         return $resultSet;
-
     }
 
     /**
