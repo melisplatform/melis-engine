@@ -11,8 +11,8 @@ namespace MelisEngine\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZendSearch\Lucene\Lucene;
 use ZendSearch\Lucene\Document;
+use ZendSearch\Lucene\Lucene;
 
 /**
  * Search service for melis search engine based on ZendSearch
@@ -167,27 +167,26 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Make a search
+     * Supplies data for searches done from indexed pages (lucene)
      *
-     * @param string $moduleName
-     * @param string $searchValue
-     * @param string $returnXml
-     * @param string|optional $_defaultPath
+     * @param $searchValue
+     * @param $moduleName
+     * @param bool $returnXml
+     * @param string $modulePath
+     * @return array|string|\ZendSearch\Lucene\Search\QueryHit
      */
-    public function search($searchValue, $moduleName, $returnXml = false,
-                           $_defaultPath = self::FOLDER_PATH)
+    public function search($searchValue, $moduleName, $returnXml = false, string $modulePath = self::FOLDER_PATH)
     {
-        $results = array();
+        $results = [];
+        $lucenePath = $modulePath . $moduleName . '/' . self::FOLDER_NAME . '/indexes';
 
-        $lucenePath = self::FOLDER_PATH.$moduleName.'/'.self::FOLDER_NAME . '/indexes';
-
-        if(file_exists($lucenePath) && is_readable($lucenePath)) {
-
+        if (file_exists($lucenePath) && is_readable($lucenePath)) {
             $index = Lucene::open($lucenePath);
             $results = $index->find($searchValue);
 
-            if($returnXml)
+            if ($returnXml) {
                 $results = $this->setSearchResultsAsXml($searchValue, $results);
+            }
         }
 
         return $results;
