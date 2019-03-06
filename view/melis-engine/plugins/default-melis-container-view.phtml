@@ -19,11 +19,12 @@
     
 ?>
 <?php
-        
+    $widthDesktop = explode('-',$this->widthDesktop);
+    $widthDesktop = $widthDesktop[3]  . "." . $widthDesktop[4] . "%" ;
 	if ($this->encapsulatedPlugin !== 'false')
 	{
 ?>		
-<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>">
+<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>" style="width:<?=$widthDesktop?>;">
 <?php
 	}
 ?>
@@ -73,7 +74,7 @@
 	    </div>
 	</div>
 
-<?php 
+<?php
     echo $this->viewFront;
 ?>
 <?php
