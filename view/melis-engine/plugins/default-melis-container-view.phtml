@@ -14,7 +14,7 @@
     $pluginId = '';
     if (!empty($this->pluginFrontConfig) && !empty($this->pluginFrontConfig['id']))
         $pluginId = $this->pluginFrontConfig['id'];
-        
+
     $uniqueContainerId =  $this->pageId . '_' . $this->configPluginKey . '_' . $this->pluginName . '_' . $pluginId;
     
 ?>
@@ -24,7 +24,7 @@
 	if ($this->encapsulatedPlugin !== 'false')
 	{
 ?>		
-<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>" style="width:<?=$widthDesktop?>;">
+<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>" >
 <?php
 	}
 ?>
