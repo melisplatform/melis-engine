@@ -23,8 +23,8 @@
     $widthDesktop = $widthDesktop[3]  . "." . $widthDesktop[4] . "%" ;
 	if ($this->encapsulatedPlugin !== 'false')
 	{
-?>		
-<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>" >
+?>
+<div class=" <?php echo "$this->widthDesktop $this->widthTablet $this->widthMobile" ?> melis-ui-outlined" id="<?= $uniqueContainerId; ?>"">
 <?php
 	}
 ?>
