@@ -116,7 +116,8 @@ return array(
 		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
             'MelisEngineTableRobot' => 'MelisEngine\Model\Tables\MelisCmsSiteRobotTable',
-            
+            'MelisEngineTableCmsSiteHome' => 'MelisEngine\Model\Tables\MelisCmsSiteHome',
+
 		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
             'MelisPageService' => 'MelisEngine\Service\MelisPageService',
             'MelisTreeService' => 'MelisEngine\Service\MelisTreeService',
