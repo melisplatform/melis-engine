@@ -14,16 +14,17 @@
     $pluginId = '';
     if (!empty($this->pluginFrontConfig) && !empty($this->pluginFrontConfig['id']))
         $pluginId = $this->pluginFrontConfig['id'];
-        
+
     $uniqueContainerId =  $this->pageId . '_' . $this->configPluginKey . '_' . $this->pluginName . '_' . $pluginId;
     
 ?>
 <?php
-        
+    $widthDesktop = explode('-',$this->widthDesktop);
+    $widthDesktop = $widthDesktop[3]  . "." . $widthDesktop[4] . "%" ;
 	if ($this->encapsulatedPlugin !== 'false')
 	{
-?>		
-<div class="melis-ui-outlined" id="<?= $uniqueContainerId; ?>">
+?>
+<div class=" <?php echo "$this->widthDesktop $this->widthTablet $this->widthMobile" ?> melis-ui-outlined" id="<?= $uniqueContainerId; ?>"">
 <?php
 	}
 ?>
@@ -73,7 +74,7 @@
 	    </div>
 	</div>
 
-<?php 
+<?php
     echo $this->viewFront;
 ?>
 <?php
