@@ -117,6 +117,7 @@ return array(
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
             'MelisEngineTableRobot' => 'MelisEngine\Model\Tables\MelisCmsSiteRobotTable',
             'MelisEngineTableCmsSiteHome' => 'MelisEngine\Model\Tables\MelisCmsSiteHome',
+            'MelisEngineTableCmsSiteLangs' => 'MelisEngine\Model\Tables\MelisCmsSiteLangs',
 
 		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
             'MelisPageService' => 'MelisEngine\Service\MelisPageService',
@@ -151,6 +152,7 @@ return array(
             'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteRobotTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteRobotTableFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteHome' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteHomeTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsSiteLangs' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteLangsTableFactory',
 		),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
