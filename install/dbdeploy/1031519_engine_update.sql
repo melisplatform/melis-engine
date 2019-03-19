@@ -1,8 +1,8 @@
 --
--- Table structure for table `melis_cms_site_langs​`
+-- Table structure for table `melis_cms_site_lang`
 --
 
-CREATE TABLE IF NOT EXISTS `melis_cms_site_langs​` (
+CREATE TABLE IF NOT EXISTS `melis_cms_site_langs` (
   `slang_id` int(11) NOT NULL AUTO_INCREMENT,
   `slang_site_id` int(11) NOT NULL,
   `slang_lang_id` int(11) NOT NULL,
