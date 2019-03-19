@@ -9,7 +9,7 @@
 
 namespace MelisEngine\Model;
 
-class MelisCmsSitelangs
+class MelisCmsSiteLangs
 {
 
 }
