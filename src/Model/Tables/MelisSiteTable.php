@@ -111,8 +111,8 @@ class MelisSiteTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
-        $select->join('melis_cms_site_domain', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',array(), $select::JOIN_LEFT)
-                ->join('melis_cms_site_404', 'melis_cms_site_404.s404_site_id = melis_cms_site.site_id', array(), $select::JOIN_LEFT);
+        $select->join('melis_cms_site_langs', 'melis_cms_site_langs.slang_site_id = melis_cms_site.site_id',array(), $select::JOIN_LEFT)
+                ->join('melis_cms_lang', 'melis_cms_lang.lang_cms_id = melis_cms_site_langs.slang_lang_id', array('site_langs' => new Expression('GROUP_CONCAT(melis_cms_lang.lang_cms_name SEPARATOR \', \')')), $select::JOIN_LEFT);
 
         if(!empty($searchableColumns) && !empty($search)) {
             foreach($searchableColumns as $column) {
