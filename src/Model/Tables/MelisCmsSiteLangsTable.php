@@ -19,12 +19,47 @@ class MelisCmsSiteLangsTable extends MelisGenericTable
 		$this->idField = 'slang_id';
 	}
 
-    public function getSiteLanguagesBySiteId($siteId){
+    public function getSiteLanguagesBySiteId($siteId)
+    {
         $select = $this->tableGateway->getSql()->select();
-        $select->join(array('cmsLang'=>'melis_cms_lang'), 'cmsLang.lang_cms_id = melis_cms_site_langs.slang_lang_id', array('*'), $select::JOIN_LEFT);
+        $select->join(array('cmsLang' => 'melis_cms_lang'), 'cmsLang.lang_cms_id = melis_cms_site_langs.slang_lang_id', array('*'), $select::JOIN_LEFT);
         $select->where->equalTo("melis_cms_site_langs.slang_site_id", $siteId);
 
         $data = $this->tableGateway->selectWith($select);
         return $data;
+    }
+
+	public function getSiteLangs ($siteLangId, $siteId, $langId, $isActive)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(['*']);
+        $select->join(
+            'melis_cms_lang',
+            'melis_cms_site_langs.slang_lang_id = melis_cms_lang.lang_cms_id',
+            [
+                'lang_cms_name',
+                'lang_cms_locale'
+            ]
+        );
+
+        if (!empty($siteLangId) && !is_null($siteLangId)) {
+            $select->where->equalTo('slang_id', $siteLangId);
+        }
+
+        if (!empty($siteId) && !is_null($siteId)) {
+            $select->where->equalTo('slang_site_id', $siteId);
+        }
+
+        if (!empty($langId) && !is_null($langId)) {
+            $select->where->equalTo('slang_lang_id', $siteLangId);
+        }
+
+        if (!empty($isActive) && !is_null($isActive)) {
+            $select->where->equalTo('status', $isActive);
+        }
+
+        $resultSet = $this->tableGateway->selectWith($select);
+
+        return $resultSet;
     }
 }
