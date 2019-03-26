@@ -19,11 +19,12 @@ class MelisCmsSiteLangsTable extends MelisGenericTable
 		$this->idField = 'slang_id';
 	}
 
-    public function getSiteLanguagesBySiteId($siteId)
+    public function getSiteLanguagesBySiteId($siteId, $isActive = true)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->join(array('cmsLang' => 'melis_cms_lang'), 'cmsLang.lang_cms_id = melis_cms_site_langs.slang_lang_id', array('*'), $select::JOIN_LEFT);
         $select->where->equalTo("melis_cms_site_langs.slang_site_id", $siteId);
+        $select->where->equalTo("melis_cms_site_langs.slang_status", $isActive);
 
         $data = $this->tableGateway->selectWith($select);
         return $data;
@@ -55,7 +56,7 @@ class MelisCmsSiteLangsTable extends MelisGenericTable
         }
 
         if (!empty($isActive) && !is_null($isActive)) {
-            $select->where->equalTo('status', $isActive);
+            $select->where->equalTo('slang_status', $isActive);
         }
 
         $resultSet = $this->tableGateway->selectWith($select);
