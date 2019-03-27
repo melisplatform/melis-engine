@@ -224,22 +224,23 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                  * add the lang locale on the url
                  */
                 $siteData = $this->getSiteByPageId($idPage);
-                if($siteData->site_opt_lang_url == 2)
-                {
-                    //get the page language id from cms page lang
-                    $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
-                    $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->toArray();
-                    if(!empty($pageLang[0]))
-                    {
-                        $pageLangId = $pageLang[0]['plang_lang_id'];
-                        //get the cms language locale to add on the url
-                        $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
-                        $langData = $langCmsTbl->getEntryById($pageLangId)->toArray();
-                        if(!empty($langData[0]))
-                        {
-                            $langLocale = explode('_', $langData[0]['lang_cms_locale']);
-                            //add the lang locale to the url
-                            $seoUrl = '/'.$langLocale[0];
+                //make sure that site_opt_lang_url is exit in the site table
+                if(!empty($siteData->site_opt_lang_url)) {
+                    //check if we are going to add lang locale to the url
+                    if ($siteData->site_opt_lang_url == 2) {
+                        //get the page language id from cms page lang
+                        $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+                        $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->toArray();
+                        if (!empty($pageLang[0])) {
+                            $pageLangId = $pageLang[0]['plang_lang_id'];
+                            //get the cms language locale to add on the url
+                            $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+                            $langData = $langCmsTbl->getEntryById($pageLangId)->toArray();
+                            if (!empty($langData[0])) {
+                                $langLocale = explode('_', $langData[0]['lang_cms_locale']);
+                                //add the lang locale to the url
+                                $seoUrl = '/' . $langLocale[0];
+                            }
                         }
                     }
                 }
