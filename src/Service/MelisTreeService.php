@@ -195,7 +195,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                 }
             }
         }
-        
+
         // if nothing found in DB, then let's generate
         if ($link == '')
         {
@@ -213,21 +213,48 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                 if (substr($seoUrl, 0, 1) != '/')
                     $seoUrl = '/' . $seoUrl;
             }
-            
+
             if ($seoUrl == '')
             {
+                /**
+                 * SITE V2 UPDATES
+                 *
+                 * This will check the site_opt_lang_url of the site
+                 * to determine whether the url will be modified to
+                 * add the lang locale on the url
+                 */
+                $siteData = $this->getSiteByPageId($idPage);
+                if($siteData->site_opt_lang_url == 2) {
+                    //get the page language id from cms page lang
+                    $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+                    $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->toArray();
+                    if(!empty($pageLang[0])){
+                        $pageLangId = $pageLang[0]['plang_lang_id'];
+                        //get the cms language locale to add on the url
+                        $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+                        $langData = $langCmsTbl->getEntryById($pageLangId)->toArray();
+                        if(!empty($langData[0])){
+                            $langLocale = explode('_', $langData[0]['lang_cms_locale']);
+                            $seoUrl = '/'.$langLocale[0];
+                        }
+                    }
+                }
+                /**
+                 * END V2 UPDATES
+                 */
+
                 // First let's see if page is the homepage one ( / no id following for url)
                 $datasSite = $this->getSiteByPageId($idPage);
                 if (!empty($datasSite) && $datasSite->site_main_page_id == $idPage)
                 {
-                    $seoUrl = '/';
+                    $seoUrl .= '/';
                 }
                 else
                 {
                     // if not, construct a classic Melis URL /..../..../id/xx
                     $datasPage = $this->getPageBreadcrumb($idPage);
             
-                    $seoUrl = '/';
+                    $seoUrl .= '/';
                     foreach ($datasPage as $page)
                     {
                         if (!empty($datasSite) && $datasSite->site_main_page_id == $page->page_id)
@@ -269,7 +296,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
 		// Save cache key
 		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $link);
-	
+
 		return $link;
 	}
 	
