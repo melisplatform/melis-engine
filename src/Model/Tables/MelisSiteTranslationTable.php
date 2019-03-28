@@ -24,6 +24,15 @@ class MelisSiteTranslationTable extends MelisGenericTable
         $this->idField = 'mst_id';
     }
 
+    /**
+     * Function to get Site Translation by key
+     * language id and site id
+     *
+     * @param $key
+     * @param $langId
+     * @param $siteId
+     * @return mixed
+     */
     public function getSiteTranslation($key, $langId, $siteId)
     {
         $select = $this->tableGateway->getSql()->select();
@@ -37,16 +46,6 @@ class MelisSiteTranslationTable extends MelisGenericTable
             $select->where->equalTo("lang.lang_cms_id", $langId);
         }
         $select->where->equalTo("melis_site_translation.mst_site_id", $siteId);
-
-        $data = $this->tableGateway->selectWith($select);
-        return $data;
-    }
-
-    public function getTranslationAll()
-    {
-        $select = $this->tableGateway->getSql()->select();
-        $select->join(array('mstt'=>'melis_site_translation_text'), 'mstt.mstt_mst_id = melis_site_translation.mst_id');
-        $select->join(array('lang'=>'melis_cms_lang'), 'mstt.mstt_lang_id = lang.lang_cms_id');
 
         $data = $this->tableGateway->selectWith($select);
         return $data;
