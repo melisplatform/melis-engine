@@ -179,7 +179,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
-	        
+
         // Get the already generated link from the DB if possible    
         $link = '';
         $tablePageDefaultUrls = $this->getServiceLocator()->get('MelisEngineTablePageDefaultUrls');
@@ -216,6 +216,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
             if ($seoUrl == '')
             {
+                $datasSite = $this->getSiteByPageId($idPage);
                 /**
                  * SITE V2 UPDATES
                  *
@@ -223,11 +224,10 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                  * to determine whether the url will be modified to
                  * add the lang locale on the url
                  */
-                $siteData = $this->getSiteByPageId($idPage);
                 //make sure that site_opt_lang_url is exit in the site table
-                if(!empty($siteData->site_opt_lang_url)) {
+                if(!empty($datasSite->site_opt_lang_url)) {
                     //check if we are going to add lang locale to the url
-                    if ($siteData->site_opt_lang_url == 2) {
+                    if ($datasSite->site_opt_lang_url == 2) {
                         //get the page language id from cms page lang
                         $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
                         $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->toArray();
@@ -240,6 +240,8 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                                 $langLocale = explode('_', $langData[0]['lang_cms_locale']);
                                 //add the lang locale to the url
                                 $seoUrl = '/' . $langLocale[0];
+                            }else{
+                                $seoUrl = '';
                             }
                         }
                     }
@@ -247,18 +249,16 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                 /**
                  * END V2 UPDATES
                  */
-
                 // First let's see if page is the homepage one ( / no id following for url)
-                $datasSite = $this->getSiteByPageId($idPage);
                 if (!empty($datasSite) && $datasSite->site_main_page_id == $idPage)
                 {
-                    $seoUrl = !empty($seoUrl) ? $seoUrl : '/';
+                    $seoUrl = (!empty($seoUrl)) ? $seoUrl : '/';
                 }
                 else
                 {
                     // if not, construct a classic Melis URL /..../..../id/xx
                     $datasPage = $this->getPageBreadcrumb($idPage);
-            
+
                     $seoUrl .= '/';
                     foreach ($datasPage as $page)
                     {
@@ -274,7 +274,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
             }
 
             $link = $this->cleanLink($seoUrl);
-            
+
             $tablePageDefaultUrls->save(
                 array(
                     'purl_page_id' => $idPage,
@@ -287,18 +287,17 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$router = $this->getServiceLocator()->get('router');
         $request = $this->getServiceLocator()->get('request');
         $routeMatch = $router->match($request);
-        
+
         $idversion = null;
         if (!empty($routeMatch)){
             $idversion = $routeMatch->getParam('idversion');
         }
-            
+
 		if ($absolute || !empty($idversion))
 		{
 			$host = $this->getDomainByPageId($idPage);
 			$link = $host . $link;
 		}
-
 		// Save cache key
 		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $link);
 
