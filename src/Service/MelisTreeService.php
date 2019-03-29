@@ -252,7 +252,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                 $datasSite = $this->getSiteByPageId($idPage);
                 if (!empty($datasSite) && $datasSite->site_main_page_id == $idPage)
                 {
-                    $seoUrl .= '/';
+                    $seoUrl = !empty($seoUrl) ? $seoUrl : '/';
                 }
                 else
                 {
@@ -304,6 +304,109 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
 		return $link;
 	}
+
+    /**
+     * Get the home page url of the
+     * given page id
+     *
+     * @param $idPage
+     * @param $absolute
+     * @return string|string[]|null
+     */
+	public function getHomePageLink($idPage, $absolute)
+    {
+        /**
+         * prepare tables / services
+         */
+        $siteHomeTable = $this->getServiceLocator()->get('MelisEngineTableCmsSiteHome');
+        $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+        /**
+         * Get the site information using the given
+         * page id
+         *
+         * First let's try to get the page information
+         * in the page published table
+         */
+        $siteData = $this->getSiteByPageId($idPage);
+        /**
+         * If $siteData is still empty,
+         * then we get the page information
+         * in the page saved table
+         */
+        if(empty($siteData)) {
+            $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+            $datasPage = $melisPage->getDatasPage($idPage, 'saved');
+            $datasTemplate = $datasPage->getMelisTemplate();
+            if (!empty($datasTemplate) && !empty($datasTemplate->tpl_site_id))
+            {
+                $melisEngineTableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
+                $siteData = $melisEngineTableSite->getSiteById($datasTemplate->tpl_site_id, getenv('MELIS_PLATFORM'));
+                if ($siteData)
+                {
+                    $siteData = $siteData->current();
+                }
+            }
+        }
+
+        $siteId = $siteData->site_id;
+        $siteDefaultMainPage = $siteData->site_main_page_id;
+        /**
+         * get page language
+         */
+        $pageLangId = 0;
+        $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->toArray();
+        if(!empty($pageLang)){
+            $pageLangId = $pageLang[0]['plang_lang_id'];
+        }
+        /**
+         * get site home page data
+         */
+        $siteHomeData = $siteHomeTable->getHomePageBySiteIdAndLangId($siteId, $pageLangId)->toArray();
+        $siteHomePageId = (!empty($siteHomeData)) ? $siteHomeData[0]['shome_page_id'] : $siteDefaultMainPage;
+
+        $link = $this->getPageLink($siteHomePageId, $absolute);
+        return $link;
+    }
+
+    /**
+     * Get the url language version of the page
+     *
+     * @param $idPage
+     * @param $locale
+     * @param $absolute
+     * @return string|string[]|null
+     */
+    public function getPageLinkByLocale($idPage, $locale, $absolute)
+    {
+        $pageLocaleVersionId = '';
+        /**
+         * Get the lang id of the given locale
+         */
+        $langId = '';
+        $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langData = $langCmsTbl->getEntryByField('lang_cms_locale', $locale)->toArray();
+        if(!empty($langData[0])){
+            $langId = $langData[0]['lang_cms_id'];
+        }
+        /**
+         * Get the page id of given locale
+         * to get the url using the page id
+         */
+        $pageTable = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+        $pageRel = $pageTable->getPageRelationshipById($idPage)->toArray();
+        if(!empty($pageRel)){
+            foreach($pageRel as $key => $val){
+                if($val['plang_lang_id'] == $langId){
+                    $pageLocaleVersionId = $val['plang_page_id'];
+                }
+            }
+        }
+        /**
+         * Get the link
+         */
+        $link = $this->getPageLink($pageLocaleVersionId, $absolute);
+        return $link;
+    }
 	
 	/**
 	 * Clean strings from special characters

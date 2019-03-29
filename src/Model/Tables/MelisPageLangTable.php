@@ -45,4 +45,19 @@ class MelisPageLangTable extends MelisGenericTable
 	    $resultSet = $this->tableGateway->selectWith($select);
 	    return $resultSet;
 	}
+
+	public function getPageRelationshipById($pageId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+
+        $subSelect = $this->tableGateway->getSql()->select();
+        $subSelect->columns(array('plang_page_id_initial'));
+        $subSelect->where->equalTo("plang_page_id", $pageId);
+
+        $select->columns(array('*'));
+        $select->where->equalTo('plang_page_id_initial', $subSelect);
+
+        $data = $this->tableGateway->selectWith($select);
+        return $data;
+    }
 }
