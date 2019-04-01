@@ -216,7 +216,6 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
             if ($seoUrl == '')
             {
-                $datasSite = $this->getSiteByPageId($idPage);
                 /**
                  * SITE V2 UPDATES
                  *
@@ -224,32 +223,13 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
                  * to determine whether the url will be modified to
                  * add the lang locale on the url
                  */
-                //make sure that site_opt_lang_url is exit in the site table
-                if(!empty($datasSite->site_opt_lang_url)) {
-                    //check if we are going to add lang locale to the url
-                    if ($datasSite->site_opt_lang_url == 2) {
-                        //get the page language id from cms page lang
-                        $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
-                        $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->toArray();
-                        if (!empty($pageLang[0])) {
-                            $pageLangId = $pageLang[0]['plang_lang_id'];
-                            //get the cms language locale to add on the url
-                            $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
-                            $langData = $langCmsTbl->getEntryById($pageLangId)->toArray();
-                            if (!empty($langData[0])) {
-                                $langLocale = explode('_', $langData[0]['lang_cms_locale']);
-                                //add the lang locale to the url
-                                $seoUrl = '/' . $langLocale[0];
-                            }else{
-                                $seoUrl = '';
-                            }
-                        }
-                    }
-                }
+                $siteLangOpt = $this->getSiteLangUrlOptByPageId($idPage);
+                $seoUrl = $siteLangOpt['siteLangOptVal'];
                 /**
                  * END V2 UPDATES
                  */
                 // First let's see if page is the homepage one ( / no id following for url)
+                $datasSite = $this->getSiteByPageId($idPage);
                 if (!empty($datasSite) && $datasSite->site_main_page_id == $idPage)
                 {
                     $seoUrl = (!empty($seoUrl)) ? $seoUrl : '/';
@@ -275,13 +255,13 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
             $link = $this->cleanLink($seoUrl);
 
-            $tablePageDefaultUrls->save(
-                array(
-                    'purl_page_id' => $idPage,
-                    'purl_page_url' => $link
-                ),
-                $idPage
-            );
+//            $tablePageDefaultUrls->save(
+//                array(
+//                    'purl_page_id' => $idPage,
+//                    'purl_page_url' => $link
+//                ),
+//                $idPage
+//            );
         }
             
 		$router = $this->getServiceLocator()->get('router');
@@ -383,9 +363,9 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
          */
         $langId = '';
         $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
-        $langData = $langCmsTbl->getEntryByField('lang_cms_locale', $locale)->toArray();
-        if(!empty($langData[0])){
-            $langId = $langData[0]['lang_cms_id'];
+        $langData = $langCmsTbl->getEntryByField('lang_cms_locale', $locale)->current();
+        if(!empty($langData)){
+            $langId = $langData->lang_cms_id;
         }
         /**
          * Get the page id of given locale
@@ -405,6 +385,47 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
          */
         $link = $this->getPageLink($pageLocaleVersionId, $absolute);
         return $link;
+    }
+
+    /**
+     * @param $idPage
+     * @return mixed
+     */
+    public function getSiteLangUrlOptByPageId($idPage)
+    {
+        $datasSite = $this->getSiteByPageId($idPage);
+        $siteLangOptVal = '';
+        $result = [
+            'siteLangOpt' => null,
+            'siteId' => null,
+            'siteLangOptVal' => $siteLangOptVal,
+        ];
+        //make sure that site_opt_lang_url is exit in the site table
+        if(!empty($datasSite->site_opt_lang_url)) {
+            $result['siteLangOpt'] = $datasSite->site_opt_lang_url;
+            $result['siteId'] = $datasSite->site_id;
+            //check if we are going to add lang locale to the url
+            if ($datasSite->site_opt_lang_url == 2) {
+                //get the page language id from cms page lang
+                $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+                $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->current();
+                if (!empty($pageLang)) {
+                    $pageLangId = $pageLang->plang_lang_id;
+                    //get the cms language locale to add on the url
+                    $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+                    $langData = $langCmsTbl->getEntryById($pageLangId)->current();
+                    if (!empty($langData)) {
+                        $langLocale = explode('_', $langData->lang_cms_locale);
+                        //add the lang locale to the url
+                        $siteLangOptVal = '/' . $langLocale[0];
+                    }else{
+                        $siteLangOptVal = '';
+                    }
+                }
+            }
+            $result['siteLangOptVal'] = $siteLangOptVal;
+        }
+        return $result;
     }
 	
 	/**
