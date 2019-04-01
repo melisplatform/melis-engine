@@ -255,13 +255,13 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
             $link = $this->cleanLink($seoUrl);
 
-//            $tablePageDefaultUrls->save(
-//                array(
-//                    'purl_page_id' => $idPage,
-//                    'purl_page_url' => $link
-//                ),
-//                $idPage
-//            );
+            $tablePageDefaultUrls->save(
+                array(
+                    'purl_page_id' => $idPage,
+                    'purl_page_url' => $link
+                ),
+                $idPage
+            );
         }
             
 		$router = $this->getServiceLocator()->get('router');
