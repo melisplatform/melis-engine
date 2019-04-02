@@ -118,6 +118,7 @@ return array(
             'MelisEngineTableRobot' => 'MelisEngine\Model\Tables\MelisCmsSiteRobotTable',
             'MelisEngineTableCmsSiteHome' => 'MelisEngine\Model\Tables\MelisCmsSiteHome',
             'MelisEngineTableCmsSiteLangs' => 'MelisEngine\Model\Tables\MelisCmsSiteLangs',
+            'MelisEngineTableCmsSiteConfig' => 'MelisEngine\Model\Tables\MelisCmsSiteConfig',
 
 		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
             'MelisPageService' => 'MelisEngine\Service\MelisPageService',
@@ -156,6 +157,7 @@ return array(
             'MelisEngine\Model\Tables\MelisCmsSiteRobotTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteRobotTableFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteHome' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteHomeTableFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteLangs' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteLangsTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsSiteConfig' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteConfigTableFactory',
 
             'MelisEngine\Model\Tables\MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTableFactory',
             'MelisEngine\Model\Tables\MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTextTableFactory',
