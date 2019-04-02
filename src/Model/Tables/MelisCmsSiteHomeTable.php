@@ -18,4 +18,14 @@ class MelisCmsSiteHomeTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'shome_id';
 	}
+
+	public function getHomePageBySiteIdAndLangId($siteId, $langId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->where->equalTo("melis_cms_site_home.shome_site_id", $siteId);
+        $select->where->equalTo("melis_cms_site_home.shome_lang_id", $langId);
+
+        $data = $this->tableGateway->selectWith($select);
+        return $data;
+    }
 }
