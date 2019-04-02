@@ -52,7 +52,7 @@ class MelisCmsSiteLangsTable extends MelisGenericTable
         }
 
         if (!empty($langId) && !is_null($langId)) {
-            $select->where->equalTo('slang_lang_id', $siteLangId);
+            $select->where->equalTo('slang_lang_id', $langId);
         }
 
         if (!empty($isActive) && !is_null($isActive)) {
