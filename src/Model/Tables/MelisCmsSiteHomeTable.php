@@ -22,10 +22,17 @@ class MelisCmsSiteHomeTable extends MelisGenericTable
 	public function getHomePageBySiteIdAndLangId($siteId, $langId)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->where->equalTo("melis_cms_site_home.shome_site_id", $siteId);
-        $select->where->equalTo("melis_cms_site_home.shome_lang_id", $langId);
+
+        if (!empty($siteId) && !is_null($siteId)) {
+            $select->where->equalTo("melis_cms_site_home.shome_site_id", $siteId);
+        }
+
+        if (!empty($langId) && !is_null($langId)) {
+            $select->where->equalTo("melis_cms_site_home.shome_lang_id", $langId);
+        }
 
         $data = $this->tableGateway->selectWith($select);
+
         return $data;
     }
 }
