@@ -9,9 +9,10 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Select;
 use MelisCore\Model\Tables\MelisGenericToolTable;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
+use Zend\Db\TableGateway\TableGateway;
 
 class MelisTemplateTable extends MelisGenericTable
 {
@@ -53,40 +54,49 @@ class MelisTemplateTable extends MelisGenericTable
         return $resultSet;
     }
 
-    public function getData($search = '', $siteId = null,  $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
+    public function getData($search = '', $siteId = null, $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(array('*'));
-        $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_template.tpl_site_id',
-            array('*'), $select::JOIN_LEFT);
+        $select->columns(['*']);
+        $select->join(
+            'melis_cms_site',
+            'melis_cms_site.site_id = melis_cms_template.tpl_site_id',
+            ['*'],
+            $select::JOIN_LEFT
+        );
 
-        if(!empty($searchableColumns) && !empty($search)) {
-            foreach($searchableColumns as $column) {
-                $select->where->or->like($column, '%'.$search.'%');
+        if (!empty($searchableColumns) && !empty($search)) {
+            $where = new Where();
+            $nest = $where->nest();
+
+            foreach ($searchableColumns as $column) {
+                $nest->like($column, '%' . $search . '%')->or;
             }
+            $select->where($where);
         }
 
-        if(!empty($siteId) && !is_null($siteId)){
+        if (!empty($siteId) && !is_null($siteId)) {
             $select->where->equalTo("tpl_site_id", $siteId);
         }
 
-        if(!empty($orderBy)) {
+        if (!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
         $getCount = $this->tableGateway->selectWith($select);
         // set current data count for pagination
-        $this->setCurrentDataCount((int) $getCount->count());
+        $this->setCurrentDataCount((int)$getCount->count());
 
-        if(!empty($limit)) {
-            $select->limit( (int) $limit);
+        if (!empty($limit)) {
+            $select->limit((int)$limit);
         }
 
-        if(!empty($start)) {
-            $select->offset( (int) $start);
+        if (!empty($start)) {
+            $select->offset((int)$start);
         }
 
         $resultSet = $this->tableGateway->selectWith($select);
+
         return $resultSet;
     }
 }
