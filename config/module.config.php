@@ -137,7 +137,10 @@ return array(
 			'MelisEngineCacheSystem' => 'MelisEngine\Service\Factory\MelisEngineCacheSystemServiceFactory',
 			'MelisEngineStyle' => 'MelisEngine\Service\Factory\MelisEngineStyleServiceFactory',
 			'MelisEngineLang' => 'MelisEngine\Service\Factory\MelisEngineLangServiceFactory',
+			'MelisGdprService' => 'MelisEngine\Service\Factory\MelisGdprServiceFactory',
+            'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
 
+            'MelisEngine\Model\Tables\MelisCmsGdprTextsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsGdprTextsFactory',
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageTreeTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageTreeTableFactory',
