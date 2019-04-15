@@ -174,7 +174,9 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                         $saveSiteResult = $cmsSiteSrv->saveSite($dataSite, $dataDomain, $dataSiteLang, array(), $siteModule, $genSiteModule, true, true);
 
                         if ($saveSiteResult['success']) {
-                            $siteId = $saveSiteResult['site_id'];
+                            foreach($saveSiteResult['site_ids'] as $key => $id){
+                                $siteId = $id;
+                            }
                         }
                     }else{
                         $this->saveCmsSiteDomain($scheme, $siteDomain);
