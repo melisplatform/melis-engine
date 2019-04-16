@@ -35,4 +35,27 @@ class MelisCmsSiteHomeTable extends MelisGenericTable
 
         return $data;
     }
+
+    public function deleteHomePageId($id, $siteId, $langId, $pageId)
+    {
+        $delete = $this->tableGateway->getSql()->delete(null);
+
+        if ($id) {
+            $delete->where->equalTo('shome_id', $id);
+        }
+
+        if ($siteId) {
+            $delete->where->equalTo('shome_site_id', $siteId);
+        }
+
+        if ($langId) {
+            $delete->where->equalTo('shome_lang_id', $langId);
+        }
+
+        if ($pageId) {
+            $delete->where->equalTo('shome_page_id', $pageId);
+        }
+
+        return $this->tableGateway->deleteWith($delete);
+    }
 }

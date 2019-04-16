@@ -18,4 +18,23 @@ class MelisCmsSiteConfigTable extends MelisGenericTable
         parent::__construct($tableGateway);
         $this->idField = 'sconf_id';
     }
+
+    public function deleteConfig($configId, $siteId, $langId)
+    {
+        $delete = $this->tableGateway->getSql()->delete(null);
+
+        if ($configId) {
+            $delete->where->equalTo('sconf_id', $configId);
+        }
+
+        if ($siteId) {
+            $delete->where->equalTo('sconf_site_id', $siteId);
+        }
+
+        if ($langId) {
+            $delete->where->equalTo('sconf_lang_id', $langId);
+        }
+
+        return $this->tableGateway->deleteWith($delete);
+    }
 }
