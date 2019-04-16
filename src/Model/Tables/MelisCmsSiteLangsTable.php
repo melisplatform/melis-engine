@@ -51,11 +51,11 @@ class MelisCmsSiteLangsTable extends MelisGenericTable
             $select->where->equalTo('slang_site_id', $siteId);
         }
 
-        if (!empty($langId) && !is_null($langId)) {
+        if ($langId) {
             $select->where->equalTo('slang_lang_id', $langId);
         }
 
-        if (!empty($isActive) && !is_null($isActive)) {
+        if ($isActive) {
             $select->where->equalTo('slang_status', $isActive);
         }
 
