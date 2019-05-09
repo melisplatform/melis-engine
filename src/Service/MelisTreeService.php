@@ -172,7 +172,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	{
 	    if (empty($idPage))
 	        return null;
-        
+
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getPageLink_' . $idPage . '_' . $absolute;
         $cacheConfig = 'engine_page_services';
@@ -292,7 +292,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
      * @param $absolute
      * @return string|string[]|null
      */
-	public function getHomePageLink($idPage, $absolute)
+	public function getHomePageLink($idPage, $absolute = false)
     {
         /**
          * prepare tables / services
@@ -355,7 +355,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
      * @param $absolute
      * @return string|string[]|null
      */
-    public function getPageLinkByLocale($idPage, $locale, $absolute)
+    public function getPageLinkByLocale($idPage, $locale, $absolute = false)
     {
         $pageLocaleVersionId = '';
         /**
