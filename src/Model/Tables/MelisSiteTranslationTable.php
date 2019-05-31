@@ -50,4 +50,16 @@ class MelisSiteTranslationTable extends MelisGenericTable
         $data = $this->tableGateway->selectWith($select);
         return $data;
     }
+
+    /**
+     * @param $siteId
+     * @return mixed
+     */
+    public function getTranslationsBySiteId($siteId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->where->equalTo("mst_site_id", $siteId);
+        $data = $this->tableGateway->selectWith($select);
+        return $data;
+    }
 }
