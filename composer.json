@@ -36,9 +36,9 @@
     "ext-json": "*",
     "ext-pdo_mysql": "*",
     "justinrainbow/json-schema": "5.2.1",
-    "melisplatform/melis-core": "^2.3",
-    "melisplatform/melis-front": "^2.3",
-    "melisplatform/zendsearch": "~2.0.0"
+    "melisplatform/melis-core": "*",
+    "melisplatform/melis-front": "*",
+    "melisplatform/zendsearch": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.8"
