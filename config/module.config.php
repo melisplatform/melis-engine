@@ -116,11 +116,17 @@ return array(
 		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
 			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
             'MelisEngineTableRobot' => 'MelisEngine\Model\Tables\MelisCmsSiteRobotTable',
-            
+            'MelisEngineTableCmsSiteHome' => 'MelisEngine\Model\Tables\MelisCmsSiteHome',
+            'MelisEngineTableCmsSiteLangs' => 'MelisEngine\Model\Tables\MelisCmsSiteLangs',
+            'MelisEngineTableCmsSiteConfig' => 'MelisEngine\Model\Tables\MelisCmsSiteConfig',
+
 		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
             'MelisPageService' => 'MelisEngine\Service\MelisPageService',
             'MelisTreeService' => 'MelisEngine\Service\MelisTreeService',
             'MelisEngineLangService' => 'MelisEngine\Service\MelisEngineLangService',
+
+            'MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTable',
+            'MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTextTable',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
@@ -152,6 +158,12 @@ return array(
             'MelisEngine\Model\Tables\MelisPageStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisPageStyleTableFactory',
             'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteRobotTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteRobotTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsSiteHome' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteHomeTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsSiteLangs' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteLangsTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsSiteConfig' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteConfigTableFactory',
+
+            'MelisEngine\Model\Tables\MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTableFactory',
+            'MelisEngine\Model\Tables\MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTextTableFactory',
 		),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
