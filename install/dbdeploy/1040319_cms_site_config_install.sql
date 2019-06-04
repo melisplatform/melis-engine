@@ -1,5 +1,5 @@
 --
--- Table structure for table `melis_cms_site_config​`
+-- Table structure for table `melis_cms_site_config`
 --
 
 CREATE TABLE IF NOT EXISTS `melis_cms_site_config` (
