@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `melis_site_translation` (
   PRIMARY KEY (`mst_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `melis_site_translation` ADD `mst_site_id` int(11) NOT NULL AFTER `mst_id`;
 
 -- -----------------------------------------------------
 -- Table `melis_site_translation_text`
@@ -30,7 +31,11 @@ CREATE TABLE IF NOT EXISTS `melis_site_translation_text` (
   PRIMARY KEY (`mstt_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `melis_site_translation_text` DROP `mstt_site_id`;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
