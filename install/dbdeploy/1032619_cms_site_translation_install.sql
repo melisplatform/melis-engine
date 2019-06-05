@@ -10,6 +10,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 --
 -- Table `melis_site_translation`
 --
+DROP TABLE IF EXISTS `melis_site_translation` ;
 
 CREATE TABLE IF NOT EXISTS `melis_site_translation` (
   `mst_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -18,11 +19,12 @@ CREATE TABLE IF NOT EXISTS `melis_site_translation` (
   PRIMARY KEY (`mst_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `melis_site_translation` ADD `mst_site_id` int(11) NOT NULL AFTER `mst_id`;
 
 -- -----------------------------------------------------
 -- Table `melis_site_translation_text`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `melis_site_translation_text` ;
+
 CREATE TABLE IF NOT EXISTS `melis_site_translation_text` (
   `mstt_id` int(11) NOT NULL AUTO_INCREMENT,
   `mstt_mst_id` int(11) NOT NULL,
@@ -31,7 +33,6 @@ CREATE TABLE IF NOT EXISTS `melis_site_translation_text` (
   PRIMARY KEY (`mstt_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `melis_site_translation_text` DROP `mstt_site_id`;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
