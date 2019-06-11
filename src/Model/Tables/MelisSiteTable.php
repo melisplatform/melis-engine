@@ -111,12 +111,12 @@ class MelisSiteTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
-        $select->join('melis_cms_site_domain', 'melis_cms_site_domain.sdom_site_id = melis_cms_site.site_id',array(), $select::JOIN_LEFT)
-                ->join('melis_cms_site_404', 'melis_cms_site_404.s404_site_id = melis_cms_site.site_id', array(), $select::JOIN_LEFT);
+        $select->join('melis_cms_site_langs', 'melis_cms_site_langs.slang_site_id = melis_cms_site.site_id',array(), $select::JOIN_LEFT)
+                ->join('melis_cms_lang', 'melis_cms_lang.lang_cms_id = melis_cms_site_langs.slang_lang_id', array('site_langs' => new Expression('GROUP_CONCAT(if(melis_cms_site_langs.slang_status, melis_cms_lang.lang_cms_name, null) SEPARATOR \', \')')), $select::JOIN_LEFT);
 
         if(!empty($searchableColumns) && !empty($search)) {
             foreach($searchableColumns as $column) {
-                $select->where->or->like($column, '%'.$search.'%');
+                $select->having->or->like($column, '%'.$search.'%');
             }
         }
 
@@ -135,7 +135,7 @@ class MelisSiteTable extends MelisGenericTable
         if(!empty($start)) {
             $select->offset($start);
         }
-        
+
         $select->group('site_id');
 
         $sql = $this->tableGateway->getSql();
