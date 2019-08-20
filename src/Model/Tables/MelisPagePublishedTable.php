@@ -52,7 +52,8 @@ class MelisPagePublishedTable extends MelisGenericTable
                 'melis_cms_template.tpl_id = melis_cms_page_published.page_tpl_id',
                 [
                     'tpl_id',
-                    'tpl_site_id'
+                    'tpl_site_id',
+                    'tpl_zf2_website_folder',
                 ],
                 $select::JOIN_LEFT
             );
