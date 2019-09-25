@@ -26,6 +26,7 @@
 
 	    // Plugins
 	    'tr_front_plugin_common_tab_properties' => 'Propriétés',
+        'tr_front_plugin_common_no_param' => 'Aucun paramètre à éditer',
 
         //Indexing
         'tr_melis_engine_search_create_index_no_sub_pages' => 'Impossible de créer l\'index, la page n\'a pas de sous-pages'
