@@ -24,10 +24,6 @@
         'tr_melis_engine_sites' => 'Site',
         'tr_melis_engine_sites_select' => 'Select a site',
 
-        // Plugins
-	    'tr_front_plugin_common_tab_properties' => 'Properties',
-	    'tr_front_plugin_common_no_param' => 'No parameters to edit',
-
         //indexing
         'tr_melis_engine_search_create_index_no_sub_pages' => 'Unable to create index, page has no subpages'
 	);
