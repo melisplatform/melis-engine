@@ -60,6 +60,9 @@ class MelisCmsStyleTable extends MelisGenericTable
             }
         }
 
+        /** Get "unfiltered" data */
+        $unfilteredData = $this->tableGateway->selectWith($select);
+
         if(!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
@@ -73,6 +76,9 @@ class MelisCmsStyleTable extends MelisGenericTable
         }
 
         $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet->getObjectPrototype()->setFilteredDataCount($resultSet->count());
+        $resultSet->getObjectPrototype()->setUnfilteredDataCount($unfilteredData->count());
+
         return $resultSet;
     }
 }
