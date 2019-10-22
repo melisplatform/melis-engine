@@ -9,6 +9,7 @@
 
 namespace MelisEngine\Model\Tables;
 
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Expression;
 
@@ -19,6 +20,41 @@ class MelisPlatformIdsTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'pids_id';
 	}
+
+    /**
+     * @param array $options
+     * @return \Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function getData(array $options = [])
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(['*']);
+
+        $select->join(
+            'melis_core_platform',
+            'melis_core_platform.plf_id = melis_cms_platform_ids.pids_id',
+            ['*'],
+            $select::JOIN_LEFT
+        );
+
+        if (!empty($options['limit'])) {
+            $select->limit($options['limit']);
+        }
+
+        if (!empty($options['start'])) {
+            $select->offset($options['start']);
+        }
+
+        if (!empty($options['order']['key']) && !empty($options['order']['dir'])) {
+            if ($options['order']['key'] == 'pids_name') {
+                $select->order('melis_core_platform.plf_name ' . $options['order']['dir']);
+            } else {
+                $select->order($options['order']['key'] . ' ' . $options['order']['dir']);
+            }
+        }
+
+        return $this->tableGateway->selectWith($select);
+    }
 
 	/**
 	 * Gets the platform ids of a specific platform
