@@ -37,6 +37,9 @@ class MelisPlatformIdsTable extends MelisGenericTable
             $select::JOIN_LEFT
         );
 
+        /** Get "unfiltered" data */
+        $unfilteredData = $this->tableGateway->selectWith($select);
+
         if (!empty($options['limit'])) {
             $select->limit($options['limit']);
         }
@@ -53,7 +56,11 @@ class MelisPlatformIdsTable extends MelisGenericTable
             }
         }
 
-        return $this->tableGateway->selectWith($select);
+        $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet->getObjectPrototype()->setFilteredDataCount($resultSet->count());
+        $resultSet->getObjectPrototype()->setUnfilteredDataCount($unfilteredData->count());
+
+        return $resultSet;
     }
 
 	/**
