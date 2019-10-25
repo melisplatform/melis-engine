@@ -10,6 +10,7 @@
 namespace MelisEngine\Model\Tables;
 
 use MelisCore\Model\Tables\MelisGenericToolTable;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
