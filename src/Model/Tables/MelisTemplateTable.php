@@ -80,7 +80,11 @@ class MelisTemplateTable extends MelisGenericTable
         }
 
         if (!empty($orderBy)) {
-            $select->order($orderBy . ' ' . $orderDirection);
+            if ($orderBy == 'tpl_type') {
+                $select->order(new Expression("CAST($orderBy AS CHAR) $orderDirection"));
+            } else {
+                $select->order("$orderBy $orderDirection");
+            }
         }
 
         $getCount = $this->tableGateway->selectWith($select);
