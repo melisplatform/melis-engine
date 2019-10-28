@@ -66,6 +66,9 @@ class MelisTemplateTable extends MelisGenericTable
             $select::JOIN_LEFT
         );
 
+        /** Get "unfiltered" data */
+        $unfilteredData = $this->tableGateway->selectWith($select);
+
         if (!empty($searchableColumns) && !empty($search)) {
             $where = new Where();
             $nest = $where->nest();
@@ -88,10 +91,6 @@ class MelisTemplateTable extends MelisGenericTable
             }
         }
 
-        $getCount = $this->tableGateway->selectWith($select);
-        // set current data count for pagination
-        $this->setCurrentDataCount((int)$getCount->count());
-
         if (!empty($limit)) {
             $select->limit((int)$limit);
         }
@@ -101,6 +100,8 @@ class MelisTemplateTable extends MelisGenericTable
         }
 
         $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet->getObjectPrototype()->setFilteredDataCount($resultSet->count());
+        $resultSet->getObjectPrototype()->setUnfilteredDataCount($unfilteredData->count());
 
         return $resultSet;
     }
