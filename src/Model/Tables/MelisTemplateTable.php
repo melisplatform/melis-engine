@@ -10,6 +10,7 @@
 namespace MelisEngine\Model\Tables;
 
 use MelisCore\Model\Tables\MelisGenericToolTable;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
@@ -65,6 +66,9 @@ class MelisTemplateTable extends MelisGenericTable
             $select::JOIN_LEFT
         );
 
+        /** Get "unfiltered" data */
+        $unfilteredData = $this->tableGateway->selectWith($select);
+
         if (!empty($searchableColumns) && !empty($search)) {
             $where = new Where();
             $nest = $where->nest();
@@ -80,12 +84,12 @@ class MelisTemplateTable extends MelisGenericTable
         }
 
         if (!empty($orderBy)) {
-            $select->order($orderBy . ' ' . $orderDirection);
+            if ($orderBy == 'tpl_type') {
+                $select->order(new Expression("CAST($orderBy AS CHAR) $orderDirection"));
+            } else {
+                $select->order("$orderBy $orderDirection");
+            }
         }
-
-        $getCount = $this->tableGateway->selectWith($select);
-        // set current data count for pagination
-        $this->setCurrentDataCount((int)$getCount->count());
 
         if (!empty($limit)) {
             $select->limit((int)$limit);
@@ -96,6 +100,8 @@ class MelisTemplateTable extends MelisGenericTable
         }
 
         $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet->getObjectPrototype()->setFilteredDataCount($resultSet->count());
+        $resultSet->getObjectPrototype()->setUnfilteredDataCount($unfilteredData->count());
 
         return $resultSet;
     }

@@ -168,7 +168,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
         $html = $viewRender->render($viewModel);
         
-        return array(array('name' => $this->pluginName, 'html' => $html, 'empty' => true));
+        return [
+            [
+                'name' => $this->getServiceLocator()->get('translator')->translate('tr_front_plugin_common_tab_properties'),
+                'icon' => 'fa fa-cog',
+                'html' => $html,
+                'empty' => true
+            ]
+        ];
     }
     
     /**
