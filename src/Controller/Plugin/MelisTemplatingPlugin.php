@@ -470,6 +470,15 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 $newPluginId = $finalConfig['id'] . '_' . $newPluginId;
                 $finalConfig['id'] = $newPluginId;
         }
+
+        $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
+        $finalConfig = $melisEngineGeneralService->sendEvent(
+            $this->pluginName.'_melistemplating_final_plugin_config',
+            [
+                'generatedPluginId' => $generatePluginId,
+                'finalConfig' => $finalConfig
+            ]
+        )['finalConfig'];
         
         $this->pluginConfig['front'] = $finalConfig;
 
