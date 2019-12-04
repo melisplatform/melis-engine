@@ -550,6 +550,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         $query = '//p[preceding-sibling::p]';
 
+        if ($xpath->query($query)->length == 0) {
+            $query = '//p';
+        }
+
         foreach ($xpath->query($query) as $node) {
             $content .= trim($node->textContent, PHP_EOL);
         }
