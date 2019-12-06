@@ -106,9 +106,9 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $viewModel->fromDragDropZone   = $this->fromDragDropZone;
         $viewModel->encapsulatedPlugin = $this->encapsulatedPlugin;
 
-        $viewModel->widthDesktop      = $this->widthDesktop;
-        $viewModel->widthTablet       = $this->widthTablet;
-        $viewModel->widthMobile       = $this->widthMobile;
+        $viewModel->widthDesktop      = $this->convertToCssClass('desktop', $this->widthDesktop);
+        $viewModel->widthTablet       = $this->convertToCssClass('tablet', $this->widthTablet);
+        $viewModel->widthMobile       = $this->convertToCssClass('mobile', $this->widthMobile);
         $viewModel->pluginContainerId = $this->pluginContainerId;
 
         $pageId = (!empty($this->pluginFrontConfig['pageId'])) ? $this->pluginFrontConfig['pageId'] : 0;
@@ -676,12 +676,18 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
                 $model['view']->setVariables(array(
-                    'widthDesktop'      => $this->convertToCssClass('desktop', $this->widthDesktop),
-                    'widthTablet'       => $this->convertToCssClass('tablet', $this->widthTablet),
-                    'widthMobile'       => $this->convertToCssClass('mobile', $this->widthMobile),
+
                     'pluginContainerId' => $this->pluginContainerId,
                     'fromDragDropZone'  => $this->fromDragDropZone
                 ));
+
+                if ($this->renderMode != 'melis'){
+                    $model['view']->setVariables([
+                        'widthDesktop'      => $this->convertToCssClass('desktop', $this->widthDesktop),
+                        'widthTablet'       => $this->convertToCssClass('tablet', $this->widthTablet),
+                        'widthMobile'       => $this->convertToCssClass('mobile', $this->widthMobile),
+                    ]);
+                }
             }
 
             return $model['view'];
