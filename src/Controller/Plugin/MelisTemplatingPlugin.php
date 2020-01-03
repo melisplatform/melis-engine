@@ -583,7 +583,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     public function translateAppConfig($array)
     {
         $translator = $this->getServiceLocator()->get('translator');
-        
+
         $final = array();
         foreach($array as $key => $value) {
             if (is_array($value)) {

@@ -1,5 +1,5 @@
-<?php 
-    $module = $this->translate('tr_PluginSection_' . $this->configPluginKey);
+<?php
+    $module = $this->boTranslate('tr_PluginSection_' . $this->configPluginKey);
     if ($module == 'tr_PluginSection_' . $this->configPluginKey)
         $module = $this->configPluginKey;
     
@@ -7,8 +7,11 @@
     if (!empty($this->pluginBackConfig))
     {
         $conf = $this->pluginBackConfig;
-        if (!empty($conf['name']))
-            $name = $this->translate($conf['name']);
+        if (!empty($conf['name'])) {
+            $name = str_replace('\\', null, $conf['name']);
+            $name = $this->boTranslate($name);
+        }
+
     }
     
     $pluginId = '';
