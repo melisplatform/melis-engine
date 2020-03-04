@@ -35,21 +35,21 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     // When used in page mode with content saved in DB
     protected $pluginXmlDbKey   = '';
     protected $pluginXmlDbValue = '';
-    
+
     protected $pluginHardcoded    = true;
     protected $fromDragDropZone   = false;
     protected $encapsulatedPlugin = true;
-    
+
     protected $pluginConfig      = array();
     protected $pluginFrontConfig = array();
     protected $pluginBackConfig  = array();
-    
+
     protected $renderMode;
     protected $previewMode;
-    
+
     protected $defaultPluginConfig = array();
     protected $updatesPluginConfig = array();
-    
+
     protected $fullTemplateList    = array();
 
     protected $widthDesktop = 100;
@@ -60,38 +60,38 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
     protected $serviceLocator;
     protected $eventManager;
-    
-    
+
+
     public function __construct($updatesPluginConfig = array())
     {
         $className = explode('\\', get_class($this));
         if (count($className) > 0)
             $className = $className[count($className) - 1];
-            $this->pluginName = $className;
-            $this->setEventManager(new EventManager());
+        $this->pluginName = $className;
+        $this->setEventManager(new EventManager());
     }
-    
+
     public function getServiceLocator() {
         return $this->serviceLocator->getServiceLocator();
     }
-    
+
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
         $this->serviceLocator = $serviceLocator;
     }
-    
+
     public function setEventManager(EventManagerInterface $eventManager)
     {
         $this->eventManager = $eventManager;
     }
-    
+
     public function getEventManager()
     {
         return $this->eventManager;
     }
-    
+
     // To call to get front view
     abstract public function front();
-    
+
     // To call to get back office view
     public function back()
     {
@@ -114,60 +114,60 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $pageId = (!empty($this->pluginFrontConfig['pageId'])) ? $this->pluginFrontConfig['pageId'] : 0;
         $viewModel->pageId = $pageId;
         $viewModel->pluginXmlDbKey = $this->pluginXmlDbKey;
-        
+
         $siteModule = getenv('MELIS_MODULE');
         $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
         $datasPage = $melisPage->getDatasPage($pageId, 'saved');
         if($datasPage)
         {
             $datasTemplate = $datasPage->getMelisTemplate();
-            
+
             if(!empty($datasTemplate))
             {
                 $siteModule = $datasTemplate->tpl_zf2_website_folder;
             }
         }
-        
-        
+
+
         $viewModel->siteModule = $siteModule;
-        
+
         return $viewModel;
     }
-    
+
     // Automatically called when generating the final config, should be overriden in plugins
     public function loadDbXmlToPluginConfig()
     {
         return array();
     }
-    
+
     public function loadGetDataPluginConfig()
     {
         $request = $this->getServiceLocator()->get('request');
         return $request->getQuery()->toArray();
     }
-    
+
     public function loadPostDataPluginConfig()
     {
         $request = $this->getServiceLocator()->get('request');
         return $request->getPost()->toArray();
     }
-    
+
     // Automatically called when saving the final config, should be overriden in plugins
     public function savePluginConfigToXml($parameters)
     {
         return '';
     }
-    
+
     // Creates the plugin parameter form, override this function in your plugin
     // in order to show a specific form. Default shows nothing
     public function createOptionsForms()
     {
         $viewModel = new ViewModel();
         $viewModel->setTemplate('melis-engine/plugins/noformtemplate');
-        
+
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
         $html = $viewRender->render($viewModel);
-        
+
         return [
             [
                 'name' => $this->getServiceLocator()->get('translator')->translate('tr_front_plugin_common_tab_properties'),
@@ -177,7 +177,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             ]
         ];
     }
-    
+
     /**
      * This setter can be used to set a hardcoded config if not given through render function
      *
@@ -187,7 +187,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         $this->updatesPluginConfig = $updatesConfig;
     }
-    
+
     /**
      * This function renders the plugin in the template in front or back end mode
      * depending on the renderMode parameter
@@ -199,7 +199,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $router = $this->getServiceLocator()->get('router');
         $request = $this->getServiceLocator()->get('request');
         $routeMatch = $router->match($request);
-        
+
         if (!$forceRenderModeToFront)
         {
             $this->renderMode = 'front';
@@ -212,68 +212,68 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         }
         else
             $this->renderMode = 'front';
-            
-            $this->previewMode = false;
-            if (!empty($routeMatch))
-            {
-                $params = $routeMatch->getParams();
-                if (!empty($params['preview']))
-                    $this->previewMode = $params['preview'];
-                    
-                    if (!empty($params['idpage']))
-                        $updatesPluginConfig['pageId'] = $params['idpage'];
-            }
-            
-            $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
-            $updatesPluginConfig = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_start', $updatesPluginConfig);
-            
-            // Send event before creating the plugin object with its parameters
-            $this->updatesPluginConfig = $updatesPluginConfig;
-            
-            $this->getPluginConfigs($generatePluginId);
 
-            if ($this->renderMode == 'front' || $this->previewMode)
-                $view = $this->sendViewResult($this->front());
-            else
-            {
-                $viewFront = $this->sendViewResult($this->front());
-                
-                $view = $this->back();
+        $this->previewMode = false;
+        if (!empty($routeMatch))
+        {
+            $params = $routeMatch->getParams();
+            if (!empty($params['preview']))
+                $this->previewMode = $params['preview'];
 
-                if ($view InstanceOf ViewModel)
+            if (!empty($params['idpage']))
+                $updatesPluginConfig['pageId'] = $params['idpage'];
+        }
+
+        $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
+        $updatesPluginConfig = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_start', $updatesPluginConfig);
+
+        // Send event before creating the plugin object with its parameters
+        $this->updatesPluginConfig = $updatesPluginConfig;
+
+        $this->getPluginConfigs($generatePluginId);
+
+        if ($this->renderMode == 'front' || $this->previewMode)
+            $view = $this->sendViewResult($this->front());
+        else
+        {
+            $viewFront = $this->sendViewResult($this->front());
+
+            $view = $this->back();
+
+            if ($view InstanceOf ViewModel)
+            {
+                $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+                $viewFrontRendered = $viewRender->render($viewFront);
+
+                $view->viewFront = $viewFrontRendered;
+
+                foreach ($viewFront->getVariables() as $keyVar => $valueVar)
                 {
-                    $viewRender = $this->getServiceLocator()->get('ViewRenderer');
-                    $viewFrontRendered = $viewRender->render($viewFront);
-                    
-                    $view->viewFront = $viewFrontRendered;
+                    // Sub plugin needs to render first before assigning to plugin viewmodel
+                    if ($valueVar instanceof ViewModel)
+                        $valueVar = $viewRender->render($valueVar);
 
-                    foreach ($viewFront->getVariables() as $keyVar => $valueVar)
-                    {
-                        // Sub plugin needs to render first before assigning to plugin viewmodel
-                        if ($valueVar instanceof ViewModel)
-                            $valueVar = $viewRender->render($valueVar);
-
-                        $view->$keyVar = $valueVar;
-                    }
+                    $view->$keyVar = $valueVar;
                 }
-                else
-                    $view = $viewFront;
-                    
             }
-            
-            return $view;
+            else
+                $view = $viewFront;
+
+        }
+
+        return $view;
     }
-    
+
     /**
      * This function gets the datas associated with this plugin from the page's XML in DB
      */
     protected function getPluginValueFromDb()
     {
-        
+
         $this->pluginXmlDbValue = '';
         $xmlPage = '';
         $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
-        
+
         $id = (!empty($this->pluginConfig['front']['id'])) ? $this->pluginConfig['front']['id'] : null;
         $pageId = (!empty($this->pluginConfig['front']['pageId'])) ? $this->pluginConfig['front']['pageId'] : null;
         // This overides the pageId if the plugin requesting is MelisTag
@@ -283,7 +283,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             // The plugin is not used with a pageId an item id, so nothing to get in DB
             return;
         }
-        
+
         $datasPage = array();
         $valueSetted = false;
         if ($this->renderMode == 'front')
@@ -298,7 +298,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                     $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
                 else
                     $this->pluginXmlDbValue = '';
-                    $valueSetted = true;
+                $valueSetted = true;
             }
             else
             {
@@ -325,12 +325,12 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
         $datasPageTree = $melisEngineGeneralService->sendEvent('melistemplating_plugin_get_datas_db', $eventParams);
         $datasPageTree = $datasPageTree['actualDatasPageTree'];
-            
+
 
         if (!$valueSetted) {
             $xmlPage = $datasPageTree['page_content'];
             $xml = simplexml_load_string($xmlPage);
-            
+
             if ($xml)
             {
                 foreach ($xml as $namePlugin => $valuePlugin)
@@ -367,11 +367,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
         }
     }
-    
+
     protected function formatGetPostInArray($parameters)
     {
         $parametersResults = array();
-        
+
         foreach ($parameters as $key => $value) {
             $tmp = explode('-', $key);
             if (count($tmp) == 1)
@@ -381,7 +381,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 $lastKey = '';
                 for ($i = count($tmp) - 1; $i >= 0; $i--) {
                     $lastKey = $tmp[$i];
-                    
+
                     if ($i == count($tmp) - 1)
                         $children[$tmp[$i]] = $value;
                     else {
@@ -389,24 +389,24 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                         $children = array();
                         $children[$tmp[$i]] = $arrayTmp;
                     }
-                    
+
                     if ($i < 0)
                         die;
                 }
-                
+
                 $parametersResults[$lastKey] = $children[$lastKey];
             }
         }
-        
+
         return $parametersResults;
     }
-    
+
     public function getPluginConfigs($generatePluginId = false)
     {
         $config = $this->getServiceLocator()->get('config');
         if (!empty($config['plugins'][$this->configPluginKey]['plugins']))
             $this->defaultPluginConfig = $config['plugins'][$this->configPluginKey]['plugins'][$this->pluginName];
-            
+
         /**
          * Merging configs:
          * - gets the default in app.plugins.php
@@ -415,23 +415,23 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
          * - merge with POST parameters, children nodes separated with a "-", ex: pagination-current_page
          */
         // merging default with parameters config
-        
+
         if (!empty($this->updatesPluginConfig['template_path']) && !is_array($this->updatesPluginConfig['template_path'])) {
             $this->updatesPluginConfig['template_path'] = array($this->updatesPluginConfig['template_path']);
         }
-        
+
         $this->pluginConfig['front'] = ArrayUtils::merge($this->defaultPluginConfig['front'], $this->updatesPluginConfig);
-        
+
         if ($generatePluginId) {
             $finalConfig = $this->translateAppConfig($this->pluginConfig['front']);
         } else {
             $request = $this->getServiceLocator()->get('request');
-            
+
             // merge with DB values
             $this->getPluginValueFromDb();
-            
+
             $this->getPluginWidths();
-            
+
             /* $this->pluginConfig['front'] = ArrayUtils::merge($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig()); */
             $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $this->loadDbXmlToPluginConfig());
 
@@ -457,26 +457,26 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $finalConfig['widthTablet']       = $this->widthTablet;
         $finalConfig['widthMobile']       = $this->widthMobile;
         $finalConfig['pluginContainerId'] = $this->pluginContainerId;
-        
+
         // Getting the final config for templatePath
         if (is_array($finalConfig['template_path'])) {
             $this->fullTemplateList = $finalConfig['template_path'];
             $finalConfig['template_path'] = $finalConfig['template_path'][count($finalConfig['template_path']) - 1];
         } else $this->fullTemplateList = array($finalConfig['template_path']);
-            
+
         // Generate pluginId if needed
         if ($generatePluginId) {$newPluginId = time();
             if (!empty($finalConfig['id']))
                 $newPluginId = $finalConfig['id'] . '_' . $newPluginId;
-                $finalConfig['id'] = $newPluginId;
+            $finalConfig['id'] = $newPluginId;
         }
-        
+
         $this->pluginConfig['front'] = $finalConfig;
 
-        
+
         if (!empty($this->pluginConfig['front']))
             $this->pluginFrontConfig = $this->pluginConfig['front'];
-            
+
         $this->pluginBackConfig = $this->translateAppConfig($this->defaultPluginConfig['melis']);
 
         // Getting JS/CSS files for auto adding in front and back if necessary
@@ -488,35 +488,35 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
         }
     }
-    
+
     /**
-     * Updating the current plugin config values to from 
+     * Updating the current plugin config values to from
      * a new config values
-     * 
-     * This will only update keys that only existing on the 
+     *
+     * This will only update keys that only existing on the
      * plugin config array
-     * 
+     *
      * @param array $pluginConfig
-     * @param array $newPluginConfig 
+     * @param array $newPluginConfig
      * @return array
      */
     public function updateFrontConfig($pluginConfig, $newPluginConfig)
     {
         if (!empty($newPluginConfig)) {
             $excludeParams = (!empty($pluginConfig['sub_plugins_params'])) ? $pluginConfig['sub_plugins_params'] : array();
-            
+
             foreach ($pluginConfig As $key => $val) {
                 if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'forms')))) {
                     /*
                      * Checking if the key is exisitng on the new config
                      */
                     if (isset($newPluginConfig[$key])) {
-                        
+
                         if (is_array($val) && is_array($newPluginConfig[$key])) {
                             /**
                              * Checking if the value are the same interger array
-                             * this will override the current 
-                             * 
+                             * this will override the current
+                             *
                              * else the key of the array is a associative
                              */
                             if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key]))) {
@@ -535,11 +535,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 }
             }
         }
-        
+
         return $pluginConfig;
     }
-    
-    
+
+
     public function savePluginRessources($keyRessource, $array)
     {
         if ($this->getServiceLocator()->get('templating_plugins')->hasItem($keyRessource)) {
@@ -579,7 +579,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $this->getServiceLocator()->get('templating_plugins')->setItem($keyRessource, $files);
 
     }
-    
+
     public function translateAppConfig($array)
     {
         $translator = $this->getServiceLocator()->get('translator');
@@ -593,36 +593,36 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 if (substr($value, 0, 3) == 'tr_') {
                     $value = $translator->translate($value);
                 }
-                
+
                 $final[$key] = $value;
             }
         }
-        
+
         return $final;
     }
-    
+
     public function sendViewResult($variables)
     {
-        
+
         if($variables instanceof JsonModel) {
             // for JSON response
             $request           = $this->getServiceLocator()->get('request');
             $variables         = $variables->getVariables();
             $pluginId          = $variables['pluginId'];
             $submittedPluginId = isset($variables['submittedPluginId']) ? $variables['submittedPluginId'] : '';
-            
+
             if( $request->isPost() &&
                 (!is_null($submittedPluginId) && ($pluginId == $submittedPluginId))) {
-                    // only return the JSON that we need, or the form that has been submitted.
-                    unset($variables['submittedPluginId']);
-                    $model = new JsonModel($variables);
-                    return $model;
-                }
+                // only return the JSON that we need, or the form that has been submitted.
+                unset($variables['submittedPluginId']);
+                $model = new JsonModel($variables);
+                return $model;
+            }
         }
         else {
-            
+
             $model = new ViewModel();
-            
+
             // Site language for site translations
             $melisEnginLangService = $this->getServiceLocator()->get('MelisEngineLang');
             $siteLang = $melisEnginLangService->getSiteLanguage();
@@ -631,20 +631,20 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
             // Send event before creating the view
             $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
-            
+
             $variables = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
-            
+
             $viewRender = $this->getServiceLocator()->get('ViewRenderer');
-            
+
             foreach ($variables as $keyVar => $valueVar)
             {
                 // Sub plugin needs to render first before assigning to plugin viewmodel
                 if ($valueVar instanceof ViewModel)
                     $valueVar = $viewRender->render($valueVar);
-                    
+
                 $model->$keyVar = $valueVar;
             }
-            
+
             if (!empty($this->pluginFrontConfig['template_path']))
             {
                 $config = $this->getServiceLocator()->get('config');
@@ -658,7 +658,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             }
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
-                
+
             $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
 
             // Plugin config datas
@@ -683,32 +683,32 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
     {
         $this->removePlugin = $value;
     }
-    
+
     public function setPluginHardcoded($value)
     {
         $this->pluginHardcoded = $value;
     }
-    
+
     public function setPluginFromDragDrop($value)
     {
         $this->fromDragDropZone = $value;
     }
-    
+
     public function getPluginXmlDbKey()
     {
         return $this->pluginXmlDbKey;
     }
-    
+
     public function getPluginFrontConfig()
     {
         return $this->pluginFrontConfig;
     }
-    
+
     public function setEncapsulatedPlugin($value)
     {
         $this->encapsulatedPlugin = $value;
     }
-    
+
     /**
      * Returns the data to populate the form inside the modals when invoked
      * @return array|bool|null
@@ -732,7 +732,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             }
             return $data;
         };
-        
+
         return $configData($this->pluginFrontConfig, [], $configData);
     }
 
