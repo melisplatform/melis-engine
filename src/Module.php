@@ -9,6 +9,7 @@
 
 namespace MelisEngine;
 
+use MelisEngine\Listener\MelisEngineGdprAutoDeleteLinkProviderListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -54,6 +55,7 @@ class Module
         // attach Listener here
         $eventManager->attach(new MelisEngineTreeServiceMicroServiceListener());
         $eventManager->attach(new MelisEngineMicroServicePageServiceListener());
+        $eventManager->attach(new MelisEngineGdprAutoDeleteLinkProviderListener());
     }
     
     public function init(ModuleManager $mm)
