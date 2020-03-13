@@ -127,6 +127,7 @@ return array(
 
             'MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTable',
             'MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTextTable',
+            'MelisGdprDeleteEmailsSentTable' => 'MelisEngine\Model\Tables\MelisGdprDeleteEmailsSentTable',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
@@ -162,6 +163,7 @@ return array(
             'MelisEngine\Model\Tables\MelisCmsSiteHome' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteHomeTableFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteLangs' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteLangsTableFactory',
             'MelisEngine\Model\Tables\MelisCmsSiteConfig' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteConfigTableFactory',
+            'MelisEngine\Model\Tables\MelisGdprDeleteEmailsSentTable' => 'MelisEngine\Model\Tables\Factory\MelisGdprDeleteEmailsSentTableFactory',
 
             'MelisEngine\Model\Tables\MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTableFactory',
             'MelisEngine\Model\Tables\MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTextTableFactory',
