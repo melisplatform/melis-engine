@@ -139,6 +139,7 @@ return array(
 			'MelisEngineLang' => 'MelisEngine\Service\Factory\MelisEngineLangServiceFactory',
 			'MelisGdprService' => 'MelisEngine\Service\Factory\MelisGdprServiceFactory',
             'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
+            'MelisGdprAutoDeleteService' => 'MelisEngine\Service\Factory\MelisGdprAutoDeleteServiceFactory',
 
             'MelisEngine\Model\Tables\MelisCmsGdprTextsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsGdprTextsFactory',
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
