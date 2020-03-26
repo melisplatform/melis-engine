@@ -55,7 +55,6 @@ class Module
         // attach Listener here
         $eventManager->attach(new MelisEngineTreeServiceMicroServiceListener());
         $eventManager->attach(new MelisEngineMicroServicePageServiceListener());
-        $eventManager->attach(new MelisEngineGdprAutoDeleteLinkProviderListener());
     }
     
     public function init(ModuleManager $mm)
