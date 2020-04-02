@@ -9,12 +9,12 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\PredicateSet;
-use Zend\Db\Sql\Predicate\Like;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Expression;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Predicate\Like;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Expression;
 
 class MelisSiteTable extends MelisGenericTable
 {
@@ -105,7 +105,7 @@ class MelisSiteTable extends MelisGenericTable
      * @param string $orderDirection
      * @param int $start
      * @param null $limit
-     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
 	public function getSitesData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
     {

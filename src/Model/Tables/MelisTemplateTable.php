@@ -10,10 +10,10 @@
 namespace MelisEngine\Model\Tables;
 
 use MelisCore\Model\Tables\MelisGenericToolTable;
-use Zend\Db\Sql\Expression;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Expression;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisTemplateTable extends MelisGenericTable
 {
@@ -26,7 +26,7 @@ class MelisTemplateTable extends MelisGenericTable
 
     /**
      * Retrieves the data from the Template table in alphabetical order
-     * @return NULL|\Zend\Db\ResultSet\ResultSetInterface
+     * @return NULL|\Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getSortedTemplates()
     {

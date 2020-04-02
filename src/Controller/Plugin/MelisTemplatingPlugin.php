@@ -9,15 +9,15 @@
 
 namespace MelisEngine\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Stdlib\ArrayUtils;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Session\Container;
 
 /**
  * This is the generic controller plugin that tools use

@@ -9,10 +9,10 @@
 
 namespace MelisEngine\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
 
 /**
@@ -27,7 +27,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     public $showOnMarketplacePostSetup = false;
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function getFormAction()
     {
@@ -53,7 +53,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
 
     /**
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function validateFormAction()
     {
@@ -140,7 +140,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                 $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
                 $tableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
 
-                $container = new \Zend\Session\Container('melisinstaller');
+                $container = new \Laminas\Session\Container('melisinstaller');
                 $container = $container->getArrayCopy();
                 $cmsSiteSrv = $this->getServiceLocator()->get('MelisCmsSiteService');
 
@@ -226,14 +226,14 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
     /**
      * Create a form from the configuration
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm()
     {
         $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $form = $coreConfig->getItem('melis_engine_setup/forms/melis_installer_platform_data');
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($form);
@@ -262,7 +262,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
 
     private function saveCmsSiteDomain($scheme, $site)
     {
-        $container = new \Zend\Session\Container('melisinstaller');
+        $container = new \Laminas\Session\Container('melisinstaller');
 
         // default platform
         $environments       = $container['environments'];

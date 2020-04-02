@@ -10,8 +10,8 @@
 namespace MelisEngine\Service\Factory;
 
 use MelisEngine\Service\MelisEngineComposerService;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisEngineComposerServiceFactory implements FactoryInterface
 {

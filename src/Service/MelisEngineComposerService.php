@@ -11,12 +11,12 @@ namespace MelisEngine\Service;
 use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisEngineComposerService implements ServiceLocatorAwareInterface
 {
-    /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
+    /** @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator */
     public $serviceLocator;
 
     /**
@@ -110,7 +110,7 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return \Laminas\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
@@ -118,7 +118,7 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
      *
      * @return $this
      */
@@ -137,7 +137,7 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
     public function isSiteModule($module)
     {
         $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
-        $composer = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
+        $composer = (array) \Laminas\Json\Json::decode(file_get_contents($composerFile));
 
         $repo = null;
 

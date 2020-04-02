@@ -11,11 +11,11 @@ namespace MelisEngine\Service;
 
 use MelisEngine\Service\MelisEngineGeneralService;
 
-use Zend\Mail\Message;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-use Zend\Mail\Transport\Sendmail;
-use Zend\View\Model\ViewModel;
+use Laminas\Mail\Message;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
+use Laminas\Mail\Transport\Sendmail;
+use Laminas\View\Model\ViewModel;
 
 class MelisEngineSendMailService extends MelisEngineGeneralService implements MelisEngineSendMailInterface
 {
@@ -32,8 +32,8 @@ class MelisEngineSendMailService extends MelisEngineGeneralService implements Me
 	    $tplPathStack = isset($config['view_manager']['template_map'][$email_template_path]) ?
 	    ['mailTemplate' => $config['view_manager']['template_map'][$email_template_path]] : $default;
 	    
-	    $view       = new \Zend\View\Renderer\PhpRenderer();
-	    $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
+	    $view       = new \Laminas\View\Renderer\PhpRenderer();
+	    $resolver   = new \Laminas\View\Resolver\TemplateMapResolver();
 	    $viewModel  = new ViewModel();
 	    
 	    $resolver->setMap($tplPathStack);

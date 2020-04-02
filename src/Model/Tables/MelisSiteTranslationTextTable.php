@@ -11,7 +11,7 @@ namespace MelisEngine\Model\Tables;
 
 
 use MelisCore\Model\Tables\MelisGenericTable;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisSiteTranslationTextTable extends MelisGenericTable
 {

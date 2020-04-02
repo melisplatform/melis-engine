@@ -10,7 +10,7 @@
 namespace MelisEngine\Model\Tables;
 
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisCmsGdprTextsTable extends MelisGenericTable
 {

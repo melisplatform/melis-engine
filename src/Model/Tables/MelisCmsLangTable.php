@@ -9,14 +9,14 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Select;
-use Zend\Db\Metadata\Metadata;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\PredicateSet;
-use Zend\Db\Sql\Predicate\Like;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Predicate;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Metadata\Metadata;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Predicate\Like;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Predicate;
 
 class MelisCmsLangTable extends MelisGenericTable
 {
@@ -44,7 +44,7 @@ class MelisCmsLangTable extends MelisGenericTable
      *       )
      * @param array $options
      * @param array $fixedCriteria (optional)
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getPagedData(array $options, $fixedCriteria = null)
     {
@@ -84,7 +84,7 @@ class MelisCmsLangTable extends MelisGenericTable
             }
 
             if(!empty($dateFilterSql)) {
-                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Zend\Db\Sql\Predicate\Expression($dateFilterSql));
+                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
             }
             else {
                 $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));

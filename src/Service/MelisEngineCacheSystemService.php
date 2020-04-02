@@ -9,11 +9,11 @@
 
 namespace MelisEngine\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use MelisEngine\Model\MelisPage;
-use Zend\Filter\HtmlEntities;
-use Zend\Cache\StorageFactory;
+use Laminas\Filter\HtmlEntities;
+use Laminas\Cache\StorageFactory;
 
 /**
  * This class handles MelisCache based on Zend Cache Storage configurations

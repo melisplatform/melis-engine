@@ -11,7 +11,7 @@ namespace MelisEngine\Service;
 
 use MelisEngine\Model\MelisPage;
 use MelisEngine\Service\MelisEngineGeneralService;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 
 class MelisEngineLangService extends MelisEngineGeneralService implements MelisEngineLangServiceInterface
 {

@@ -166,7 +166,7 @@ return array(
             'MelisEngine\Model\Tables\MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTextTableFactory',
 		),
         'abstract_factories' => array(
-            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+            'Laminas\Cache\Service\StorageCacheAbstractServiceFactory',
         )
     ),
     'controllers' => array(

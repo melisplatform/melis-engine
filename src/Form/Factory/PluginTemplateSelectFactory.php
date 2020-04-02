@@ -9,9 +9,9 @@
 
 namespace MelisEngine\Form\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use MelisCore\Form\Factory\MelisSelectFactory;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\Stdlib\ArrayUtils;
 
 /**
  * Template select factory to fill the template list

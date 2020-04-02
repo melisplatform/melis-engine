@@ -10,8 +10,8 @@
 namespace MelisEngine\Model\Tables;
 
 use MelisCore\Model\Tables\MelisGenericTable;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Join;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Join;
 
 class MelisSiteTranslationTable extends MelisGenericTable
 {

@@ -8,8 +8,8 @@ namespace MelisEngine\Model\Tables;
  * @package MelisCmsSiteRobotTable\Model
  */
 use MelisEngine\Model\Tables\MelisGenericTable;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Expression;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Expression;
 
 class MelisCmsSiteRobotTable extends MelisGenericTable
 {

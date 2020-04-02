@@ -9,7 +9,7 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPagePublishedTable extends MelisGenericTable
 {
@@ -36,7 +36,7 @@ class MelisPagePublishedTable extends MelisGenericTable
      *
      * @param string|null $pageType
      * @param int|null $siteId
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getPagesByType(string $pageType = null, int $siteId = null)
     {

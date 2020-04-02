@@ -9,18 +9,18 @@
 
 namespace MelisEngine\Model\Tables\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Stdlib\Hydrator\ObjectProperty;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Stdlib\Hydrator\ObjectProperty;
 
 
 class MelisCmsPageColumnsFactory implements FactoryInterface
 {
 	public function createService(ServiceLocatorInterface $sl)
 	{
-		$metadata = new \Zend\Db\Metadata\Metadata($sl->get('Zend\Db\Adapter\Adapter'));
+		$metadata = new \Laminas\Db\Metadata\Metadata($sl->get('Laminas\Db\Adapter\Adapter'));
 		$melisPageColumns = $metadata->getColumnNames('melis_cms_page_saved');
 		
 		return $melisPageColumns;

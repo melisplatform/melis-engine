@@ -9,9 +9,9 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Expression;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Expression;
 
 class MelisPlatformIdsTable extends MelisGenericTable
 {
@@ -23,7 +23,7 @@ class MelisPlatformIdsTable extends MelisGenericTable
 
     /**
      * @param array $options
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getData(array $options = [])
     {

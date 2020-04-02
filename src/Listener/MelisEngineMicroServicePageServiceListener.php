@@ -9,8 +9,8 @@
 
 namespace MelisEngine\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 use MelisCore\Listener\MelisCoreGeneralListener;
 
 class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListener implements ListenerAggregateInterface

@@ -9,8 +9,8 @@
 
 namespace MelisEngine\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZendSearch\Lucene\Document;
 use ZendSearch\Lucene\Lucene;
 
@@ -747,7 +747,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
 
         if(isset($parseUrl['host']) || !empty($parseUrl['host'])) {
 
-            $uri = new \Zend\Validator\Uri();
+            $uri = new \Laminas\Validator\Uri();
             if ($uri->isValid($url)) {
                 $valid = true;
             }
