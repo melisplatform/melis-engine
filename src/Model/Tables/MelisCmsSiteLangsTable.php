@@ -13,11 +13,20 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisCmsSiteLangsTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'slang_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site_langs';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'slang_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
     public function getSiteLanguagesBySiteId($siteId, $isActive = true)
     {

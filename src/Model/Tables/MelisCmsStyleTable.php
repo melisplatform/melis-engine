@@ -9,16 +9,36 @@
 
 namespace MelisEngine\Model\Tables;
 
+use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Hydrator\ObjectProperty;
+use MelisEngine\Model\Hydrator\MelisCmsStyle;
 
 class MelisCmsStyleTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'style_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_style';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'style_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisCmsStyle());
+    }
+
 	public function getStyles($idPage = null, $status = null)
 	{
 	    $select = $this->tableGateway->getSql()->select();

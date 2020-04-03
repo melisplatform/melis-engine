@@ -9,9 +9,8 @@
 
 namespace MelisEngine\Model\Tables;
 
+use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Metadata\Metadata;
 use Laminas\Db\Sql\Where;
@@ -19,9 +18,13 @@ use Laminas\Db\Sql\Predicate\PredicateSet;
 use Laminas\Db\Sql\Predicate\Like;
 use Laminas\Db\Sql\Predicate\Operator;
 use Laminas\Db\Sql\Predicate\Predicate;
-class MelisGenericTable implements ServiceLocatorAwareInterface
+use Laminas\Hydrator\ObjectProperty;
+use Laminas\ServiceManager\ServiceManager;
+use MelisEngine\Model\Hydrator\MelisResultSet;
+
+class MelisGenericTable
 {
-    protected $serviceLocator;
+    protected $serviceManager;
     protected $tableGateway;
     protected $idField;
     protected $lastInsertId;
@@ -29,25 +32,44 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
     protected $_selectedValues;
     protected $_currentDataCount;
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * @param ServiceManager $serviceManager
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
+    }
+
+    /**
+     * @param TableGateway $tableGateway
+     */
+    public function setTableGateway(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
     }
 
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
+    /**
+     * @return TableGateway $tableGateway
+     */
     public function getTableGateway()
     {
         return $this->tableGateway;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisResultSet());
     }
 
     public function fetchAll()

@@ -11,14 +11,9 @@ namespace MelisEngine\Service;
 use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-class MelisEngineComposerService implements ServiceLocatorAwareInterface
+class MelisEngineComposerService extends MelisEngineServiceManager
 {
-    /** @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator */
-    public $serviceLocator;
-
     /**
      * @var Composer
      */
@@ -107,26 +102,6 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
         }
 
         return '';
-    }
-
-    /**
-     * @return \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
     }
 
     /**

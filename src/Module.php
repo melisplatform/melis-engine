@@ -25,7 +25,6 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
@@ -36,7 +35,7 @@ class Module
         {
             $routeName = $routeMatch->getMatchedRouteName();
             $module = explode('/', $routeName);
-             
+
             if (!empty($module[0]))
             {
                 if ($module[0] == 'melis-backoffice')
@@ -51,41 +50,35 @@ class Module
         
         $this->createTranslations($e);
         
-        // attach Listener here
-        $eventManager->attach(new MelisEngineTreeServiceMicroServiceListener());
-        $eventManager->attach(new MelisEngineMicroServicePageServiceListener());
+        (new MelisEngineTreeServiceMicroServiceListener())->attach($eventManager);
+        (new MelisEngineMicroServicePageServiceListener())->attach($eventManager);
     }
     
-    public function init(ModuleManager $mm)
-    {
-    }
-
     public function getConfig()
     {
-    	$config = array();
-    	$configFiles = array(
-    			include __DIR__ . '/../config/module.config.php',
-    			include __DIR__ . '/../config/diagnostic.config.php',
-    	        include __DIR__ . '/../config/app.microservice.php',
-    	        include __DIR__ . '/../config/app.install.php'
-    	);
-    	
-    	foreach ($configFiles as $file) {
+    	$config = [];
+    	$configFiles = [
+            include __DIR__ . '/../config/module.config.php',
+            include __DIR__ . '/../config/diagnostic.config.php',
+            include __DIR__ . '/../config/app.microservice.php',
+            include __DIR__ . '/../config/app.install.php'
+    	];
+
+    	foreach ($configFiles as $file)
     		$config = ArrayUtils::merge($config, $file);
-    	} 
-    	
+
     	return $config;
     }
 
     public function getAutoloaderConfig()
     {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+        return [
+            'Laminas\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        ); 
+                ],
+            ],
+        ];
     }
     
     public function createTranslations($e, $locale = 'en_EN')
@@ -94,12 +87,12 @@ class Module
     	$translator = $sm->get('translator');
         
     	if (!empty($locale)){
-    	    $translationType = array(
+    	    $translationType = [
     	        'interface',
     	        'install',
-    	    );
+    	    ];
     	    
-    	    $translationList = array();
+    	    $translationList = [];
     	    if(file_exists($_SERVER['DOCUMENT_ROOT'].'/../module/MelisModuleConfig/config/translation.list.php')){
                 $translationList = include 'module/MelisModuleConfig/config/translation.list.php';
             }
@@ -124,5 +117,4 @@ class Module
             }
     	}
     }
-    
 }

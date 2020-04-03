@@ -9,7 +9,7 @@
 
 namespace MelisEngine\Form\Factory;
 
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\Factory\MelisSelectFactory;
 use Laminas\Stdlib\ArrayUtils;
 
@@ -18,13 +18,10 @@ use Laminas\Stdlib\ArrayUtils;
  */
 class PluginTemplateSelectFactory extends MelisSelectFactory
 {
-	protected function loadValueOptions(ServiceLocatorInterface $formElementManager)
+	protected function loadValueOptions(ServiceManager $serviceManager)
 	{
-		$serviceManager = $formElementManager->getServiceLocator();
-
 		$config = $serviceManager->get('config');
-		
-		
+
 		$request = $serviceManager->get('request');
 		$parameters = $request->getQuery('parameters', array());
 		$module = (!empty($parameters['module'])) ? $parameters['module'] : '';
@@ -36,13 +33,9 @@ class PluginTemplateSelectFactory extends MelisSelectFactory
 		    $config = ArrayUtils::merge($config, require $siteconfig);
 		
 		if (empty($config['plugins'][$module]['plugins'][$pluginName]))
-		{
             $valueoptions = array();
-		}
 		else
-		{
 		    $valueoptions = $config['plugins'][$module]['plugins'][$pluginName]['front']['template_path'];
-		}
 
 		$translator = $serviceManager->get('translator');
 		

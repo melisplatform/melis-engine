@@ -13,11 +13,20 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisCmsSiteHomeTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'shome_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site_home';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'shome_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
 	public function getHomePageBySiteIdAndLangId($siteId, $langId)
     {

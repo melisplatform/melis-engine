@@ -33,7 +33,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results; */
 	         
-		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
+		$tablePageTree = $this->getServiceManager()->get('MelisEngineTablePageTree');
 		$datasPage = $tablePageTree->getPageChildrenByidPage($idPage, $publishedOnly);
 
 		// Save cache key
@@ -78,7 +78,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	        
-		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
+		$tablePageTree = $this->getServiceManager()->get('MelisEngineTablePageTree');
 		$datasPage = $tablePageTree->getFatherPageById($idPage, $type);
 
 		// Save cache key
@@ -110,7 +110,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	        
 		$results = array();
 		$tmp = $idPage;
-		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+		$melisPage = $this->getServiceManager()->get('MelisEnginePage');
 
 		
 		$datasPageRes = $melisPage->getDatasPage($idPage);
@@ -182,7 +182,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
         // Get the already generated link from the DB if possible    
         $link = '';
-        $tablePageDefaultUrls = $this->getServiceLocator()->get('MelisEngineTablePageDefaultUrls');
+        $tablePageDefaultUrls = $this->getServiceManager()->get('MelisEngineTablePageDefaultUrls');
         if ($this->getRenderMode() == 'front')
         {
             $defaultUrls = $tablePageDefaultUrls->getEntryById($idPage);
@@ -203,7 +203,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
             
             // Check for SEO URL first
             $seoUrl = '';
-            $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+            $melisPage = $this->getServiceManager()->get('MelisEnginePage');
             $datasPageRes = $melisPage->getDatasPage($idPage);
             $datasPageTreeRes = $datasPageRes->getMelisPageTree();
             
@@ -264,8 +264,8 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
             );
         }
             
-		$router = $this->getServiceLocator()->get('router');
-        $request = $this->getServiceLocator()->get('request');
+		$router = $this->getServiceManager()->get('router');
+        $request = $this->getServiceManager()->get('request');
         $routeMatch = $router->match($request);
 
         $idversion = null;
@@ -297,8 +297,8 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         /**
          * prepare tables / services
          */
-        $siteHomeTable = $this->getServiceLocator()->get('MelisEngineTableCmsSiteHome');
-        $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+        $siteHomeTable = $this->getServiceManager()->get('MelisEngineTableCmsSiteHome');
+        $cmsPageLang = $this->getServiceManager()->get('MelisEngineTablePageLang');
         /**
          * Get the site information using the given
          * page id
@@ -313,12 +313,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
          * in the page saved table
          */
         if(empty($siteData)) {
-            $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+            $melisPage = $this->getServiceManager()->get('MelisEnginePage');
             $datasPage = $melisPage->getDatasPage($idPage, 'saved');
             $datasTemplate = $datasPage->getMelisTemplate();
             if (!empty($datasTemplate) && !empty($datasTemplate->tpl_site_id))
             {
-                $melisEngineTableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
+                $melisEngineTableSite = $this->getServiceManager()->get('MelisEngineTableSite');
                 $siteData = $melisEngineTableSite->getSiteById($datasTemplate->tpl_site_id, getenv('MELIS_PLATFORM'));
                 if ($siteData)
                 {
@@ -362,7 +362,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
          * Get the lang id of the given locale
          */
         $langId = '';
-        $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langCmsTbl = $this->getServiceManager()->get('MelisEngineTableCmsLang');
         $langData = $langCmsTbl->getEntryByField('lang_cms_locale', $locale)->current();
         if(!empty($langData)){
             $langId = $langData->lang_cms_id;
@@ -371,7 +371,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
          * Get the page id of given locale
          * to get the url using the page id
          */
-        $pageTable = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+        $pageTable = $this->getServiceManager()->get('MelisEngineTablePageLang');
         $pageRel = $pageTable->getPageRelationshipById($idPage)->toArray();
         if(!empty($pageRel)){
             foreach($pageRel as $key => $val){
@@ -407,12 +407,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
             //check if we are going to add lang locale to the url
             if ($datasSite->site_opt_lang_url == 2) {
                 //get the page language id from cms page lang
-                $cmsPageLang = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+                $cmsPageLang = $this->getServiceManager()->get('MelisEngineTablePageLang');
                 $pageLang = $cmsPageLang->getEntryByField('plang_page_id', $idPage)->current();
                 if (!empty($pageLang)) {
                     $pageLangId = $pageLang->plang_lang_id;
                     //get the cms language locale to add on the url
-                    $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+                    $langCmsTbl = $this->getServiceManager()->get('MelisEngineTableCmsLang');
                     $langData = $langCmsTbl->getEntryById($pageLangId)->current();
                     if (!empty($langData)) {
                         $langLocale = explode('_', $langData->lang_cms_locale);
@@ -534,12 +534,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         if (!empty($results)) return $results;
 	        
         $domainStr = '';
-		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+		$melisPage = $this->getServiceManager()->get('MelisEnginePage');
 		$datasPage = $melisPage->getDatasPage($idPage);
 		$datasTemplate = $datasPage->getMelisTemplate();
 		if (!empty($datasTemplate) && !empty($datasTemplate->tpl_site_id))
 		{
-			$melisEngineTableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
+			$melisEngineTableSite = $this->getServiceManager()->get('MelisEngineTableSite');
 			$datasSite = $melisEngineTableSite->getSiteById($datasTemplate->tpl_site_id, getenv('MELIS_PLATFORM'));
 			if ($datasSite)
 			{
@@ -582,12 +582,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         if (!empty($results)) return $results;
 	    
         $datasSite = null;
-		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+		$melisPage = $this->getServiceManager()->get('MelisEnginePage');
 		$datasPage = $melisPage->getDatasPage($idPage);
 		$datasTemplate = $datasPage->getMelisTemplate();
 		if (!empty($datasTemplate) && !empty($datasTemplate->tpl_site_id))
 		{
-			$melisEngineTableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
+			$melisEngineTableSite = $this->getServiceManager()->get('MelisEngineTableSite');
 			$datasSite = $melisEngineTableSite->getSiteById($datasTemplate->tpl_site_id, getenv('MELIS_PLATFORM'));
 			if ($datasSite)
 			{
@@ -614,11 +614,11 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	        'next' => null
 	    );
 	
-	    $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+	    $melisPage = $this->getServiceManager()->get('MelisEnginePage');
 	    $datasPagePublished = $melisPage->getDatasPage($idPage, 'published');
 	    $datasPagePublishedTree = $datasPagePublished->getMelisPageTree();
 	
-	    $melisTree = $this->getServiceLocator()->get('MelisEngineTree');
+	    $melisTree = $this->getServiceManager()->get('MelisEngineTree');
 	    $sisters = $melisTree->getPageChildren($datasPagePublishedTree->tree_father_page_id, $publishedOnly);
 	    $sisters = $sisters->toArray();
 	

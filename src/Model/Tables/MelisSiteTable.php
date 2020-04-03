@@ -18,12 +18,21 @@ use Laminas\Db\Sql\Predicate\Expression;
 
 class MelisSiteTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'site_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'site_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	/**
 	 * Gets all the datas for a site
 	 * 

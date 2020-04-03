@@ -13,12 +13,20 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisSiteDomainTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'sdom_id';
-		$this->cacheResults = true;
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site_domain';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'sdom_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
 	 /**
      * @param string $search

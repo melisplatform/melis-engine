@@ -13,11 +13,9 @@ use MelisEngine\Service\MelisEngineGeneralService;
 
 class MelisEngineStyleService extends MelisEngineGeneralService implements MelisEngineStyleInterface
 {
-    
     public function getStyles($idPage = null, $status = null)
     {
-        
-        $styleTable = $this->getServiceLocator()->get('MelisEngineTableStyle');
+        $styleTable = $this->getServiceManager()->get('MelisEngineTableStyle');
         
         $stylesData = $styleTable->getStyles($idPage, $status)->toArray();
         
@@ -26,8 +24,7 @@ class MelisEngineStyleService extends MelisEngineGeneralService implements Melis
     
     public function saveStyle($styleData , $styleId = null)
     {
-        
-        $styleTable = $this->getServiceLocator()->get('MelisEngineTableStyle');
+        $styleTable = $this->getServiceManager()->get('MelisEngineTableStyle');
         
         $result = $styleTable->save($styleData, $styleId);
         

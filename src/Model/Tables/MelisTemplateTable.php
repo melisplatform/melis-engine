@@ -9,19 +9,39 @@
 
 namespace MelisEngine\Model\Tables;
 
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Hydrator\ObjectProperty;
 use MelisCore\Model\Tables\MelisGenericToolTable;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
+use MelisEngine\Model\Hydrator\MelisCmsGdprTexts;
 
 class MelisTemplateTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_template';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'tpl_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'tpl_id';
+        $this->idField = self::PRIMARY_KEY;
         $this->cacheResults = true;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisCmsGdprTexts());
     }
 
     /**

@@ -9,17 +9,37 @@
 
 namespace MelisEngine\Model\Tables;
 
+use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Expression;
+use Laminas\Hydrator\ObjectProperty;
+use MelisEngine\Model\Hydrator\MelisPlatformIds;
 
 class MelisPlatformIdsTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'pids_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_platform_ids';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'pids_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisPlatformIds());
+    }
 
     /**
      * @param array $options

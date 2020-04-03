@@ -20,11 +20,20 @@ use Laminas\Db\Sql\Predicate\Predicate;
 
 class MelisCmsLangTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'lang_cms_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_lang';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'lang_cms_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
 	    /**
      * This is used whenever you want to implement a pagination on your data table

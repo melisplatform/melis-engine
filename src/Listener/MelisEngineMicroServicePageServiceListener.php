@@ -25,9 +25,8 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
             'melis_core_microservice_amend_data',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceLocator();
                 $params = $e->getParams();
-
 
                 $module  = isset($params['module'])  ? $params['module']  : null;
                 $service = isset($params['service']) ? $params['service'] : null;
@@ -58,7 +57,6 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
                     $pageTree->page_uri = $uri;
 
                     $results->getMelisPageTree = $pageTree;
-
                 }
 
                 return array(

@@ -27,7 +27,7 @@ class MelisEngineLangService extends MelisEngineGeneralService implements MelisE
         $arrayParameters = $this->sendEvent('melisengine_service_get_available_languages_start', $arrayParameters);
 
         // Service implementation start
-        $langTable = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langTable = $this->getServiceManager()->get('MelisEngineTableCmsLang');
         $results = $langTable->fetchAll()->toArray();
         // Service implementation end
 
@@ -55,7 +55,7 @@ class MelisEngineLangService extends MelisEngineGeneralService implements MelisE
         $arrayParameters = $this->sendEvent('melisengine_service_get_local_by_id_start', $arrayParameters);
 
         // Service implementation start
-        $langTable = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langTable = $this->getServiceManager()->get('MelisEngineTableCmsLang');
         $result = $langTable->getEntryByField('lang_cms_id', $langId)->toArray();
         if(!isset($result[0]['lang_cms_locale'])) return null;
         $result = $result[0]['lang_cms_locale'];
@@ -85,7 +85,7 @@ class MelisEngineLangService extends MelisEngineGeneralService implements MelisE
         $arrayParameters = $this->sendEvent('melisengine_service_get_lang_by_local_start', $arrayParameters);
 
         // Service implementation start
-        $langTable = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langTable = $this->getServiceManager()->get('MelisEngineTableCmsLang');
         $result = $langTable->getEntryByField('lang_cms_locale', $locale)->toArray();
         if(!isset($result[0]['lang_cms_locale'])) return null;
         $result = $result[0];
@@ -116,7 +116,7 @@ class MelisEngineLangService extends MelisEngineGeneralService implements MelisE
         // Service implementation start
         $siteModule = getenv('MELIS_MODULE');
         $container = new Container('melisplugins');
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
 
         $langId = $container['melis-plugins-lang-id'];
         $langLocale = $container['melis-plugins-lang-locale'];

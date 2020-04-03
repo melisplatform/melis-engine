@@ -7,13 +7,16 @@
  *
  */
 
-namespace MelisEngine\Model;
+namespace MelisEngine\Model\Hydrator;
 
-class MelisCmsStyle
+class MelisPlatformIds
 {
     protected $unfilteredDataCount = 0;
     protected $filteredDataCount = 0;
 
+    public function __construct(){
+    }
+    
     public function getArrayCopy()
     {
         return get_object_vars($this);
@@ -23,16 +26,20 @@ class MelisCmsStyle
     {
         return $this->unfilteredDataCount;
     }
+
     public function setUnfilteredDataCount(int $count = 0)
     {
         $this->unfilteredDataCount = $count;
     }
+
     public function getFilteredDataCount()
     {
         return $this->filteredDataCount;
     }
+
     public function setFilteredDataCount(int $count = 0)
     {
         $this->filteredDataCount = $count;
     }
+
 }

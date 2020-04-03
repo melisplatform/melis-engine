@@ -13,12 +13,21 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPageSavedTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'page_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_saved';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'page_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	public function getSavedSitePagesById($pageId)
 	{
 	    $select = $this->tableGateway->getSql()->select();

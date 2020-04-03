@@ -13,9 +13,18 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPageDefaultUrlsTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'purl_page_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_default_urls';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'purl_page_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 }

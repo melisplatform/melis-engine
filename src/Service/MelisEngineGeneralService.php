@@ -9,8 +9,6 @@
 
 namespace MelisEngine\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerInterface;
 
@@ -19,22 +17,10 @@ use Laminas\EventManager\EventManagerInterface;
  * This service handles the generic service system of Melis.
  *
  */
-class MelisEngineGeneralService implements ServiceLocatorAwareInterface, EventManagerAwareInterface
+class MelisEngineGeneralService extends MelisEngineServiceManager implements EventManagerAwareInterface
 {
-	public $serviceLocator;
 	public $eventManager;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}
-	
+
 	public function setEventManager(EventManagerInterface $eventManager)
 	{
 	    $this->eventManager = $eventManager;
@@ -47,8 +33,8 @@ class MelisEngineGeneralService implements ServiceLocatorAwareInterface, EventMa
 
 	public function getRenderMode()
 	{
-	    $router = $this->serviceLocator->get('router');
-	    $request = $this->serviceLocator->get('request');
+	    $router = $this->getServiceManager()->get('router');
+	    $request = $this->getServiceManager()->get('request');
 	
 	    $routeMatch = $router->match($request);
 	    $renderMode = $routeMatch->getParam('renderMode', 'melis');

@@ -9,8 +9,6 @@
 
 namespace MelisEngine\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZendSearch\Lucene\Document;
 use ZendSearch\Lucene\Lucene;
 
@@ -18,9 +16,8 @@ use ZendSearch\Lucene\Lucene;
  * Search service for melis search engine based on ZendSearch
  *
  */
-class MelisSearchService implements ServiceLocatorAwareInterface
+class MelisSearchService extends MelisEngineServiceManager
 {
-    public $serviceLocator;
     protected $tmpLogs;
     protected $unreachableCount = 0;
     protected $totalCount;
@@ -53,18 +50,6 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      * ACTIVE PAGE FLAG
      */
     const PAGE_ACTIVE = 1;
-
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
 
     /**
      * Create index for the provided page id
@@ -153,7 +138,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      */
     public function optimizeIndex($moduleName)
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $status = $translator->translate('tr_melis_engine_search_optimize');
         $lucenePath = self::FOLDER_PATH.$moduleName.'/'.self::FOLDER_NAME . '/indexes';
 
@@ -202,10 +187,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      */
     protected function setSearchResultsAsXml($searchValue, $searchResults)
     {
-        $pagePublishTable = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
-        $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
-        $cmsLangTbl  = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
-        $pageTreeSvc = $this->getServiceLocator()->get('MelisEngineTree');
+        $pagePublishTable = $this->getServiceManager()->get('MelisEngineTablePagePublished');
+        $pageLangTbl = $this->getServiceManager()->get('MelisEngineTablePageLang');
+        $cmsLangTbl  = $this->getServiceManager()->get('MelisEngineTableCmsLang');
+        $pageTreeSvc = $this->getServiceManager()->get('MelisEngineTree');
         $xmlContent = '<?xml version="1.0" encoding="UTF-8"?>';
         $xmlContent.= '<document type="MelisSearchResults" author="MelisTechnology" version="2.0">';
         $xmlContent.= '<searchQuery>'.$searchValue.'</searchQuery>';
@@ -255,7 +240,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
     {
 
         //Services
-        $pageService = $this->getServiceLocator()->get('MelisEnginePage');
+        $pageService = $this->getServiceManager()->get('MelisEnginePage');
 
         //page Search type value
         $opt1 = 'tr_meliscms_page_tab_properties_search_type_option1';
@@ -350,10 +335,10 @@ class MelisSearchService implements ServiceLocatorAwareInterface
         );
 
         //Services
-        $pagePub     = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
-        $pageSaved   = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
-        $enginePage  = $this->getServiceLocator()->get('MelisEngineTree');
-        $translator  = $this->getServiceLocator()->get('translator');
+        $pagePub     = $this->getServiceManager()->get('MelisEngineTablePagePublished');
+        $pageSaved   = $this->getServiceManager()->get('MelisEngineTablePageSaved');
+        $enginePage  = $this->getServiceManager()->get('MelisEngineTree');
+        $translator  = $this->getServiceManager()->get('translator');
 
         /*
          * Get data first in page published table
@@ -476,9 +461,9 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      */
     protected function createDocument($data = array())
     {
-        $enginePage = $this->getServiceLocator()->get('MelisEngineTree');
-        $translator = $this->getServiceLocator()->get('translator');
-        $pageSvc    = $this->getServiceLocator()->get('MelisEnginePage');
+        $enginePage = $this->getServiceManager()->get('MelisEngineTree');
+        $translator = $this->getServiceManager()->get('translator');
+        $pageSvc    = $this->getServiceManager()->get('MelisEnginePage');
         $doc = new Document();
         if(is_array($data)) {
             $uri = $enginePage->getPageLink($data['page_id'], true);
@@ -526,7 +511,7 @@ class MelisSearchService implements ServiceLocatorAwareInterface
         $env = getenv('MELIS_PLATFORM');
         $url = '/';
         if($env) {
-            $table = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
+            $table = $this->getServiceManager()->get('MelisEngineTableSiteDomain');
             $data  = $table->getEntryByField('sdom_env', $env)->current();
             if(!empty($data)) {
                 $url = $data->sdom_scheme . '://' . $data->sdom_domain;
@@ -764,8 +749,6 @@ class MelisSearchService implements ServiceLocatorAwareInterface
      */
     protected function melisFrontNav($pageId)
     {
-        return new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceLocator(), $pageId, 'front');
+        return new \MelisFront\Navigation\MelisFrontNavigation($this->getServiceManager(), $pageId, 'front');
     }
-
-
 }

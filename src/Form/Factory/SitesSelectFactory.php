@@ -8,7 +8,9 @@
  */
 
 namespace MelisEngine\Form\Factory;
+
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\Factory\MelisSelectFactory;
 
 /**
@@ -17,19 +19,15 @@ use MelisCore\Form\Factory\MelisSelectFactory;
  */
 class SitesSelectFactory extends MelisSelectFactory
 {
-    protected function loadValueOptions(ServiceLocatorInterface $formElementManager)
+    protected function loadValueOptions(ServiceManager $serviceManager)
     {
-        $serviceManager = $formElementManager->getServiceLocator();
         $table = $serviceManager->get('MelisEngineTableSiteDomain');
         $sites = $table->getSitesByEnv();
 
-        $valueoptions = array();
-
-        foreach($sites as $site) {
+        $valueoptions = [];
+        foreach($sites as $site)
             $valueoptions[$site->sdom_site_id] = $site->sdom_domain;
-        }
 
         return $valueoptions;
     }
-
 }

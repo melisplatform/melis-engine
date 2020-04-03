@@ -22,12 +22,10 @@ class MelisEngineTreeServiceMicroServiceListener extends MelisCoreGeneralListene
 
         $callBackHandler = $sharedEvents->attach(
             '*',
-            array(
-                'melis_core_microservice_amend_data',
-            ),
+            'melis_core_microservice_amend_data',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceLocator();
                 $params = $e->getParams();
 
                 $module  = isset($params['module'])  ? $params['module']  : null;

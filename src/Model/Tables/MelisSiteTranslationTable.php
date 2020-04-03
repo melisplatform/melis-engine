@@ -15,13 +15,19 @@ use Laminas\Db\Sql\Join;
 
 class MelisSiteTranslationTable extends MelisGenericTable
 {
-    protected $tableGateway;
-    protected $idField;
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_site_translation';
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mst_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'mst_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
     /**

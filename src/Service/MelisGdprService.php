@@ -142,6 +142,6 @@ class MelisGdprService extends MelisEngineGeneralService
      */
     private function getMelisCmsGdprTextsTable()
     {
-        return $this->getServiceLocator()->get('MelisEngine\Model\Tables\MelisCmsGdprTextsTable');
+        return $this->getServiceManager()->get('MelisEngine\Model\Tables\MelisCmsGdprTextsTable');
     }
 }

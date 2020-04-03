@@ -25,7 +25,7 @@ class MelisEngineSendMailService extends MelisEngineGeneralService implements Me
 	                           $email_content, $email_content_tag_replace = array(), $email_reply_to = null) 
 	{
 	    
-	    $config = $this->getServiceLocator()->get('config');
+	    $config = $this->getServiceManager()->get('config');
 	   
 	    $default = ['mailTemplate' => $config['view_manager']['template_map']['MelisEngine/emailLayout']];
 	    // email template

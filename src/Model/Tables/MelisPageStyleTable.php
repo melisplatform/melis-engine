@@ -13,12 +13,21 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPageStyleTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'pstyle_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_style';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'pstyle_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	public function savePageStyle($pageStyle, $pageId = null)
 	{
 	    if (!is_null($pageId))
