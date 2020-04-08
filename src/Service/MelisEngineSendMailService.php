@@ -9,15 +9,14 @@
 
 namespace MelisEngine\Service;
 
-use MelisEngine\Service\MelisEngineGeneralService;
-
 use Laminas\Mail\Message;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Part as MimePart;
 use Laminas\Mail\Transport\Sendmail;
 use Laminas\View\Model\ViewModel;
+use MelisCore\Service\MelisGeneralService;
 
-class MelisEngineSendMailService extends MelisEngineGeneralService implements MelisEngineSendMailInterface
+class MelisEngineSendMailService extends MelisGeneralService implements MelisEngineSendMailInterface
 {
     
 	public function sendEmail($email_template_path, $email_from, $email_from_name, 

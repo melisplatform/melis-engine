@@ -133,7 +133,7 @@ class MelisGenericTable
 
     protected function aliasColumnsFromTableDefinition($serviceTableName, $prefix)
     {
-        $melisPageColumns = $this->serviceLocator->get($serviceTableName);
+        $melisPageColumns = $this->getServiceManager()->get($serviceTableName);
 
         $final = array();
         foreach ($melisPageColumns as $column)

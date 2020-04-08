@@ -13,6 +13,7 @@ use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
+use MelisCore\Controller\AbstractActionController;
 
 /**
  * @property bool $showOnMarketplacePostSetup

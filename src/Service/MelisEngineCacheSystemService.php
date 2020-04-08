@@ -9,6 +9,7 @@
 
 namespace MelisEngine\Service;
 
+use MelisCore\Service\MelisServiceManager;
 use MelisEngine\Model\MelisPage;
 use Laminas\Filter\HtmlEntities;
 use Laminas\Cache\StorageFactory;
@@ -18,7 +19,7 @@ use Laminas\Cache\StorageFactory;
  * See module.config.php, "caches" keys for overridding config for your own site
  *
  */
-class MelisEngineCacheSystemService extends MelisEngineServiceManager
+class MelisEngineCacheSystemService extends MelisServiceManager
 {
     /**
      * Returns front/melis

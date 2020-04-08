@@ -7,9 +7,6 @@
  *
  */
 
-use MelisEngine\Service\Factory\AbstractFactory;
-use MelisEngine\Model\Tables\Factory\AbstractTableGatewayFactory;
-
 return [
     'router' => [
         'routes' => [
@@ -91,57 +88,24 @@ return [
     ],
     'service_manager' => [
         'invokables' => [
-            \MelisEngine\Service\MelisPageServiceInterface::class     => \MelisEngine\Service\MelisPageService::class,
-            \MelisEngine\Service\MelisTreeServiceInterface::class     => \MelisEngine\Service\MelisTreeService::class,
-            \MelisEngine\Service\MelisEngineSendMailInterface::class  => \MelisEngine\Service\MelisEngineSendMailService::class,
-            \MelisEngine\Service\MelisEngineStyleInterface::class     => \MelisEngine\Service\MelisEngineStyleService::class,
-            \MelisEngine\Service\MelisEngineLangInterface::class      => \MelisEngine\Service\MelisEngineLangService::class
+//            @TODO need to confirm whats the use of the following invokables
+//            \MelisEngine\Service\MelisPageServiceInterface::class     => \MelisEngine\Service\MelisPageService::class,
+//            \MelisEngine\Service\MelisTreeServiceInterface::class     => \MelisEngine\Service\MelisTreeService::class,
+//            \MelisEngine\Service\MelisEngineSendMailInterface::class  => \MelisEngine\Service\MelisEngineSendMailService::class,
+//            \MelisEngine\Service\MelisEngineStyleInterface::class     => \MelisEngine\Service\MelisEngineStyleService::class,
+//            \MelisEngine\Service\MelisEngineLangInterface::class      => \MelisEngine\Service\MelisEngineLangService::class
         ],
         'factories' => [
-            // Services
-            \MelisEngine\Service\MelisPageService::class                    => AbstractFactory::class,
-            \MelisEngine\Service\MelisTreeService::class                    => AbstractFactory::class,
-            \MelisEngine\Service\MelisSearchService::class                  => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineGeneralService::class           => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineSendMailService::class          => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineCacheSystemService::class       => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineStyleService::class             => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineLangService::class              => AbstractFactory::class,
-            \MelisEngine\Service\MelisGdprService::class                    => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineComposerService::class          => AbstractFactory::class,
-            \MelisEngine\Service\MelisEngineComposerService::class          => AbstractFactory::class,
-            // Model tables
-            \MelisEngine\Model\Tables\MelisCmsGdprTextsTable::class         => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisCmsLangTable::class              => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPageLangTable::class             => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPageTreeTable::class             => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisTemplateTable::class             => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisSiteTable::class                 => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisSiteDomainTable::class           => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisSite404Table::class              => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisSite301Table::class              => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPagePublishedTable::class        => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPageSavedTable::class            => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPageSeoTable::class              => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPlatformIdsTable::class          => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPageDefaultUrlsTable::class      => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisCmsStyleTable::class             => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisPageStyleTable::class            => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisCmsSiteRobotTable::class         => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisCmsSiteHomeTable::class          => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisCmsSiteLangsTable::class         => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisCmsSiteConfigTable::class        => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisSiteTranslationTable::class      => AbstractTableGatewayFactory::class,
-            \MelisEngine\Model\Tables\MelisSiteTranslationTextTable::class  => AbstractTableGatewayFactory::class,
             // Metadata 'melis_cms_page_saved'
             'MelisEngine\MelisPageColumns'  => \MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory::class,
         ],
         'aliases' => [
             // Services
+            //            'MelisEngineGeneralService'         => \MelisEngine\Service\MelisEngineGeneralService::class,
+            'MelisGeneralService'               => \MelisCore\Service\MelisGeneralService::class,
             'MelisEnginePage'                   => \MelisEngine\Service\MelisPageService::class,
             'MelisEngineTree'                   => \MelisEngine\Service\MelisTreeService::class,
             'MelisSearch'                       => \MelisEngine\Service\MelisSearchService::class,
-            'MelisEngineGeneralService'         => \MelisEngine\Service\MelisEngineGeneralService::class,
             'MelisEngineSendMail'               => \MelisEngine\Service\MelisEngineSendMailService::class,
             'MelisEngineCacheSystem'            => \MelisEngine\Service\MelisEngineCacheSystemService::class,
             'MelisEngineStyle'                  => \MelisEngine\Service\MelisEngineStyleService::class,

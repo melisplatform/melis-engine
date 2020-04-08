@@ -9,10 +9,10 @@
 
 namespace MelisEngine\Service;
 
+use MelisCore\Service\MelisGeneralService;
 use MelisEngine\Model\MelisPage;
-use MelisEngine\Service\MelisEngineGeneralService;
 
-class MelisTreeService extends MelisEngineGeneralService implements MelisTreeServiceInterface
+class MelisTreeService extends MelisGeneralService implements MelisTreeServiceInterface
 {
 	/**
 	 * This service gets the children pages of a specific page
@@ -29,7 +29,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         // Retrieve cache version if front mode to avoid multiple calls
         /* $cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results; */
 	         
@@ -74,7 +74,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getPageFather_' . $idPage;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	        
@@ -104,7 +104,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getPageBreadcrumb_' . $idPage . '_' . $typeLinkOnly . '_' . $allPages;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	        
@@ -176,7 +176,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getPageLink_' . $idPage . '_' . $absolute;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 
@@ -529,7 +529,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getDomainByPageId_' . $idPage;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	        
@@ -577,7 +577,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getSiteByPageId_' . $idPage;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	    

@@ -77,7 +77,7 @@ class MelisSiteTable extends MelisGenericTable
         // Retrieve cache version if front mode to avoid multiple calls
 	    $cacheKey = get_class($this) . '_getSiteById_' . $idSite . '_' . $env . '_' . $includeSite404Table;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	    

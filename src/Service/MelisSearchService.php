@@ -7,16 +7,24 @@
  *
  */
 
+/**
+ * @TODO
+ *
+ * ZendSearch\Lucene\Document;
+ * ZendSearch\Lucene\Lucene;
+ *
+ */
+
 namespace MelisEngine\Service;
 
+use MelisCore\Service\MelisServiceManager;
 use ZendSearch\Lucene\Document;
 use ZendSearch\Lucene\Lucene;
 
 /**
  * Search service for melis search engine based on ZendSearch
- *
  */
-class MelisSearchService extends MelisEngineServiceManager
+class MelisSearchService extends MelisServiceManager
 {
     protected $tmpLogs;
     protected $unreachableCount = 0;

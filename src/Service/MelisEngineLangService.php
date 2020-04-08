@@ -9,11 +9,11 @@
 
 namespace MelisEngine\Service;
 
+use MelisCore\Service\MelisGeneralService;
 use MelisEngine\Model\MelisPage;
-use MelisEngine\Service\MelisEngineGeneralService;
 use Laminas\Session\Container;
 
-class MelisEngineLangService extends MelisEngineGeneralService implements MelisEngineLangServiceInterface
+class MelisEngineLangService extends MelisGeneralService implements MelisEngineLangServiceInterface
 {
     /**
      * This service gets all available languages

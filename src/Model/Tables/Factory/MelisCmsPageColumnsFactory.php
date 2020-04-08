@@ -15,7 +15,7 @@ use Laminas\Db\Adapter\Adapter;
 
 class MelisCmsPageColumnsFactory
 {
-	public function __construct(ContainerInterface $container, $requestedName)
+	public function __invoke(ContainerInterface $container, $requestedName)
 	{
 		$metadata = new Metadata($container->get(Adapter::class));
 		$melisPageColumns = $metadata->getColumnNames('melis_cms_page_saved');

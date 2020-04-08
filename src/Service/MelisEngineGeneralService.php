@@ -11,13 +11,14 @@ namespace MelisEngine\Service;
 
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerInterface;
+use MelisCore\Service\MelisServiceManager;
 
 /**
  * 
  * This service handles the generic service system of Melis.
  *
  */
-class MelisEngineGeneralService extends MelisEngineServiceManager implements EventManagerAwareInterface
+class MelisEngineGeneralService extends MelisServiceManager implements EventManagerAwareInterface
 {
 	public $eventManager;
 

@@ -16,7 +16,7 @@ use Laminas\Db\Sql\Expression;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
-use MelisEngine\Model\Hydrator\MelisCmsGdprTexts;
+use MelisEngine\Model\Hydrator\MelisTemplate;
 
 class MelisTemplateTable extends MelisGenericTable
 {
@@ -41,7 +41,7 @@ class MelisTemplateTable extends MelisGenericTable
      */
     public function hydratingResultSet()
     {
-        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisCmsGdprTexts());
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisTemplate());
     }
 
     /**

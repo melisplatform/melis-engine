@@ -9,9 +9,10 @@
 
 namespace MelisEngine\Service;
 
-use MelisEngine\Service\MelisEngineGeneralService;
 
-class MelisEngineStyleService extends MelisEngineGeneralService implements MelisEngineStyleInterface
+use MelisCore\Service\MelisGeneralService;
+
+class MelisEngineStyleService extends MelisGeneralService implements MelisEngineStyleInterface
 {
     public function getStyles($idPage = null, $status = null)
     {

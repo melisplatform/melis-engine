@@ -12,6 +12,7 @@ namespace MelisEngine\Controller;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
+use MelisCore\Controller\AbstractActionController;
 
 /**
  * @property bool $showOnMarketplacePostSetup

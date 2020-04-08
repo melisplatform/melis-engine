@@ -45,7 +45,7 @@ Provides services to get all datas from a page.
 File: /melis-engine/src/Service/MelisPageService.php  
 ```
 // Get the service
-$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+$melisPage = $this->getServiceManager()->get('MelisEnginePage');
 // Get all datas of this page
 $datasPageRes = $melisPage->getDatasPage($siteMainPage); 
 ```
@@ -56,7 +56,7 @@ Meant to deliver parent pages, breadcrumb, generate menus, generate URLs, etc.
 File: /melis-engine/src/Service/MelisTreeService.php  
 ```
 // Get the service
-$treeSrv = $this->getServiceLocator()->get('MelisEngineTree');
+$treeSrv = $this->getServiceManager()->get('MelisEngineTree');
 // Get the breadcrumb
 $pageBreadcrumb = $treeSrv->getPageBreadcrumb($pageId, 0, true);
 ```
@@ -67,7 +67,7 @@ Search is done using Zend_Search.
 File: /melis-engine/src/Service/MelisSearchService.php  
 ```
 // Get the service
-$searchSvc = $this->getServiceLocator()->get('MelisSearch');
+$searchSvc = $this->getServiceManager()->get('MelisSearch');
 // Search
 $searchresults = $searchSvc->search($keyword, $moduleName, true);
 ```

@@ -11,8 +11,9 @@ namespace MelisEngine\Service;
 use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
+use MelisCore\Service\MelisServiceManager;
 
-class MelisEngineComposerService extends MelisEngineServiceManager
+class MelisEngineComposerService extends MelisServiceManager
 {
     /**
      * @var Composer

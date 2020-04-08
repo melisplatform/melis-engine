@@ -9,10 +9,10 @@
 
 namespace MelisEngine\Service;
 
+use MelisCore\Service\MelisGeneralService;
 use MelisEngine\Model\MelisPage;
-use MelisEngine\Service\MelisEngineGeneralService;
 
-class MelisPageService extends MelisEngineGeneralService implements MelisPageServiceInterface
+class MelisPageService extends MelisGeneralService implements MelisPageServiceInterface
 {
 	/**
 	 * This service gets all datas of a page

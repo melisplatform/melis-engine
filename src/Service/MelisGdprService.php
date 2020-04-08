@@ -9,14 +9,14 @@
 namespace MelisEngine\Service;
 
 
-use MelisEngine\Service\MelisEngineGeneralService;
+use MelisCore\Service\MelisGeneralService;
 
 /**
  *
  * This service handles the user tabs system of Melis.
  *
  */
-class MelisGdprService extends MelisEngineGeneralService
+class MelisGdprService extends MelisGeneralService
 {
     /**
      * Saves the banner content

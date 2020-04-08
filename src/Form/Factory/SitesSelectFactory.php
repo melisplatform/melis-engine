@@ -9,7 +9,6 @@
 
 namespace MelisEngine\Form\Factory;
 
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\Factory\MelisSelectFactory;
 

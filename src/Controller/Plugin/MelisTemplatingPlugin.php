@@ -218,8 +218,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                 $updatesPluginConfig['pageId'] = $params['idpage'];
         }
 
-        $melisEngineGeneralService = $this->getServiceManager()->get('MelisEngineGeneralService');
-        $updatesPluginConfig = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_start', $updatesPluginConfig);
+        $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+        $updatesPluginConfig = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_start', $updatesPluginConfig);
 
         // Send event before creating the plugin object with its parameters
         $this->updatesPluginConfig = $updatesPluginConfig;
@@ -316,8 +316,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             'pluginName' => $this->pluginName,
             'actualDatasPageTree' => $datasPageTree,
         );
-        $melisEngineGeneralService = $this->getServiceManager()->get('MelisEngineGeneralService');
-        $datasPageTree = $melisEngineGeneralService->sendEvent('melistemplating_plugin_get_datas_db', $eventParams);
+        $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+        $datasPageTree = $melisGeneralService->sendEvent('melistemplating_plugin_get_datas_db', $eventParams);
         $datasPageTree = $datasPageTree['actualDatasPageTree'];
 
 
@@ -624,9 +624,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             $model->siteLangLocale = $siteLang['langLocale'];
 
             // Send event before creating the view
-            $melisEngineGeneralService = $this->getServiceManager()->get('MelisEngineGeneralService');
-
-            $variables = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
+            $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+            $variables = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
 
             $viewRender = $this->getServiceManager()->get('ViewRenderer');
 
@@ -653,7 +652,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
 
-            $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+            $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
 
             // Plugin config datas
             $model['view']->pluginConfig = $this->pluginFrontConfig;
