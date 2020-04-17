@@ -11,16 +11,15 @@ namespace MelisEngine\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
+use MelisCore\Listener\MelisGeneralListener;
 
-class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisEngineMicroServicePageServiceListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
             'melis_core_microservice_amend_data',
             function($e){
@@ -68,8 +67,7 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
                 );
 
             },
-            -10000);
-
-        $this->listeners[] = $callBackHandler;
+            -10000
+        );
     }
 }
