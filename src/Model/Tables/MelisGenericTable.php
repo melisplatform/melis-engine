@@ -393,6 +393,22 @@ class MelisGenericTable
 
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @return mixed
+     */
+    public function getEntryByFieldUsingLike($field, $value)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $where = new Where();
+        $where->like($field, '%'.$value.'%');
+        $select->where($where);
+        $rowset = $this->tableGateway->selectwith($select);
+
+        return $rowset;
+    }
+
     protected function setCurrentDataCount($dataCount)
     {
         $this->_currentDataCount = $dataCount;
