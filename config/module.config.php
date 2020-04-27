@@ -100,6 +100,8 @@ return [
             'MelisEngine\MelisPageColumns'  => \MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory::class,
         ],
         'aliases' => [
+            // @TODO to be remove replaced by MelisGeneralService
+            'MelisEngineGeneralService'           => \MelisCore\Service\MelisGeneralService::class,
             // Services
             //            'MelisEngineGeneralService'         => \MelisEngine\Service\MelisEngineGeneralService::class,
             'MelisGeneralService'               => \MelisCore\Service\MelisGeneralService::class,
