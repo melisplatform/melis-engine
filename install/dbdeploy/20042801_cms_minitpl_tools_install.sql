@@ -5,7 +5,8 @@
 CREATE TABLE `melis_cms_category` (
   `mtplc_id` int(11) NOT NULL,
   `mtplc_user_id` int(11) NOT NULL,
-  `mtplc_creation_date` datetime NOT NULL
+  `mtplc_creation_date` datetime NOT NULL,
+  `mtplc_status` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
