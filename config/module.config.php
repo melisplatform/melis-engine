@@ -127,6 +127,10 @@ return array(
 
             'MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTable',
             'MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTextTable',
+            'MelisCmsCategoryTable' => 'MelisEngine\Model\Tables\MelisCmsCategoryTable',
+            'MelisCmsCategoryTransTable' => 'MelisEngine\Model\Tables\MelisCmsCategoryTransTable',
+            'MelisCmsMiniTplCategoryTemplateTable' => 'MelisEngine\Model\Tables\MelisCmsMiniTplCategoryTemplateTable',
+            'MelisCmsMiniTplSiteCategoryTable' => 'MelisEngine\Model\Tables\MelisCmsMiniTplSiteCategoryTable',
 		),
         'factories' => array(
 			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
@@ -164,6 +168,10 @@ return array(
 
             'MelisEngine\Model\Tables\MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTableFactory',
             'MelisEngine\Model\Tables\MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTextTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsCategoryTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsCategoryTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsCategoryTransTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsCategoryTransTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsMiniTplCategoryTemplateTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsMiniTplCategoryTemplateTableFactory',
+            'MelisEngine\Model\Tables\MelisCmsMiniTplSiteCategoryTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsMiniTplSiteCategoryTableFactory',
 		),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
