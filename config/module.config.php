@@ -101,9 +101,8 @@ return [
         ],
         'aliases' => [
             // @TODO to be remove replaced by MelisGeneralService
-            'MelisEngineGeneralService'           => \MelisCore\Service\MelisGeneralService::class,
+            // 'MelisEngineGeneralService'           => \MelisCore\Service\MelisGeneralService::class,
             // Services
-            //            'MelisEngineGeneralService'         => \MelisEngine\Service\MelisEngineGeneralService::class,
             'MelisGeneralService'               => \MelisCore\Service\MelisGeneralService::class,
             'MelisEnginePage'                   => \MelisEngine\Service\MelisPageService::class,
             'MelisEngineTree'                   => \MelisEngine\Service\MelisTreeService::class,
