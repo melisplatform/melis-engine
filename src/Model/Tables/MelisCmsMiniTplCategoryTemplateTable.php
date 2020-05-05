@@ -34,4 +34,13 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         $select->order('mtplct_order ASC');
         return $this->tableGateway->selectWith($select);
     }
+
+    public function getLatestOrder($cat_id) {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(['*']);
+        $select->where->equalTo('mtplct_category_id', $cat_id);
+        $select->order('mtplct_order DESC');
+        $select->limit(1);
+        return $this->tableGateway->selectWith($select);
+    }
 }
