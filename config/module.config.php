@@ -141,6 +141,9 @@ return array(
             'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
             'MelisEngineTemplateService' => 'MelisEngine\Service\Factory\MelisEngineTemplateServiceFactory',
 
+            'MelisEngineSiteService' => 'MelisEngine\Service\Factory\MelisEngineSiteServiceFactory',
+            'MelisEngineSiteDomainService' => 'MelisEngine\Service\Factory\MelisEngineSiteDomainServiceFactory',
+
             'MelisEngine\Model\Tables\MelisCmsGdprTextsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsGdprTextsFactory',
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
             'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',

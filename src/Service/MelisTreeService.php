@@ -34,7 +34,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
 		if (!is_null($results))
 			return $results; 
-		
+
 		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
 		$pages = $tablePageTree->getPageChildrenByidPage($idPage, $publishedOnly)->toArray();
 
