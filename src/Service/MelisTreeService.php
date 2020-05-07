@@ -29,7 +29,6 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		// Retrieve cache version if front mode to avoid multiple calls
 		$cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
 		$cacheConfig = 'engine_page_services';
-		$cacheConfig = 'meliscms_page';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
 
@@ -58,7 +57,6 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 			else {
 				$pages['children'][$idx] = array_merge($child, $this->getAllPages($child['tree_page_id']));
 			}
-
 		}
 
 		return $pages;
