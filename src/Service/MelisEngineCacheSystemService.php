@@ -35,24 +35,24 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 		return $this->serviceLocator;
 	}	
 
-    /**
-     * Returns front/melis
-     * 
-     * @return string
-     */
+	/**
+	 * Returns front/melis
+	 * 
+	 * @return string
+	 */
 	public function getRenderMode()
 	{
-	    $router = $this->serviceLocator->get('router');
-	    $request = $this->serviceLocator->get('request');
+		$router = $this->serviceLocator->get('router');
+		$request = $this->serviceLocator->get('request');
 	
-	    $routeMatch = $router->match($request);
-	    
-	    if (!empty($routeMatch))
-	       $renderMode = $routeMatch->getParam('renderMode', 'melis');
-	    else
-	        $renderMode = 'melis'; // no cache
+		$routeMatch = $router->match($request);
+		
+		if (!empty($routeMatch))
+		$renderMode = $routeMatch->getParam('renderMode', 'melis');
+		else
+			$renderMode = 'melis'; // no cache
 	
-	    return $renderMode;
+		return $renderMode;
 	}
 	
 	/**
@@ -63,18 +63,18 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function isCacheConfActive($confCache)
 	{
-	    $active = true;
-	    
-	    $config =  $this->getServiceLocator()->get('config');
-	    if (!empty($config['caches']) && !empty($config['caches'][$confCache]))
-	    {
-	        $conf = $config['caches'][$confCache];
-	        
-	        if (isset($conf['active']))
-	            $active = $conf['active'];
-	    }
-	    
-	    return $active;
+		$active = true;
+		
+		$config =  $this->getServiceLocator()->get('config');
+		if (!empty($config['caches']) && !empty($config['caches'][$confCache]))
+		{
+			$conf = $config['caches'][$confCache];
+			
+			if (isset($conf['active']))
+				$active = $conf['active'];
+		}
+		
+		return $active;
 	}
 	
 	/**
@@ -87,29 +87,29 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function getTtlByKey($confCache, $cacheKey)
 	{
-	    $ttl = 0;
-	    $config =  $this->getServiceLocator()->get('config');
-	    if (!empty($config['caches']) && !empty($config['caches'][$confCache]))
-	    {
-	        $conf = $config['caches'][$confCache];
-	         
-	        // Get default ttl from adapater config
-	        if (!empty($conf['adapter']['options']['ttl']))
-	            $ttl = $conf['adapter']['options']['ttl'];
-	        
-	        foreach ($conf['ttls'] as $nameKey => $tll)
-	        {
-	            preg_match("/$nameKey/", $cacheKey, $matches, PREG_OFFSET_CAPTURE, 3);
-	            
-	            if (count($matches) > 0)
-	            {
-	                $ttl = $conf['ttls'][$nameKey];
-	                break;
-	            }
-	        }
-	    }
-	    
-	    return $ttl;
+		$ttl = 0;
+		$config =  $this->getServiceLocator()->get('config');
+		if (!empty($config['caches']) && !empty($config['caches'][$confCache]))
+		{
+			$conf = $config['caches'][$confCache];
+			
+			// Get default ttl from adapater config
+			if (!empty($conf['adapter']['options']['ttl']))
+				$ttl = $conf['adapter']['options']['ttl'];
+			
+			foreach ($conf['ttls'] as $nameKey => $tll)
+			{
+				preg_match("/$nameKey/", $cacheKey, $matches, PREG_OFFSET_CAPTURE, 3);
+				
+				if (count($matches) > 0)
+				{
+					$ttl = $conf['ttls'][$nameKey];
+					break;
+				}
+			}
+		}
+		
+		return $ttl;
 	}
 	
 	/**
@@ -121,23 +121,23 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function getCacheByKey($cacheKey, $confCache, $getForce = false)
 	{
-	    // only when in front mode
-	    if ($this->getRenderMode() != 'front' && !$getForce)
-	        return null;
-	    
-	    $active = $this->isCacheConfActive($confCache);
-	    if ($active)
-	    {
-	        $cache = $this->getServiceLocator()->get($confCache);
+		// only when in front mode
+		if ($this->getRenderMode() != 'front' && !$getForce)
+			return null;
+		
+		$active = $this->isCacheConfActive($confCache);
+		if ($active)
+		{
+			$cache = $this->getServiceLocator()->get($confCache);
 
-	        if ($cache->hasItem($cacheKey))
-	        {
-	            $itemValue = $cache->getItem($cacheKey);
-	            return $itemValue;
-	        }
-	    }
-	    
-	    return null;
+			if ($cache->hasItem($cacheKey))
+			{
+				$itemValue = $cache->getItem($cacheKey);
+				return $itemValue;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -150,16 +150,16 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function setCacheByKey($cacheKey, $confCache, $results, $getForce = false)
 	{
-	    if ($this->getRenderMode() != 'front' && !$getForce)
-	        return;
+		if ($this->getRenderMode() != 'front' && !$getForce)
+			return;
 
-	    $active = $this->isCacheConfActive($confCache);
-	    if ($active)
-	    {
-	        $cache = $this->getServiceLocator()->get($confCache);
-	        $cache->setItem($cacheKey, $results);
-	        unset($cache);
-	    }
+		$active = $this->isCacheConfActive($confCache);
+		if ($active)
+		{
+			$cache = $this->getServiceLocator()->get($confCache);
+			$cache->setItem($cacheKey, $results);
+			unset($cache);
+		}
 	}
 	
 	/**
@@ -170,7 +170,7 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function deleteCacheByPrefix($prefix, $confName)
 	{
-	    $this->getServiceLocator()->get($confName)->clearByPrefix($prefix);
+		$this->getServiceLocator()->get($confName)->clearByPrefix($prefix);
 	}
 	
 }
