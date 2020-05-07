@@ -28,7 +28,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		
 		// Retrieve cache version if front mode to avoid multiple calls
 		$cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
-		$cacheConfig = 'engine_page_services';
+		$cacheConfig = 'meliscms_page';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
 
@@ -78,7 +78,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-		if (!empty($results)) return $results;
+		if (!is_null($results)) return $results;
 			
 		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
 		$datasPage = $tablePageTree->getFatherPageById($idPage, $type);
@@ -108,7 +108,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-		if (!empty($results)) return $results;
+		if (!is_null($results)) return $results;
 			
 		$results = array();
 		$tmp = $idPage;
@@ -180,7 +180,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-		if (!empty($results)) return $results;
+		if (!is_null($results)) return $results;
 
 		// Get the already generated link from the DB if possible    
 		$link = '';
@@ -535,7 +535,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-		if (!empty($results)) return $results;
+		if (!is_null($results)) return $results;
 			
 		$domainStr = '';
 		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
@@ -583,7 +583,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-		if (!empty($results)) return $results;
+		if (!is_null($results)) return $results;
 		
 		$datasSite = null;
 		$melisPage = $this->getServiceLocator()->get('MelisEnginePage');
