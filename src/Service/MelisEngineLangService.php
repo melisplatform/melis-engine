@@ -140,4 +140,25 @@ class MelisEngineLangService extends MelisEngineGeneralService implements MelisE
 
         return $arrayParameters['results'];
     }
+
+    /**
+     * @param $siteLangLocale
+     * @return mixed
+     */
+    public function getLangDataByLangLocale($siteLangLocale)
+    {
+        //try to get config from cache
+        $cacheKey = 'getLangDataByLangLocale_' . $siteLangLocale;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if(!is_null($results)) return $results;
+
+        $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langData = $langCmsTbl->getEntryByField('lang_cms_locale', $siteLangLocale)->current();
+
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $langData);
+
+        return $langData;
+    }
 }
