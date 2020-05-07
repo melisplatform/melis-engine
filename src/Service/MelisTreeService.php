@@ -296,6 +296,13 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	 */
 	public function getHomePageLink($idPage, $absolute = false)
 	{
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getHomePageLink_' . $idPage . '_' . $absolute;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if (!is_null($results)) return $results;
+
 		/**
 		 * prepare tables / services
 		 */
@@ -346,6 +353,10 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		$siteHomePageId = (!empty($siteHomeData)) ? $siteHomeData[0]['shome_page_id'] : $siteDefaultMainPage;
 
 		$link = $this->getPageLink($siteHomePageId, $absolute);
+
+        // Save cache key
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $link);
+
 		return $link;
 	}
 
@@ -395,6 +406,13 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	 */
 	public function getSiteLangUrlOptByPageId($idPage)
 	{
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getSiteLangUrlOptByPageId_' . $idPage;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if (!is_null($results)) return $results;
+
 		$datasSite = $this->getSiteByPageId($idPage);
 		$siteLangOptVal = '';
 		$result = [
@@ -427,6 +445,10 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 			}
 			$result['siteLangOptVal'] = $siteLangOptVal;
 		}
+
+        // Save cache key
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $result);
+
 		return $result;
 	}
 	
