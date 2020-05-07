@@ -72,9 +72,9 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 
 		if (!empty($tplId))
 		{
-			$tableTemplate = $this->serviceLocator->get('MelisEngineTableTemplate');
-			$melisTemplateRes = $tableTemplate->getEntryById($tplId);
-			$melisPage->setMelisTemplate($melisTemplateRes->current());
+			$tplSrv = $this->getServiceLocator()->get('MelisEngineTemplateService');
+			$tplData = $tplSrv->getTemplate($tplId);
+			$melisPage->setMelisTemplate($tplData->current());
 		}
 		
 		// Save cache key
