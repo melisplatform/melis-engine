@@ -296,12 +296,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	 */
 	public function getHomePageLink($idPage, $absolute = false)
 	{
-        // Retrieve cache version if front mode to avoid multiple calls
-        $cacheKey = 'getHomePageLink_' . $idPage . '_' . $absolute;
-        $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
-        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-        if (!is_null($results)) return $results;
+		// Retrieve cache version if front mode to avoid multiple calls
+		$cacheKey = 'getHomePageLink_' . $idPage . '_' . $absolute;
+		$cacheConfig = 'engine_page_services';
+		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+		if (!is_null($results)) return $results;
 
 		/**
 		 * prepare tables / services
@@ -354,8 +354,8 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
 		$link = $this->getPageLink($siteHomePageId, $absolute);
 
-        // Save cache key
-        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $link);
+		// Save cache key
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $link);
 
 		return $link;
 	}
@@ -406,12 +406,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	 */
 	public function getSiteLangUrlOptByPageId($idPage)
 	{
-        // Retrieve cache version if front mode to avoid multiple calls
-        $cacheKey = 'getSiteLangUrlOptByPageId_' . $idPage;
-        $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
-        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-        if (!is_null($results)) return $results;
+		// Retrieve cache version if front mode to avoid multiple calls
+		$cacheKey = 'getSiteLangUrlOptByPageId_' . $idPage;
+		$cacheConfig = 'engine_page_services';
+		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+		if (!is_null($results)) return $results;
 
 		$datasSite = $this->getSiteByPageId($idPage);
 		$siteLangOptVal = '';
@@ -446,8 +446,8 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 			$result['siteLangOptVal'] = $siteLangOptVal;
 		}
 
-        // Save cache key
-        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $result);
+		// Save cache key
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $result);
 
 		return $result;
 	}
@@ -523,10 +523,10 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	}
 
 	/**
-	 * Cleans a link to allow only good characters
-	 * 
-	 * @param string $link
-	 */
+		* Cleans a link to allow only good characters
+		* 
+		* @param string $link
+		*/
 	public function cleanLink($link)
 	{
 		$link = strtolower(preg_replace(
@@ -542,11 +542,11 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	}
 	
 	/**
-	 * Gets the domain as define in site table for a page id
-	 * 
-	 * @param int $idPage
-	 * @return string The domain with the scheme
-	 */
+		* Gets the domain as define in site table for a page id
+		* 
+		* @param int $idPage
+		* @return string The domain with the scheme
+		*/
 	public function getDomainByPageId($idPage)
 	{
 		if (empty($idPage))
@@ -591,10 +591,10 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	}
 	
 	/**
-	 * Gets the site object of a page id
-	 * 
-	 * @param int $idPage
-	 */
+		* Gets the site object of a page id
+		* 
+		* @param int $idPage
+		*/
 	public function getSiteByPageId($idPage)
 	{
 		if (empty($idPage))
@@ -628,11 +628,11 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	}
 	
 	/**
-	 * Gets the previous and next page for a specific page in the treeview
-	 * 
-	 * @param int $idPage The page id
-	 * @param int $publishedOnly Only active pages will be taken in consideration
-	 */
+		* Gets the previous and next page for a specific page in the treeview
+		* 
+		* @param int $idPage The page id
+		* @param int $publishedOnly Only active pages will be taken in consideration
+		*/
 	public function getPrevNextPage($idPage, $publishedOnly = 1) {
 	
 		$output = array(
@@ -697,5 +697,27 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 		}
 	
 		return $output;
+	}
+
+	/**
+		* Gets full datas for a page from tree, page saved, paged published, lang
+		*/
+	public function getFullDatasPage($id, $type = '')
+	{
+		// Retrieve cache version if front mode to avoid multiple calls
+		$cacheKey = 'getFullDatasPage' . $id . '_' . $type;
+		$cacheConfig = 'engine_memory_cache';
+		$melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+
+		if (!is_null($results)) return $results;
+
+		$tablePageTree = $this->getServiceLocator()->get('MelisEngineTablePageTree');
+		$melisPageTreePublished = $tablePageTree->getFullDatasPage($id, $type);
+
+		// Save cache key
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $melisPageTreePublished);
+		
+		return $melisPageTreePublished;
 	}
 }
