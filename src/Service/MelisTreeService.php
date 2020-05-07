@@ -298,7 +298,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	{
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getHomePageLink_' . $idPage . '_' . $absolute;
-        $cacheConfig = 'engine_lang_services';
+        $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!is_null($results)) return $results;
@@ -408,7 +408,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 	{
         // Retrieve cache version if front mode to avoid multiple calls
         $cacheKey = 'getSiteLangUrlOptByPageId_' . $idPage;
-        $cacheConfig = 'engine_lang_services';
+        $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!is_null($results)) return $results;
