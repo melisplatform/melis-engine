@@ -161,4 +161,27 @@ class MelisEngineLangService extends MelisEngineGeneralService implements MelisE
 
         return $langData;
     }
+
+    /**
+     * Function to get lang data
+     *
+     * @param $langId
+     * @return mixed
+     */
+    public function getLangDataById($langId)
+    {
+        //try to get config from cache
+        $cacheKey = 'getLangDataById_' . $langId;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if(!is_null($results)) return $results;
+
+        $langCmsTbl = $this->getServiceLocator()->get('MelisEngineTableCmsLang');
+        $langList = $langCmsTbl->getEntryById($langId)->toArray();
+
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $langList);
+
+        return $langList;
+    }
 }
