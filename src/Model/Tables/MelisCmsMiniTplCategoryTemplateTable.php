@@ -56,7 +56,7 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function saveMiniTemplate($data, $site_id, $template_name) {
+    public function updateMiniTemplate($data, $site_id, $template_name) {
         $update = $this->tableGateway->getSql()->update();
         $update->set($data);
         if (! empty($site_id))
