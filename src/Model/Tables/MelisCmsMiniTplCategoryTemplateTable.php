@@ -19,10 +19,14 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         $this->idField = 'mtplct_id';
     }
 
-    public function getTemplatesByCategoryIds($cat_ids = []) {
+    public function getTemplatesByCategoryIds($cat_ids = [], $site_id = null) {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->where->in('mtplct_category_id', $cat_ids);
+
+        if (! empty($site_id))
+            $select->where->equalTo('mtplct_site_id', $site_id);
+
         $select->order('mtplct_order ASC');
         return $this->tableGateway->selectWith($select);
     }

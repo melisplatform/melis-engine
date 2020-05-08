@@ -70,6 +70,7 @@ COMMIT;
 
 CREATE TABLE `melis_cms_mini_tpl_category_template` (
   `mtplct_id` int(11) NOT NULL,
+  `mtplct_site_id` int(11) NOT NULL,
   `mtplct_category_id` int(11) NOT NULL,
   `mtplct_template_name` varchar(250) NOT NULL,
   `mtplct_order` int(11) NOT NULL
