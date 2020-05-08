@@ -64,8 +64,8 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
-        $melisTableDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
-        $datasDomain = $melisTableDomain->getEntryByField('sdom_domain', $domain)->current();
+        $donSrv = $this->getServiceLocator()->get('MelisEngineSiteDomainService');
+        $datasDomain = $donSrv->getDomainByDomainName($domain);
         $siteId = $datasDomain->sdom_site_id;
 
         /**
