@@ -18,7 +18,7 @@ class MelisEnginePageDefaultUrlsService extends MelisEngineGeneralService
 			return null;
 		
 		// Retrieve cache version if front mode to avoid multiple calls
-		$cacheKey = 'getTemplate_' . $pageId;
+		$cacheKey = 'getPageDefaultUrl_' . $pageId;
 		$cacheConfig = 'engine_memory_cache';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
@@ -27,11 +27,11 @@ class MelisEnginePageDefaultUrlsService extends MelisEngineGeneralService
 			return $results; 
 		
         $pageDefaultUrlsTable = $this->getServiceLocator()->get('MelisEngineTablePageDefaultUrls');
-        $tplData = $pageDefaultUrlsTable->getEntryById($pageId)->toArray();
+        $pageDefaultUrlData = $pageDefaultUrlsTable->getEntryById($pageId)->toArray();
 
 		// Save cache key
-		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $tplData);
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pageDefaultUrlData);
 		
-		return $tplData;
+		return $pageDefaultUrlData;
     }
 }
