@@ -256,6 +256,7 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
 			$link = $this->cleanLink($seoUrl);
 
+			$tablePageDefaultUrls = $this->getServiceLocator()->get('MelisEngineTablePageDefaultUrls');
 			$tablePageDefaultUrls->save(
 				array(
 					'purl_page_id' => $idPage,
