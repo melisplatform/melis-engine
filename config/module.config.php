@@ -140,6 +140,7 @@ return array(
 			'MelisGdprService' => 'MelisEngine\Service\Factory\MelisGdprServiceFactory',
             'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
             'MelisEngineTemplateService' => 'MelisEngine\Service\Factory\MelisEngineTemplateServiceFactory',
+            'MelisEngineSEOService' => 'MelisEngine\Service\Factory\MelisEngineSEOServiceFactory',
 
             'MelisEngineSiteService' => 'MelisEngine\Service\Factory\MelisEngineSiteServiceFactory',
             'MelisEngineSiteDomainService' => 'MelisEngine\Service\Factory\MelisEngineSiteDomainServiceFactory',
