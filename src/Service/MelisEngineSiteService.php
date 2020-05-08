@@ -22,6 +22,12 @@ use Zend\EventManager\EventManagerInterface;
 class MelisEngineSiteService extends MelisEngineGeneralService
 {
 
+    /**
+     * Get Site data by Site ID
+     * 
+     * @param $siteId
+     * @return mixed
+     */
     public function getSiteById($siteId)
     {
         //try to get config from cache
@@ -65,8 +71,7 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         /**
          * Get site data
          */
-        $siteTable = $this->getServiceLocator()->get('MelisEngineTableSite');
-        $siteData = $siteTable->getEntryById($siteId)->current();
+        $siteData = $this->getSiteById($siteId)->current();
 
         $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $siteData);
 
@@ -112,8 +117,7 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
-        $siteTbl = $this->getServiceLocator()->get('MelisEngineTableSite');
-        $siteDatas = $siteTbl->getEntryById($siteId)->current();
+        $siteDatas = $this->getSiteById($siteId)->current();
         $pageId = $siteDatas->site_main_page_id;
 
         $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pageId);
