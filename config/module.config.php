@@ -141,6 +141,7 @@ return array(
             'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
             'MelisEngineTemplateService' => 'MelisEngine\Service\Factory\MelisEngineTemplateServiceFactory',
             'MelisEngineSEOService' => 'MelisEngine\Service\Factory\MelisEngineSEOServiceFactory',
+            'MelisEnginePageDefaultUrlsService' => 'MelisEngine\Service\Factory\MelisEnginePageDefaultUrlsServiceFactory',
 
             'MelisEngineSiteService' => 'MelisEngine\Service\Factory\MelisEngineSiteServiceFactory',
             'MelisEngineSiteDomainService' => 'MelisEngine\Service\Factory\MelisEngineSiteDomainServiceFactory',

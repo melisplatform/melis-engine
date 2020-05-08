@@ -184,13 +184,12 @@ class MelisTreeService extends MelisEngineGeneralService implements MelisTreeSer
 
 		// Get the already generated link from the DB if possible    
 		$link = '';
-		$tablePageDefaultUrls = $this->getServiceLocator()->get('MelisEngineTablePageDefaultUrls');
+		$pageDefaultUrlsSrv = $this->getServiceLocator()->get('MelisEnginePageDefaultUrlsService');
 		if ($this->getRenderMode() == 'front')
 		{
-			$defaultUrls = $tablePageDefaultUrls->getEntryById($idPage);
+			$defaultUrls = $pageDefaultUrlsSrv->getPageDefaultUrl($idPage);
 			if (!empty($defaultUrls))
 			{
-				$defaultUrls = $defaultUrls->toArray();
 				if (count($defaultUrls) > 0)
 				{
 					$link = $defaultUrls[0]['purl_page_url'];
