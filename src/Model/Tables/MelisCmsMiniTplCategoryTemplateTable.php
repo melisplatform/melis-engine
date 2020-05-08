@@ -19,6 +19,14 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         $this->idField = 'mtplct_id';
     }
 
+    public function getTemplateBySiteId($site_id, $template_name) {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(['*']);
+        $select->where->equalTo('mtplct_site_id', $site_id);
+        $select->where->equalTo('mtplct_template_name', $template_name);
+        return $this->tableGateway->selectWith($select);
+    }
+
     public function getTemplatesByCategoryIds($cat_ids = [], $site_id = null) {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
@@ -46,5 +54,15 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         $select->order('mtplct_order DESC');
         $select->limit(1);
         return $this->tableGateway->selectWith($select);
+    }
+
+    public function saveMiniTemplate($data, $site_id, $template_name) {
+        $update = $this->tableGateway->getSql()->update();
+        $update->set($data);
+        if (! empty($site_id))
+            $update->where->equalTo('mtplct_site_id', $site_id);
+        if (! empty($template_name))
+            $update->where->equalTo('mtplct_template_name', $template_name);
+        $resultSet = $this->tableGateway->updateWith($update);
     }
 }
