@@ -40,6 +40,8 @@ class MelisEngineSiteService extends MelisEngineGeneralService
     }
 
     /**
+     * Function to get site data by domain
+     *
      * @param $domain
      * @return mixed
      */
@@ -49,7 +51,7 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         $treeService = $this->getServiceLocator()->get('MelisEngineTree');
         $cacheDom = $treeService->cleanString($domain);
         $cacheDom = str_replace('.', '', $cacheDom);
-        //try to get config from cache
+        //try to get data from cache
         $cacheKey = 'getSiteDataByDomain_' . $cacheDom;
         $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
@@ -72,13 +74,15 @@ class MelisEngineSiteService extends MelisEngineGeneralService
     }
 
     /**
+     * Function to get homoe page data
+     *
      * @param $siteId
      * @param $langId
      * @return mixed
      */
     public function getHomePageBySiteIdAndLangId($siteId, $langId)
     {
-        //try to get config from cache
+        //try to get data from cache
         $cacheKey = 'getHomePageBySiteIdAndLangId_' . $siteId.'_'. $langId;
         $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
@@ -94,12 +98,14 @@ class MelisEngineSiteService extends MelisEngineGeneralService
     }
 
     /**
+     * Function to get site main home page id
+     *
      * @param $siteId
      * @return mixed
      */
     public function getSiteMainHomePageIdBySiteId($siteId)
     {
-        //try to get config from cache
+        //try to get data from cache
         $cacheKey = 'getSiteMainHomePageIdBySiteId_' . $siteId;
         $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
