@@ -59,6 +59,13 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
      */
     public function getVendorModules()
     {
+        //try to get modules from cache
+        $cacheKey = 'getVendorModulesEngine';
+        $cacheConfig = 'meliscms_page';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if(!is_null($results)) return $results;
+
         $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
 
         $packages = array_filter($repos->getPackages(), function ($package) {
@@ -74,6 +81,8 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
 
         sort($modules);
 
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $modules);
+
         return $modules;
     }
 
@@ -84,8 +93,17 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
      */
     public function getComposerModulePath($moduleName, $returnFullPath = true)
     {
+        //try to get module path from cache
+        $cacheKey = 'getComposerModulePathEngine_'.$moduleName.'_'.$returnFullPath;
+        $cacheConfig = 'meliscms_page';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if(!is_null($results)) return $results;
+
         $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
         $packages = $repos->getPackages();
+
+        $path = '';
 
         if (!empty($packages)) {
             foreach ($packages as $repo) {
@@ -96,9 +114,9 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
                             $source = $require->getSource();
 
                             if ($returnFullPath) {
-                                return $_SERVER['DOCUMENT_ROOT'] . '/../vendor/' . $source;
+                                $path = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/' . $source;
                             } else {
-                                return '/vendor/' . $source;
+                                $path = '/vendor/' . $source;
                             }
                         }
                     }
@@ -106,7 +124,10 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
             }
         }
 
-        return '';
+        //save cache
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $path);
+
+        return $path;
     }
 
     /**
