@@ -33,7 +33,7 @@ class MelisEngineSiteDomainService extends MelisEngineGeneralService
         $cacheDom = str_replace('.', '', $cacheDom);
 
         //try to get config from cache
-        $cacheKey = 'getSiteConfigByPageId_' . $cacheDom;
+        $cacheKey = 'getDomainByDomainName_' . $cacheDom;
         $cacheConfig = 'engine_page_services';
         $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
