@@ -143,6 +143,12 @@ return array(
 			'MelisEngineLang' => 'MelisEngine\Service\Factory\MelisEngineLangServiceFactory',
 			'MelisGdprService' => 'MelisEngine\Service\Factory\MelisGdprServiceFactory',
             'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
+            'MelisEngineTemplateService' => 'MelisEngine\Service\Factory\MelisEngineTemplateServiceFactory',
+            'MelisEngineSEOService' => 'MelisEngine\Service\Factory\MelisEngineSEOServiceFactory',
+            'MelisEnginePageDefaultUrlsService' => 'MelisEngine\Service\Factory\MelisEnginePageDefaultUrlsServiceFactory',
+
+            'MelisEngineSiteService' => 'MelisEngine\Service\Factory\MelisEngineSiteServiceFactory',
+            'MelisEngineSiteDomainService' => 'MelisEngine\Service\Factory\MelisEngineSiteDomainServiceFactory',
 
             'MelisEngine\Model\Tables\MelisCmsGdprTextsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsGdprTextsFactory',
             'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
@@ -211,6 +217,39 @@ return array(
         ),
     ),
     'caches' => array(
+        'engine_memory_cache' => array( 
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => array(
+                'name'    => 'Memory',
+                'options' => array('ttl' => 0, 'namespace' => 'engine_memory_cache'),
+            ),
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => false),
+            ),
+            'ttls' => array(
+                // add a specific ttl for a specific cache key
+                // 'my_cache_key' => 60,
+            )
+        ),
+        'engine_file_cache' => array(
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => array(
+                'name'    => 'Filesystem',
+                'options' => array(
+                    'ttl' => 0, // 24hrs
+                    'namespace' => 'meliscms_page',
+                    'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
+                ),
+            ),
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => false),
+                'Serializer'
+            ),
+            'ttls' => array(
+                // add a specific ttl for a specific cache key (found via regexp)
+                // 'my_cache_key' => 60,
+            )
+        ),
         'engine_page_services' => array( 
             'active' => true, // activate or deactivate Melis Cache for this conf
             'adapter' => array(
