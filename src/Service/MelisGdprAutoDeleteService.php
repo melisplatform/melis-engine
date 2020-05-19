@@ -131,4 +131,17 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
         #return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
     }
 
+    /**
+     * get auto delete configuration by siteId and module
+     *
+     * @param $siteId
+     * @param $module
+     */
+    public function getAutoDeleteConfig($siteId, $module)
+    {
+        $configTable = $this->getServiceLocator()->get('MelisGdprAutodeleteConfigTable');
+
+        return $configTable->getAutoDeleteConfig($siteId, $module)->current();
+    }
+
 }
