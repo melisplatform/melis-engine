@@ -144,4 +144,21 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
         return $configTable->getAutoDeleteConfig($siteId, $module)->current();
     }
 
+    /**
+     * remove an account on the delete email set table
+     *
+     * @param $accountId
+     * @param $module
+     * @param $siteId
+     */
+    public function removeDeleteEmailSentLog($accountId, $module, $siteId)
+    { 
+        $status = false;
+        $emailSentTbl = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSentTable');
+        // delete by field
+        $status = $emailSentTbl->deleteEmailSentData($accountId, $module, $siteId);
+
+        return $status;
+
+    }
 }
