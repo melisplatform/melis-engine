@@ -136,7 +136,8 @@ return [
             'MelisEngineTableCmsSiteConfig'     => \MelisEngine\Model\Tables\MelisCmsSiteConfigTable::class,
             'MelisSiteTranslationTable'         => \MelisEngine\Model\Tables\MelisSiteTranslationTable::class,
             'MelisSiteTranslationTextTable'     => \MelisEngine\Model\Tables\MelisSiteTranslationTextTable::class,
-
+?
+            
             // Alias redeclared
             // **This not neccessary but its already used from modules**
             'MelisEngineStyleService'           => \MelisEngine\Service\MelisEngineStyleService::class,
