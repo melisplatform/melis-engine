@@ -161,4 +161,50 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		
 		return $pagesData;
 	}
+
+    /**
+     * Function to get page data by id
+     *
+     * @param $idPage
+     * @param string $type
+     * @return mixed
+     */
+	public function getPageById($idPage, $type = 'published')
+    {
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getPageById' . $idPage. '_'.$type;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+
+        if (!empty($results)) return $results;
+
+        if($type == 'published')
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
+        else
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+
+        $pageData = $pageTbl->getEntryById($idPage)->current();
+
+        // Save cache key
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pageData);
+
+        return $pageData;
+    }
+
+    /**
+     * @param $idPage
+     * @param $data
+     * @param string $type
+     * @return mixed
+     */
+    public function updatePageById($idPage, $data, $type = 'published')
+    {
+        if($type == 'published')
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
+        else
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+
+        return $pageTbl->update($data, 'page_id', $idPage);
+    }
 }
