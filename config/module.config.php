@@ -113,6 +113,12 @@ return [
             'MelisEngineLang'                   => \MelisEngine\Service\MelisEngineLangService::class,
             'MelisGdprService'                  => \MelisEngine\Service\MelisGdprService::class,
             'MelisEngineComposer'               => \MelisEngine\Service\MelisEngineComposerService::class,
+            'MelisEngineTemplateService'        => \MelisEngine\Service\MelisEngineTemplateService::class,
+            'MelisEngineSEOService'             => \MelisEngine\Service\MelisEngineSEOService::class,
+            'MelisEnginePageDefaultUrlsService' => \MelisEngine\Service\MelisEnginePageDefaultUrlsService::class,
+            'MelisEngineSiteService'            => \MelisEngine\Service\MelisEngineSiteService::class,
+            'MelisEngineSiteDomainService'      => \MelisEngine\Service\MelisEngineSiteDomainService::class,
+
             // Model tables
             'MelisCmsGdprTextsTable'            => \MelisEngine\Model\Tables\MelisCmsGdprTextsTable::class,
             'MelisEngineTableCmsLang'           => \MelisEngine\Model\Tables\MelisCmsLangTable::class,
@@ -184,7 +190,40 @@ return [
         ],
     ],
     'caches' => [
-        'engine_page_services' => [
+        'engine_memory_cache' => [ 
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => [
+                'name'    => 'Memory',
+                'options' => array('ttl' => 0, 'namespace' => 'engine_memory_cache'),
+            ],
+            'plugins' => [
+                'exception_handler' => array('throw_exceptions' => false),
+            ],
+            'ttls' => [
+                // add a specific ttl for a specific cache key
+                // 'my_cache_key' => 60,
+            ]
+        ],
+        'engine_file_cache' => [
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => [
+                'name'    => 'Filesystem',
+                'options' => [
+                    'ttl' => 0, // 24hrs
+                    'namespace' => 'meliscms_page',
+                    'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
+                ],
+            ],
+            'plugins' => [
+                'exception_handler' => ['throw_exceptions' => false],
+                'Serializer'
+            ],
+            'ttls' => [
+                // add a specific ttl for a specific cache key (found via regexp)
+                // 'my_cache_key' => 60,
+            ]
+        ],
+        'engine_page_services' => [ 
             'active' => true, // activate or deactivate Melis Cache for this conf
             'adapter' => [
                 'name'    => 'Memory',
@@ -236,7 +275,7 @@ return [
                 'Serializer'
             ],
             'ttls' => [
-                // add a specific ttl for a specific cache key (found via regexp]
+                // add a specific ttl for a specific cache key (found via regexp)
                 // 'my_cache_key' => 60,
             ]
         ],
