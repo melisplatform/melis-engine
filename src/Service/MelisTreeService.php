@@ -23,29 +23,30 @@ class MelisTreeService extends MelisGeneralService implements MelisTreeServiceIn
 	 */
 	public function getPageChildren($idPage, $publishedOnly = 0)
 	{
-		if (empty($idPage))
-			return null;
-		
 		// Retrieve cache version if front mode to avoid multiple calls
-		/* $cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
+		$cacheKey = 'getPageChildren_' . $idPage . '_' . $publishedOnly;
 		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-		if (!empty($results)) return $results; */
-			
+
+		if (!is_null($results))
+			return $results; 
+
 		$tablePageTree = $this->getServiceManager()->get('MelisEngineTablePageTree');
-		$datasPage = $tablePageTree->getPageChildrenByidPage($idPage, $publishedOnly);
+		$pages = $tablePageTree->getPageChildrenByidPage($idPage, $publishedOnly)->toArray();
 
 		// Save cache key
-		// $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pages);
-		
-		return $datasPage;
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pages);
+
+		return $pages;
 	}
 
 	public function getAllPages($idPage)
 	{
 		$pages = [];
 		$children = $this->getPageChildren($idPage);
+
+		// print_r($children);
 
 		foreach($children as $idx => $child) {
 
