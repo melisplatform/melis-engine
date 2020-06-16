@@ -13,12 +13,12 @@ use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
-use MelisCore\Controller\AbstractActionController;
+use MelisCore\Controller\MelisAbstractActionController;
 
 /**
  * @property bool $showOnMarketplacePostSetup
  */
-class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
+class MelisSetupPostDownloadController extends MelisAbstractActionController implements MelisSetupInterface
 {
     /**
      * flag for Marketplace whether to display the setup form or not
