@@ -149,14 +149,6 @@ return [
             'MelisPageService'                  => \MelisEngine\Service\MelisPageService::class,
             'MelisTreeService'                  => \MelisEngine\Service\MelisTreeService::class,
             'MelisEngineLangService'            => \MelisEngine\Service\MelisEngineLangService::class,
-        ],
-        'abstract_factories' => [
-            \Laminas\Cache\Service\StorageCacheAbstractServiceFactory::class,
-            /**
-             * This Abstract factory will create requested service
-             * that match on the onCreate() condetions
-             */
-            \MelisCore\Factory\MelisAbstractFactory::class
         ]
     ],
     'controllers' => [
