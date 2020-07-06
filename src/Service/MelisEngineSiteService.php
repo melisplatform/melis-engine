@@ -61,6 +61,10 @@ class MelisEngineSiteService extends MelisEngineGeneralService
 
         $donSrv = $this->getServiceManager()->get('MelisEngineSiteDomainService');
         $datasDomain = $donSrv->getDomainByDomainName($domain);
+
+        if (!$datasDomain)
+            return null;
+
         $siteId = $datasDomain->sdom_site_id;
 
         /**

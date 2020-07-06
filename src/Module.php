@@ -16,6 +16,7 @@ use Laminas\Stdlib\ArrayUtils;
 
 use MelisEngine\Listener\MelisEngineTreeServiceMicroServiceListener;
 use MelisEngine\Listener\MelisEngineMicroServicePageServiceListener;
+use MelisEngine\Listener\MelisEngineGdprAutoDeleteLinkProviderListener;
 
 /**
  * Class Module
@@ -42,7 +43,7 @@ class Module
                 {
                     $eventManager->getSharedManager()->attach(__NAMESPACE__,
                         MvcEvent::EVENT_DISPATCH, function($e) {
-            				$e->getTarget()->layout('layout/layoutEngine');
+                            $e->getTarget()->layout('layout/layoutEngine');
                     });
                 }
             }
@@ -56,18 +57,18 @@ class Module
     
     public function getConfig()
     {
-    	$config = [];
-    	$configFiles = [
+        $config = [];
+        $configFiles = [
             include __DIR__ . '/../config/module.config.php',
             include __DIR__ . '/../config/diagnostic.config.php',
             include __DIR__ . '/../config/app.microservice.php',
             include __DIR__ . '/../config/app.install.php'
-    	];
+        ];
 
-    	foreach ($configFiles as $file)
-    		$config = ArrayUtils::merge($config, $file);
+        foreach ($configFiles as $file)
+            $config = ArrayUtils::merge($config, $file);
 
-    	return $config;
+        return $config;
     }
 
     public function getAutoloaderConfig()
@@ -83,17 +84,17 @@ class Module
     
     public function createTranslations($e, $locale = 'en_EN')
     {
-    	$sm = $e->getApplication()->getServiceManager();
-    	$translator = $sm->get('translator');
+        $sm = $e->getApplication()->getServiceManager();
+        $translator = $sm->get('translator');
         
-    	if (!empty($locale)){
-    	    $translationType = [
-    	        'interface',
-    	        'install',
-    	    ];
-    	    
-    	    $translationList = [];
-    	    if(file_exists($_SERVER['DOCUMENT_ROOT'].'/../module/MelisModuleConfig/config/translation.list.php')){
+        if (!empty($locale)){
+            $translationType = [
+                'interface',
+                'install',
+            ];
+            
+            $translationList = [];
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/../module/MelisModuleConfig/config/translation.list.php')){
                 $translationList = include 'module/MelisModuleConfig/config/translation.list.php';
             }
 
@@ -115,6 +116,6 @@ class Module
                 
                 $translator->addTranslationFile('phparray', $transPath);
             }
-    	}
+        }
     }
 }
