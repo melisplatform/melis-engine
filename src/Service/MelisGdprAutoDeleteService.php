@@ -127,8 +127,22 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
      */
     public function getDaysDiff($date1, $date2)
     {
-        return round((time() - strtotime($date1)) / 60);
-        #return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+        // get config time format 
+        $timeFormat = "d"; 
+        $diff = 0;
+        // 
+        switch ($timeFormat) {
+            case "d":
+                $diff = round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+                break;
+            case "m":
+                $diff = round((time() - strtotime($date1)) / 60);
+                break;
+            default:
+                $diff = round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+        }
+
+        return $diff; 
     }
 
     /**
