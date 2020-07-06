@@ -23,22 +23,22 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	 */
 	public function getDatasPage($idPage, $type = 'published')
 	{
-	    if (empty($idPage))
-	        return null;
-	    
-	    // Retrieve cache version if front mode to avoid multiple calls
-	    $cacheKey = 'getDatasPage_' . $idPage . '_' . $type;
-	    $cacheConfig = 'engine_page_services';
+		if (empty($idPage))
+			return null;
+		
+		// Retrieve cache version if front mode to avoid multiple calls
+		$cacheKey = 'getDatasPage_' . $idPage . '_' . $type;
+		$cacheConfig = 'engine_page_services';
 		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
-	    $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
-	    if (!empty($results)) return $results;
-	    
+		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+		if (!empty($results)) return $results;
+		
 		$melisPage = new MelisPage();
 		$melisPage->setId($idPage);
 		$melisPage->setType($type);
 		
-		$tablePageTree = $this->serviceLocator->get('MelisEngineTablePageTree');
-		$melisPageTreePublished = $tablePageTree->getFullDatasPage($idPage, 'published');
+		$ageTreeSrv = $this->serviceLocator->get('MelisEngineTree');
+		$melisPageTreePublished = $ageTreeSrv->getFullDatasPage($idPage, 'published');
 		$datasPagePublished = $melisPageTreePublished->current();
 		
 		$tplId = 0;
@@ -51,8 +51,8 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		}
 		else
 		{
-			$tablePageTreeSaved = $this->serviceLocator->get('MelisEngineTablePageTree');
-			$melisPageTreeSaved = $tablePageTreeSaved->getFullDatasPage($idPage, 'saved');
+			$ageTreeSrv = $this->serviceLocator->get('MelisEngineTree');
+			$melisPageTreeSaved = $ageTreeSrv->getFullDatasPage($idPage, 'saved');
 			$datasPageSaved = $melisPageTreeSaved->current();
 			
 			if ($melisPageTreeSaved->count() > 0 && !empty($datasPageSaved->page_id))
@@ -72,9 +72,9 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 
 		if (!empty($tplId))
 		{
-			$tableTemplate = $this->serviceLocator->get('MelisEngineTableTemplate');
-			$melisTemplateRes = $tableTemplate->getEntryById($tplId);
-			$melisPage->setMelisTemplate($melisTemplateRes->current());
+			$tplSrv = $this->getServiceLocator()->get('MelisEngineTemplateService');
+			$tplData = $tplSrv->getTemplate($tplId);
+			$melisPage->setMelisTemplate($tplData->current());
 		}
 		
 		// Save cache key
@@ -93,17 +93,17 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	public function searchPage($value, $type = 'published')
 	{
 
-	    $results = array();
-	  
-	    // Service implementation start
-	    $pageTreeTable = $this->getServiceLocator()->get('MelisEngineTablePageTree');
-	    $pages = $pageTreeTable->getPagesBySearchValue($value, $type);
-	     
-	    foreach($pages as $page){
-	        $results[] = $page;
-	    }
+		$results = array();
+	
+		// Service implementation start
+		$pageTreeTable = $this->getServiceLocator()->get('MelisEngineTablePageTree');
+		$pages = $pageTreeTable->getPagesBySearchValue($value, $type);
+		
+		foreach($pages as $page){
+			$results[] = $page;
+		}
 
-	    return $results;
+		return $results;
 	}
 	
 	/**
@@ -115,27 +115,27 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	 */
 	public function getPageLanguageList($pageId)
 	{
-	    // Retrieving the list of Page languages
-	    $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
-	    $pageLang = $pageLangTbl->getEntryByField('plang_page_id', $pageId)->current();
-	    
-	    $pagesData = array();
-	    
-	    if (!empty($pageLang))
-	    {
-	        $pageInitialId = $pageLang->plang_page_id_initial;
-	        
-	        $pages = $pageLangTbl->getEntryByField('plang_page_id_initial', $pageInitialId);
-	        
-	        foreach ($pages As $val)
-	        {
-	            $pageData = $this->getDatasPage($val->plang_page_id);
-	            
-	            array_push($pagesData, $pageData);
-	        }
-	    }
-	    
-	    return $pagesData;
+		// Retrieving the list of Page languages
+		$pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+		$pageLang = $pageLangTbl->getEntryByField('plang_page_id', $pageId)->current();
+		
+		$pagesData = array();
+		
+		if (!empty($pageLang))
+		{
+			$pageInitialId = $pageLang->plang_page_id_initial;
+			
+			$pages = $pageLangTbl->getEntryByField('plang_page_id_initial', $pageInitialId);
+			
+			foreach ($pages As $val)
+			{
+				$pageData = $this->getDatasPage($val->plang_page_id);
+				
+				array_push($pagesData, $pageData);
+			}
+		}
+		
+		return $pagesData;
 	}
 	
 	/**
@@ -148,17 +148,63 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	 */
 	public function getPageLanguageById($pageId, $langId) 
 	{
-	    // Retrieving the list of Page languages
-	    $pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
-	    $pageLang = $pageLangTbl->getPageLanguageById($pageId, $langId)->current();
-	    
-	    $pagesData = array();
-	    
-	    if (!empty($pageLang))
-	    {
-	        $pagesData = $this->getDatasPage($pageLang->plang_page_id);
-	    }
-	    
-	    return $pagesData;
+		// Retrieving the list of Page languages
+		$pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+		$pageLang = $pageLangTbl->getPageLanguageById($pageId, $langId)->current();
+		
+		$pagesData = array();
+		
+		if (!empty($pageLang))
+		{
+			$pagesData = $this->getDatasPage($pageLang->plang_page_id);
+		}
+		
+		return $pagesData;
 	}
+
+    /**
+     * Function to get page data by id
+     *
+     * @param $idPage
+     * @param string $type
+     * @return mixed
+     */
+	public function getPageById($idPage, $type = 'published')
+    {
+        // Retrieve cache version if front mode to avoid multiple calls
+        $cacheKey = 'getPageById' . $idPage. '_'.$type;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+
+        if (!empty($results)) return $results;
+
+        if($type == 'published')
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
+        else
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+
+        $pageData = $pageTbl->getEntryById($idPage)->current();
+
+        // Save cache key
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pageData);
+
+        return $pageData;
+    }
+
+    /**
+     * @param $idPage
+     * @param $data
+     * @param string $type
+     * @return mixed
+     */
+    public function updatePageById($idPage, $data, $type = 'published')
+    {
+        if($type == 'published')
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
+        else
+            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+
+        return $pageTbl->update($data, 'page_id', $idPage);
+    }
 }

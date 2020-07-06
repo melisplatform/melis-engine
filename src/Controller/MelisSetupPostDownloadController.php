@@ -179,7 +179,9 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                             }
                         }
                     }else{
-                        $this->saveCmsSiteDomain($scheme, $siteDomain);
+                        //create domain only if the user install MelisDemoCms or MelisDemoCmsTwig or other sites
+                        if($selectedSite == 'MelisDemoCms')
+                            $this->saveCmsSiteDomain($scheme, $siteDomain);
                     }
                 }
 

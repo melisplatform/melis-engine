@@ -54,7 +54,7 @@ class MelisPageTreeTable extends MelisGenericTable
 		}
 		
 		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
-		    array('*'), $select::JOIN_LEFT);
+			array('*'), $select::JOIN_LEFT);
 		
 		$select->where('tree_page_id = ' . $id);
 		
@@ -92,16 +92,16 @@ class MelisPageTreeTable extends MelisGenericTable
 		
 		if ($publishedOnly == 0)
 		{
-    		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
-		    $select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
+			$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
+			$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
 					$columns, $select::JOIN_LEFT);
 		}
 		
 		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
-	       array('*'), $select::JOIN_LEFT);
+		array('*'), $select::JOIN_LEFT);
 		
 		$select->join('melis_cms_page_default_urls', 'melis_cms_page_default_urls.purl_page_id = melis_cms_page_tree.tree_page_id',
-	       array('*'), $select::JOIN_LEFT);
+		array('*'), $select::JOIN_LEFT);
 			
 		$select->where('tree_father_page_id = ' . $id);
 		$select->order('tree_page_order ASC');
@@ -136,13 +136,13 @@ class MelisPageTreeTable extends MelisGenericTable
 
 		if ($type != 'published' || $type == '')
 		{
-    		$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
-    		$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_father_page_id', 
-    						$columns, $select::JOIN_LEFT);
+			$columns = $this->aliasColumnsFromTableDefinition('MelisEngine\MelisPageColumns', 's_');
+			$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_father_page_id', 
+							$columns, $select::JOIN_LEFT);
 		}
 		
 		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_father_page_id',
-		    array('*'), $select::JOIN_LEFT);
+			array('*'), $select::JOIN_LEFT);
 		
 		$select->where('tree_page_id = ' . $id);
 		
@@ -153,15 +153,15 @@ class MelisPageTreeTable extends MelisGenericTable
 	
 	public function getPageTreeOrderedByFatherId($fatherId)
 	{
-	    $select = $this->tableGateway->getSql()->select();
-	    
-	    $select->columns(array('*'));
-	    $select->where('tree_father_page_id ='.$fatherId);
-	    $select->order(array('tree_page_order' => 'ASC'));
-	    
-	    $resultSet = $this->tableGateway->selectWith($select);
-	    
-	    return $resultSet;
+		$select = $this->tableGateway->getSql()->select();
+		
+		$select->columns(array('*'));
+		$select->where('tree_father_page_id ='.$fatherId);
+		$select->order(array('tree_page_order' => 'ASC'));
+		
+		$resultSet = $this->tableGateway->selectWith($select);
+		
+		return $resultSet;
 	}
 	
 	/**
@@ -174,61 +174,61 @@ class MelisPageTreeTable extends MelisGenericTable
 	 */
 	public function getPagesBySearchValue($value, $type = '')
 	{
-	    $select = $this->tableGateway->getSql()->select();
-	    $select->columns(array('tree_page_id'));
-	    
-	    if ($type == 'published' || $type == ''){
-	        $select->join('melis_cms_page_published', 'melis_cms_page_published.page_id = melis_cms_page_tree.tree_page_id',
-	            array(), $select::JOIN_LEFT);
-	    }
-	        
-	    
-        if ($type == 'saved'){
-            $select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
-                array(), $select::JOIN_LEFT);
-        }
-        
-        $select->join('melis_cms_page_style', 'melis_cms_page_tree.tree_page_id = melis_cms_page_style.pstyle_page_id', array(), $select::JOIN_LEFT);
-        
-        $select->join('melis_cms_style', ' melis_cms_style.style_id = melis_cms_page_style.pstyle_style_id', array('*'), $select::JOIN_LEFT);
-            
-        $search = '%'.$value.'%';
-        $select->where->NEST->like('page_name', $search)
-            ->or->like('melis_cms_page_tree.tree_page_id', $search);
-        
-        $resultSet = $this->tableGateway->selectWith($select);
-        
-        return $resultSet;
+		$select = $this->tableGateway->getSql()->select();
+		$select->columns(array('tree_page_id'));
+		
+		if ($type == 'published' || $type == ''){
+			$select->join('melis_cms_page_published', 'melis_cms_page_published.page_id = melis_cms_page_tree.tree_page_id',
+				array(), $select::JOIN_LEFT);
+		}
+			
+		
+		if ($type == 'saved'){
+			$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
+				array(), $select::JOIN_LEFT);
+		}
+		
+		$select->join('melis_cms_page_style', 'melis_cms_page_tree.tree_page_id = melis_cms_page_style.pstyle_page_id', array(), $select::JOIN_LEFT);
+		
+		$select->join('melis_cms_style', ' melis_cms_style.style_id = melis_cms_page_style.pstyle_style_id', array('*'), $select::JOIN_LEFT);
+			
+		$search = '%'.$value.'%';
+		$select->where->NEST->like('page_name', $search)
+			->or->like('melis_cms_page_tree.tree_page_id', $search);
+		
+		$resultSet = $this->tableGateway->selectWith($select);
+		
+		return $resultSet;
 	}
 	
 	public function getPageTreeByFatherIdWithDetails($fatherId)
 	{
-	    $select = $this->tableGateway->getSql()->select();
-	     
-	    $select->columns(array('*'));
-	    
-	    $select->join('melis_cms_page_lang', 'melis_cms_page_lang.plang_page_id = melis_cms_page_tree.tree_page_id',
-	        array('plang_lang_id'));
-	    $select->join('melis_cms_lang', 'melis_cms_lang.lang_cms_id = melis_cms_page_lang.plang_lang_id',
-	        array('*'), $select::JOIN_LEFT);
-	    $select->join('melis_cms_page_style', 'melis_cms_page_tree.tree_page_id = melis_cms_page_style.pstyle_page_id', array(), $select::JOIN_LEFT);
-	    
-	    $select->join('melis_cms_style', ' melis_cms_style.style_id = melis_cms_page_style.pstyle_style_id', array('*'), $select::JOIN_LEFT);
-	    
-        $select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
-            array('*'), $select::JOIN_LEFT);
+		$select = $this->tableGateway->getSql()->select();
+		
+		$select->columns(array('*'));
+		
+		$select->join('melis_cms_page_lang', 'melis_cms_page_lang.plang_page_id = melis_cms_page_tree.tree_page_id',
+			array('plang_lang_id'));
+		$select->join('melis_cms_lang', 'melis_cms_lang.lang_cms_id = melis_cms_page_lang.plang_lang_id',
+			array('*'), $select::JOIN_LEFT);
+		$select->join('melis_cms_page_style', 'melis_cms_page_tree.tree_page_id = melis_cms_page_style.pstyle_page_id', array(), $select::JOIN_LEFT);
+		
+		$select->join('melis_cms_style', ' melis_cms_style.style_id = melis_cms_page_style.pstyle_style_id', array('*'), $select::JOIN_LEFT);
+		
+		$select->join('melis_cms_page_saved', 'melis_cms_page_saved.page_id = melis_cms_page_tree.tree_page_id',
+			array('*'), $select::JOIN_LEFT);
 
-        $select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
-            array('*'), $select::JOIN_LEFT);
+		$select->join('melis_cms_page_seo', 'melis_cms_page_seo.pseo_id = melis_cms_page_tree.tree_page_id',
+			array('*'), $select::JOIN_LEFT);
 
-        $select->where('tree_father_page_id ='.$fatherId);
-	    $select->order('tree_page_order ASC');
+		$select->where('tree_father_page_id ='.$fatherId);
+		$select->order('tree_page_order ASC');
 
-	    $sql = $this->tableGateway->getSql();
-	    $raw = $sql->getSqlstringForSqlObject($select);
-        $resultSet = $this->tableGateway->selectWith($select);
+		$sql = $this->tableGateway->getSql();
+		$raw = $sql->getSqlstringForSqlObject($select);
+		$resultSet = $this->tableGateway->selectWith($select);
 
-        return $resultSet;
-	    
+		return $resultSet;
+		
 	}
 }
