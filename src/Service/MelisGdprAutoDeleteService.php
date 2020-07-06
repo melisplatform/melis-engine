@@ -128,7 +128,7 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
     public function getDaysDiff($date1, $date2)
     {
         // get config time format 
-        $timeFormat = "d"; 
+        $timeFormat = $this->getServiceLocator()->get('MelisConfig')->getItem('melisfront/datas')['gdpr_auto_anonymized_time_format'] ?? null;
         $diff = 0;
         // 
         switch ($timeFormat) {
