@@ -9,6 +9,7 @@
 
 namespace MelisEngine;
 
+use MelisEngine\Listener\MelisEngineGdprAutoDeleteLinkProviderListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\ModuleManager;
