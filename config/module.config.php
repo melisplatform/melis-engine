@@ -118,6 +118,7 @@ return [
             'MelisEnginePageDefaultUrlsService' => \MelisEngine\Service\MelisEnginePageDefaultUrlsService::class,
             'MelisEngineSiteService'            => \MelisEngine\Service\MelisEngineSiteService::class,
             'MelisEngineSiteDomainService'      => \MelisEngine\Service\MelisEngineSiteDomainService::class,
+            'MelisGdprAutoDeleteService'        => \MelisEngine\Service\MelisGdprAutoDeleteService::class,
 
             // Model tables
             'MelisCmsGdprTextsTable'            => \MelisEngine\Model\Tables\MelisCmsGdprTextsTable::class,
