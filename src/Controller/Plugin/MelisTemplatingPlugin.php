@@ -65,7 +65,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         if (count($className) > 0)
             $className = $className[count($className) - 1];
         $this->pluginName = $className;
-        $this->setEventManager(new EventManager());
+//        $this->setEventManager(new EventManager());
     }
 
     public function getServiceManager()
@@ -73,14 +73,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         return $this->getController()->getEvent()->getApplication()->getServiceManager();
     }
 
-    public function setEventManager(EventManagerInterface $eventManager)
-    {
-        $this->eventManager = $eventManager;
-    }
+//    public function setEventManager(EventManagerInterface $eventManager)
+//    {
+//        $this->eventManager = $eventManager;
+//    }
 
     public function getEventManager()
     {
-        return $this->eventManager;
+        return $this->getController()->getEventManager();
     }
 
     // To call to get front view
