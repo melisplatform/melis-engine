@@ -7,7 +7,7 @@
  *
  */
 
-namespace MelisEngine\Model;
+namespace MelisEngine\Model\Hydrator;
 
 class MelisTemplate
 {

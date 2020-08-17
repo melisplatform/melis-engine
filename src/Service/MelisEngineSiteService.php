@@ -9,11 +9,6 @@
 
 namespace MelisEngine\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerInterface;
-
 /**
  * 
  * This service handles the generic service system of Melis.
@@ -33,11 +28,11 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         //try to get config from cache
         $cacheKey = 'getSiteById_' . $siteId;
         $cacheConfig = 'engine_memory_cache';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
-        $siteTable = $this->getServiceLocator()->get('MelisEngineTableSite');
+        $siteTable = $this->getServiceManager()->get('MelisEngineTableSite');
         $siteData = $siteTable->getEntryById($siteId);
 
         $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $siteData);
@@ -54,18 +49,22 @@ class MelisEngineSiteService extends MelisEngineGeneralService
     public function getSiteDataByDomain($domain)
     {
         //clean domain name
-        $treeService = $this->getServiceLocator()->get('MelisEngineTree');
+        $treeService = $this->getServiceManager()->get('MelisEngineTree');
         $cacheDom = $treeService->cleanString($domain);
         $cacheDom = str_replace('.', '', $cacheDom);
         //try to get data from cache
         $cacheKey = 'getSiteDataByDomain_' . $cacheDom;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
-        $donSrv = $this->getServiceLocator()->get('MelisEngineSiteDomainService');
+        $donSrv = $this->getServiceManager()->get('MelisEngineSiteDomainService');
         $datasDomain = $donSrv->getDomainByDomainName($domain);
+
+        if (!$datasDomain)
+            return null;
+
         $siteId = $datasDomain->sdom_site_id;
 
         /**
@@ -90,11 +89,11 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         //try to get data from cache
         $cacheKey = 'getHomePageBySiteIdAndLangId_' . $siteId.'_'. $langId;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
-        $siteHomeTable = $this->getServiceLocator()->get('MelisEngineTableCmsSiteHome');
+        $siteHomeTable = $this->getServiceManager()->get('MelisEngineTableCmsSiteHome');
         $siteHomeData = $siteHomeTable->getHomePageBySiteIdAndLangId($siteId, $langId)->current();
 
         $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $siteHomeData);
@@ -113,7 +112,7 @@ class MelisEngineSiteService extends MelisEngineGeneralService
         //try to get data from cache
         $cacheKey = 'getSiteMainHomePageIdBySiteId_' . $siteId;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 

@@ -11,16 +11,22 @@ namespace MelisEngine\Model\Tables;
 
 
 use MelisCore\Model\Tables\MelisGenericTable;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisSiteTranslationTextTable extends MelisGenericTable
 {
-    protected $tableGateway;
-    protected $idField;
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_site_translation_text';
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mstt_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'mstt_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 }

@@ -11,14 +11,10 @@ namespace MelisEngine\Service;
 use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use MelisCore\Service\MelisServiceManager;
 
-class MelisEngineComposerService implements ServiceLocatorAwareInterface
+class MelisEngineComposerService extends MelisServiceManager
 {
-    /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
-    public $serviceLocator;
-
     /**
      * @var Composer
      */
@@ -58,7 +54,7 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
         //try to get modules from cache
         $cacheKey = 'getVendorModulesEngine';
         $cacheConfig = 'meliscms_page';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
@@ -104,7 +100,7 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
         //try to get module path from cache
         $cacheKey = 'getComposerModulePathEngine_'.$moduleName.'_'.$returnFullPath;
         $cacheConfig = 'meliscms_page';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if(!is_null($results)) return $results;
 
@@ -115,26 +111,6 @@ class MelisEngineComposerService implements ServiceLocatorAwareInterface
         $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $path);
 
         return $path;
-    }
-
-    /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
     }
 
     /**

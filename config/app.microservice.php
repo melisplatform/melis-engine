@@ -16,7 +16,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -44,7 +44,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -70,7 +70,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -114,7 +114,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -132,7 +132,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => '0 or 1' 
+												\Laminas\Validator\NotEmpty::IS_EMPTY => '0 or 1' 
 											),
 										),
 									),
@@ -156,7 +156,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -200,7 +200,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an Integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an Integer'
 											),
 										),
 									),
@@ -218,7 +218,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter type'
+												\Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter type'
 											),
 										),
 									),
@@ -243,7 +243,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -303,7 +303,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -321,7 +321,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => ''
+												\Laminas\Validator\NotEmpty::IS_EMPTY => ''
 											),
 										),
 									),
@@ -339,7 +339,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => ''
+												\Laminas\Validator\NotEmpty::IS_EMPTY => ''
 											),
 										),
 									),
@@ -363,7 +363,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -407,7 +407,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -425,7 +425,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => ''
+												\Laminas\Validator\NotEmpty::IS_EMPTY => ''
 											),
 										),
 									),
@@ -448,7 +448,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -476,7 +476,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -499,7 +499,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -527,7 +527,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -551,7 +551,7 @@ return array(
 							'method'=> 'POST',
 							'action'=> $_SERVER['REQUEST_URI'],
 						),
-						'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+						'hydrator' => 'Laminas\Hydrator\ArraySerializable',
 						'elements' => array(
 							array(
 								'spec' => array(
@@ -595,7 +595,7 @@ return array(
 										'name' => 'IsInt',
 										'options' => array(
 											'message' => array(
-												\Zend\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
+												\Laminas\I18n\Validator\IsInt::INVALID => 'idPage must be an integer'
 											),
 										),
 									),
@@ -613,7 +613,7 @@ return array(
 										'name' => 'NotEmpty',
 										'options' => array(
 											'message' => array(
-												\Zend\Validator\NotEmpty::IS_EMPTY => ''
+												\Laminas\Validator\NotEmpty::IS_EMPTY => ''
 											),
 										),
 									),

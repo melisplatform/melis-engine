@@ -9,25 +9,23 @@
 
 namespace MelisEngine\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use MelisCore\Listener\MelisGeneralListener;
 
-class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisEngineMicroServicePageServiceListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
             'melis_core_microservice_amend_data',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
-
 
                 $module  = isset($params['module'])  ? $params['module']  : null;
                 $service = isset($params['service']) ? $params['service'] : null;
@@ -58,7 +56,6 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
                     $pageTree->page_uri = $uri;
 
                     $results->getMelisPageTree = $pageTree;
-
                 }
 
                 return array(
@@ -70,8 +67,7 @@ class MelisEngineMicroServicePageServiceListener extends MelisCoreGeneralListene
                 );
 
             },
-            -10000);
-
-        $this->listeners[] = $callBackHandler;
+            -10000
+        );
     }
 }

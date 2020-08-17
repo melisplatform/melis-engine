@@ -9,25 +9,21 @@
 
 namespace MelisEngine\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use MelisCore\Listener\MelisGeneralListener;
 
-class MelisEngineTreeServiceMicroServiceListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisEngineTreeServiceMicroServiceListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
-
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             '*',
-            array(
-                'melis_core_microservice_amend_data',
-            ),
+            'melis_core_microservice_amend_data',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
 
                 $module  = isset($params['module'])  ? $params['module']  : null;
@@ -45,21 +41,18 @@ class MelisEngineTreeServiceMicroServiceListener extends MelisCoreGeneralListene
                     $results = $results;
                 }
                 else if($module == 'MelisEngine' && $service == 'MelisTreeService' && $method == 'getDomainByPageId') {
-                    
-                  
+
                 }
 
-
-                return array(
+                return [
                     'module'  => $module,
                     'service' => $service,
                     'method'  => $method,
                     'post'    => $post,
                     'results' => $results
-                );
-
+                ];
             },
-            1000);
-        $this->listeners[] = $callBackHandler;
+            1000
+        );
     }
 }

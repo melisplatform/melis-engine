@@ -9,15 +9,24 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisSite301Table extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 's301_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site_301';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 's301_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
     public function getData($search = '', $siteId = null,  $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
     {

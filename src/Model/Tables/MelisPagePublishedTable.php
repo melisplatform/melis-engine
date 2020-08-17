@@ -9,16 +9,25 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPagePublishedTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'page_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_published';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'page_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	public function getPublishedSitePagesById($pageId)
 	{
 	    $select = $this->tableGateway->getSql()->select();
@@ -36,7 +45,7 @@ class MelisPagePublishedTable extends MelisGenericTable
      *
      * @param string|null $pageType
      * @param int|null $siteId
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getPagesByType(string $pageType = null, int $siteId = null)
     {

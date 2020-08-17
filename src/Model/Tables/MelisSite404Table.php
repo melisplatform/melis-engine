@@ -9,16 +9,25 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisSite404Table extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 's404_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site_404';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 's404_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	/**
 	 * Gets the 404 for a siteId and main page_id
 	 * 

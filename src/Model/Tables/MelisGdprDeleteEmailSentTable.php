@@ -10,16 +10,22 @@
 namespace MelisEngine\Model\Tables;
 
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisGdprDeleteEmailSentTable extends MelisGenericTable
 {
-    protected $tableGateway;
-    protected $idField;
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_gdpr_delete_emails_sent';
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mgdprs_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'mgdprs_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 }

@@ -9,32 +9,18 @@
 
 namespace MelisEngine\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use MelisCore\Service\MelisServiceManager;
 use MelisEngine\Model\MelisPage;
-use Zend\Filter\HtmlEntities;
-use Zend\Cache\StorageFactory;
+use Laminas\Filter\HtmlEntities;
+use Laminas\Cache\StorageFactory;
 
 /**
  * This class handles MelisCache based on Zend Cache Storage configurations
  * See module.config.php, "caches" keys for overridding config for your own site
  *
  */
-class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
+class MelisEngineCacheSystemService extends MelisServiceManager
 {
-	protected $serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}	
-
 	/**
 	 * Returns front/melis
 	 * 
@@ -42,8 +28,8 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function getRenderMode()
 	{
-		$router = $this->serviceLocator->get('router');
-		$request = $this->serviceLocator->get('request');
+		$router = $this->getServiceManager()->get('router');
+		$request = $this->getServiceManager()->get('request');
 	
 		$routeMatch = $router->match($request);
 		
@@ -65,7 +51,7 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	{
 		$active = true;
 		
-		$config =  $this->getServiceLocator()->get('config');
+		$config =  $this->getServiceManager()->get('config');
 		if (!empty($config['caches']) && !empty($config['caches'][$confCache]))
 		{
 			$conf = $config['caches'][$confCache];
@@ -88,7 +74,7 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	public function getTtlByKey($confCache, $cacheKey)
 	{
 		$ttl = 0;
-		$config =  $this->getServiceLocator()->get('config');
+		$config =  $this->getServiceManager()->get('config');
 		if (!empty($config['caches']) && !empty($config['caches'][$confCache]))
 		{
 			$conf = $config['caches'][$confCache];
@@ -128,7 +114,7 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 		$active = $this->isCacheConfActive($confCache);
 		if ($active)
 		{
-			$cache = $this->getServiceLocator()->get($confCache);
+			$cache = $this->getServiceManager()->get($confCache);
 
 			if ($cache->hasItem($cacheKey))
 			{
@@ -156,7 +142,7 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 		$active = $this->isCacheConfActive($confCache);
 		if ($active)
 		{
-			$cache = $this->getServiceLocator()->get($confCache);
+			$cache = $this->getServiceManager()->get($confCache);
 			$cache->setItem($cacheKey, $results);
 			unset($cache);
 		}
@@ -170,7 +156,7 @@ class MelisEngineCacheSystemService implements ServiceLocatorAwareInterface
 	 */
 	public function deleteCacheByPrefix($prefix, $confName)
 	{
-		$this->getServiceLocator()->get($confName)->clearByPrefix($prefix);
+		$this->getServiceManager()->get($confName)->clearByPrefix($prefix);
 	}
 	
 }

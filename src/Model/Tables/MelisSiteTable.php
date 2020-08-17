@@ -9,21 +9,30 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\PredicateSet;
-use Zend\Db\Sql\Predicate\Like;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Expression;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Predicate\Like;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Expression;
 
 class MelisSiteTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'site_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'site_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	/**
 	 * Gets all the datas for a site
 	 * 
@@ -68,7 +77,7 @@ class MelisSiteTable extends MelisGenericTable
         // Retrieve cache version if front mode to avoid multiple calls
 	    $cacheKey = get_class($this) . '_getSiteById_' . $idSite . '_' . $env . '_' . $includeSite404Table;
         $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
         $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
         if (!empty($results)) return $results;
 	    
@@ -105,7 +114,7 @@ class MelisSiteTable extends MelisGenericTable
      * @param string $orderDirection
      * @param int $start
      * @param null $limit
-     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
 	public function getSitesData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
     {

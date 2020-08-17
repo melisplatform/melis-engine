@@ -9,15 +9,15 @@
 
 namespace MelisEngine\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
+use MelisCore\Controller\MelisAbstractActionController;
 
 /**
  * @property bool $showOnMarketplacePostSetup
  */
-class MelisSetupPostUpdateController extends AbstractActionController implements MelisSetupInterface
+class MelisSetupPostUpdateController extends MelisAbstractActionController implements MelisSetupInterface
 {
     /**
      * flag for Marketplace whether to display the setup form or not
@@ -26,7 +26,7 @@ class MelisSetupPostUpdateController extends AbstractActionController implements
     public $showOnMarketplacePostSetup = true;
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function getFormAction()
     {
@@ -37,7 +37,7 @@ class MelisSetupPostUpdateController extends AbstractActionController implements
     }
 
     /**
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function validateFormAction()
     {
@@ -45,7 +45,7 @@ class MelisSetupPostUpdateController extends AbstractActionController implements
     }
 
     /**
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function submitAction()
     {

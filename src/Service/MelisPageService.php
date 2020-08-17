@@ -9,10 +9,10 @@
 
 namespace MelisEngine\Service;
 
+use MelisCore\Service\MelisGeneralService;
 use MelisEngine\Model\MelisPage;
-use MelisEngine\Service\MelisEngineGeneralService;
 
-class MelisPageService extends MelisEngineGeneralService implements MelisPageServiceInterface
+class MelisPageService extends MelisGeneralService implements MelisPageServiceInterface
 {
 	/**
 	 * This service gets all datas of a page
@@ -29,7 +29,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		// Retrieve cache version if front mode to avoid multiple calls
 		$cacheKey = 'getDatasPage_' . $idPage . '_' . $type;
 		$cacheConfig = 'engine_page_services';
-		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+		$melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
 		if (!empty($results)) return $results;
 		
@@ -37,7 +37,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		$melisPage->setId($idPage);
 		$melisPage->setType($type);
 		
-		$ageTreeSrv = $this->serviceLocator->get('MelisEngineTree');
+		$ageTreeSrv = $this->getServiceManager()->get('MelisEngineTree');
 		$melisPageTreePublished = $ageTreeSrv->getFullDatasPage($idPage, 'published');
 		$datasPagePublished = $melisPageTreePublished->current();
 		
@@ -51,7 +51,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		}
 		else
 		{
-			$ageTreeSrv = $this->serviceLocator->get('MelisEngineTree');
+			$ageTreeSrv = $this->getServiceManager()->get('MelisEngineTree');
 			$melisPageTreeSaved = $ageTreeSrv->getFullDatasPage($idPage, 'saved');
 			$datasPageSaved = $melisPageTreeSaved->current();
 			
@@ -72,7 +72,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 
 		if (!empty($tplId))
 		{
-			$tplSrv = $this->getServiceLocator()->get('MelisEngineTemplateService');
+			$tplSrv = $this->getServiceManager()->get('MelisEngineTemplateService');
 			$tplData = $tplSrv->getTemplate($tplId);
 			$melisPage->setMelisTemplate($tplData->current());
 		}
@@ -96,7 +96,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		$results = array();
 	
 		// Service implementation start
-		$pageTreeTable = $this->getServiceLocator()->get('MelisEngineTablePageTree');
+		$pageTreeTable = $this->getServiceManager()->get('MelisEngineTablePageTree');
 		$pages = $pageTreeTable->getPagesBySearchValue($value, $type);
 		
 		foreach($pages as $page){
@@ -116,7 +116,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	public function getPageLanguageList($pageId)
 	{
 		// Retrieving the list of Page languages
-		$pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+		$pageLangTbl = $this->getServiceManager()->get('MelisEngineTablePageLang');
 		$pageLang = $pageLangTbl->getEntryByField('plang_page_id', $pageId)->current();
 		
 		$pagesData = array();
@@ -149,7 +149,7 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 	public function getPageLanguageById($pageId, $langId) 
 	{
 		// Retrieving the list of Page languages
-		$pageLangTbl = $this->getServiceLocator()->get('MelisEngineTablePageLang');
+		$pageLangTbl = $this->getServiceManager()->get('MelisEngineTablePageLang');
 		$pageLang = $pageLangTbl->getPageLanguageById($pageId, $langId)->current();
 		
 		$pagesData = array();
@@ -162,49 +162,49 @@ class MelisPageService extends MelisEngineGeneralService implements MelisPageSer
 		return $pagesData;
 	}
 
-    /**
-     * Function to get page data by id
-     *
-     * @param $idPage
-     * @param string $type
-     * @return mixed
-     */
+	/**
+	 * Function to get page data by id
+	 *
+	 * @param $idPage
+	 * @param string $type
+	 * @return mixed
+	 */
 	public function getPageById($idPage, $type = 'published')
-    {
-        // Retrieve cache version if front mode to avoid multiple calls
-        $cacheKey = 'getPageById' . $idPage. '_'.$type;
-        $cacheConfig = 'engine_page_services';
-        $melisEngineCacheSystem = $this->getServiceLocator()->get('MelisEngineCacheSystem');
-        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+	{
+		// Retrieve cache version if front mode to avoid multiple calls
+		$cacheKey = 'getPageById' . $idPage. '_'.$type;
+		$cacheConfig = 'engine_page_services';
+		$melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
+		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
 
-        if (!empty($results)) return $results;
+		if (!empty($results)) return $results;
 
-        if($type == 'published')
-            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
-        else
-            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+		if($type == 'published')
+			$pageTbl = $this->getServiceManager()->get('MelisEngineTablePagePublished');
+		else
+			$pageTbl = $this->getServiceManager()->get('MelisEngineTablePageSaved');
 
-        $pageData = $pageTbl->getEntryById($idPage)->current();
+		$pageData = $pageTbl->getEntryById($idPage)->current();
 
-        // Save cache key
-        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pageData);
+		// Save cache key
+		$melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $pageData);
 
-        return $pageData;
-    }
+		return $pageData;
+	}
 
-    /**
-     * @param $idPage
-     * @param $data
-     * @param string $type
-     * @return mixed
-     */
-    public function updatePageById($idPage, $data, $type = 'published')
-    {
-        if($type == 'published')
-            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePagePublished');
-        else
-            $pageTbl = $this->getServiceLocator()->get('MelisEngineTablePageSaved');
+	/**
+	 * @param $idPage
+	 * @param $data
+	 * @param string $type
+	 * @return mixed
+	 */
+	public function updatePageById($idPage, $data, $type = 'published')
+	{
+		if($type == 'published')
+			$pageTbl = $this->getServiceManager()->get('MelisEngineTablePagePublished');
+		else
+			$pageTbl = $this->getServiceManager()->get('MelisEngineTablePageSaved');
 
-        return $pageTbl->update($data, 'page_id', $idPage);
-    }
+		return $pageTbl->update($data, 'page_id', $idPage);
+	}
 }

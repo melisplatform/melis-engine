@@ -128,7 +128,7 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
     public function getDaysDiff($date1, $date2)
     {
         // get config time format 
-        $timeFormat = $this->getServiceLocator()->get('MelisConfig')->getItem('melisfront/datas')['gdpr_auto_anonymized_time_format'] ?? null;
+        $timeFormat = $this->getServiceManager()->get('MelisConfig')->getItem('melisfront/datas')['gdpr_auto_anonymized_time_format'] ?? null;
         $diff = 0;
         // 
         switch ($timeFormat) {
@@ -153,7 +153,7 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
      */
     public function getAutoDeleteConfig($siteId, $module)
     {
-        $configTable = $this->getServiceLocator()->get('MelisGdprAutodeleteConfigTable');
+        $configTable = $this->getServiceManager()->get('MelisGdprAutodeleteConfigTable');
 
         return $configTable->getAutoDeleteConfig($siteId, $module)->current();
     }
@@ -168,7 +168,7 @@ class MelisGdprAutoDeleteService extends MelisEngineGeneralService
     public function removeDeleteEmailSentLog($accountId, $module, $siteId)
     { 
         $status = false;
-        $emailSentTbl = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSentTable');
+        $emailSentTbl = $this->getServiceManager()->get('MelisGdprDeleteEmailsSentTable');
         // delete by field
         $status = $emailSentTbl->deleteEmailSentData($accountId, $module, $siteId);
 

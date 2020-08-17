@@ -13,7 +13,7 @@ return array(
                         'method' => 'POST',
                         'action' => '',
                     ),
-                    'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
                     'elements'  => array(
                         array(
                             'spec' => array(
@@ -125,8 +125,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -146,7 +146,7 @@ return array(
                                         'encoding' => 'UTF-8',
                                         'max'      => 11,
                                         'messages' => array(
-                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                            \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
                                         ),
                                     ),
                                 ),
@@ -154,8 +154,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -163,7 +163,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
 
                                         ),
                                     ),
@@ -184,7 +184,7 @@ return array(
                                         'encoding' => 'UTF-8',
                                         'max'      => 11,
                                         'messages' => array(
-                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                            \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
                                         ),
                                     ),
                                 ),
@@ -192,8 +192,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -201,7 +201,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -221,7 +221,7 @@ return array(
                                         'encoding' => 'UTF-8',
                                         'max'      => 11,
                                         'messages' => array(
-                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                            \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
                                         ),
                                     ),
                                 ),
@@ -229,8 +229,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -238,7 +238,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -258,7 +258,7 @@ return array(
                                         'encoding' => 'UTF-8',
                                         'max'      => 11,
                                         'messages' => array(
-                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                            \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
                                         ),
                                     ),
                                 ),
@@ -266,8 +266,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -275,7 +275,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -295,7 +295,7 @@ return array(
                                         'encoding' => 'UTF-8',
                                         'max'      => 11,
                                         'messages' => array(
-                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                            \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
                                         ),
                                     ),
                                 ),
@@ -303,8 +303,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -312,7 +312,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),
@@ -332,7 +332,7 @@ return array(
                                         'encoding' => 'UTF-8',
                                         'max'      => 11,
                                         'messages' => array(
-                                            \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
+                                            \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscms_tool_platform_value_too_long',
                                         ),
                                     ),
                                 ),
@@ -340,8 +340,8 @@ return array(
                                     'name'    => 'Digits',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
-                                            \Zend\Validator\Digits::STRING_EMPTY => '',
+                                            \Laminas\Validator\Digits::NOT_DIGITS => 'tr_meliscms_tool_platform_not_digit',
+                                            \Laminas\Validator\Digits::STRING_EMPTY => '',
                                         ),
                                     ),
                                 ),
@@ -349,7 +349,7 @@ return array(
                                     'name' => 'NotEmpty',
                                     'options' => array(
                                         'messages' => array(
-                                            \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscms_tool_platform_empty',
                                         ),
                                     ),
                                 ),

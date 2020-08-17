@@ -10,17 +10,34 @@
 namespace MelisEngine\Model\Tables;
 
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Hydrator\ObjectProperty;
+use MelisEngine\Model\Hydrator\MelisCmsGdprTexts;
 
 class MelisCmsGdprTextsTable extends MelisGenericTable
 {
-    protected $tableGateway;
-    protected $idField;
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_gdpr_texts';
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mcgdpr_text_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'mcgdpr_text_id';
+        $this->idField = self::PRIMARY_KEY;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisCmsGdprTexts());
     }
 
     public function getGdprBannerText($siteId, $langId)

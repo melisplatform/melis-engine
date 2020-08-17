@@ -9,18 +9,21 @@
 
 namespace MelisEngine\Model\Tables;
 
-
-use Zend\Db\TableGateway\TableGateway;
-
 class MelisGdprAutoDeleteConfigTable  extends MelisGenericTable
 {
-    protected $tableGateway;
-    protected $idField;
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_gdpr_delete_config';
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mgdprc_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'mgdprc_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
     /**
@@ -32,7 +35,7 @@ class MelisGdprAutoDeleteConfigTable  extends MelisGenericTable
     public function getAutoDeleteConfig($siteId, $module)
     {
 
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
 
         if (! empty($siteId)) {
             $select->where->equalTo('mgdprc_site_id', $siteId);
@@ -42,6 +45,6 @@ class MelisGdprAutoDeleteConfigTable  extends MelisGenericTable
             $select->where->equalTo('mgdprc_module_name', $module);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 }

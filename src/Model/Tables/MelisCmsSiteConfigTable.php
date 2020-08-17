@@ -9,14 +9,23 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisCmsSiteConfigTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_site_config';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'sconf_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'sconf_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
     public function deleteConfig($configId, $siteId, $langId)

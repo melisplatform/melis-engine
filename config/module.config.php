@@ -7,300 +7,272 @@
  *
  */
 
-return array(
-    'router' => array(
-        'routes' => array(
-            'melis-backoffice' => array(
+return [
+    'router' => [
+        'routes' => [
+            'melis-backoffice' => [
                 'type'    => 'Segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/melis[/]',
-                ),
-                'child_routes' => array(
-                    'application-MelisEngine' => array(
+                ],
+                'child_routes' => [
+                    'application-MelisEngine' => [
                         'type'    => 'Literal',
-                        'options' => array(
+                        'options' => [
                             'route'    => 'MelisEngine',
-                            'defaults' => array(
+                            'defaults' => [
                                 '__NAMESPACE__' => 'MelisEngine\Controller',
                                 'controller'    => 'MelisSetup',
                                 'action'        => 'setup-form',
-                            ),
-                        ),
+                            ],
+                        ],
                         'may_terminate' => true,
-                        'child_routes' => array(
-                            'default' => array(
+                        'child_routes' => [
+                            'default' => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/[:controller[/:action]]',
-                                    'constraints' => array(
+                                    'constraints' => [
                                         'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                    ),
-                                    'defaults' => array(
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+                                    ],
+                                    'defaults' => [
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             /*
              * This route will handle the
              * alone setup of a module
              */
-            'setup-melis-engine' => array(
+            'setup-melis-engine' => [
                 'type'    => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/MelisEngine',
-                    'defaults' => array(
+                    'defaults' => [
                         '__NAMESPACE__' => 'MelisEngine\Controller',
                         'controller'    => 'MelisSetup',
                         'action'        => 'setup-form',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
+                            'constraints' => [
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-//
-                            ),
-                        ),
-                    ),
-                    'setup' => array(
+                            ],
+                            'defaults' => [
+                            ],
+                        ],
+                    ],
+                    'setup' => [
                         'type' => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route' => '/setup',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'MelisEngine\Controller\MelisSetup',
                                 'action' => 'setup-form',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'translator' => array(
-    	'locale' => 'en_EN',
-	),
-    'service_manager' => array(
-		'invokables' => array(
-			'MelisEngine\Service\MelisPageServiceInterface' => 'MelisEngine\Service\MelisPageService',
-			'MelisEngine\Service\MelisTreeServiceInterface' => 'MelisEngine\Service\MelisTreeService',
-		    'MelisEngine\Service\MelisEngineSendMailInterface' => 'MelisEngine\Service\MelisEngineSendMailService',
-		    'MelisEngine\Service\MelisEngineStyleInterface' => 'MelisEngine\Service\MelisEngineStyleService',
-		    'MelisEngine\Service\MelisEngineLangInterface' => 'MelisEngine\Service\MelisEngineLangService'
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'service_manager' => [
+        'invokables' => [
+//            @TODO need to confirm whats the use of the following invokables
+//            \MelisEngine\Service\MelisPageServiceInterface::class     => \MelisEngine\Service\MelisPageService::class,
+//            \MelisEngine\Service\MelisTreeServiceInterface::class     => \MelisEngine\Service\MelisTreeService::class,
+//            \MelisEngine\Service\MelisEngineSendMailInterface::class  => \MelisEngine\Service\MelisEngineSendMailService::class,
+//            \MelisEngine\Service\MelisEngineStyleInterface::class     => \MelisEngine\Service\MelisEngineStyleService::class,
+//            \MelisEngine\Service\MelisEngineLangInterface::class      => \MelisEngine\Service\MelisEngineLangService::class
+        ],
+        'factories' => [
+            // Metadata 'melis_cms_page_saved'
+            'MelisEngine\MelisPageColumns'  => \MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory::class,
+        ],
+        'aliases' => [
+            // @TODO to be remove replaced by MelisGeneralService
+            // 'MelisEngineGeneralService'           => \MelisCore\Service\MelisGeneralService::class,
+            // Services
+            'MelisGeneralService'               => \MelisCore\Service\MelisGeneralService::class,
+            'MelisEnginePage'                   => \MelisEngine\Service\MelisPageService::class,
+            'MelisEngineTree'                   => \MelisEngine\Service\MelisTreeService::class,
+            'MelisSearch'                       => \MelisEngine\Service\MelisSearchService::class,
+            'MelisEngineSendMail'               => \MelisEngine\Service\MelisEngineSendMailService::class,
+            'MelisEngineCacheSystem'            => \MelisEngine\Service\MelisEngineCacheSystemService::class,
+            'MelisEngineStyle'                  => \MelisEngine\Service\MelisEngineStyleService::class,
+            'MelisEngineLang'                   => \MelisEngine\Service\MelisEngineLangService::class,
+            'MelisGdprService'                  => \MelisEngine\Service\MelisGdprService::class,
+            'MelisEngineComposer'               => \MelisEngine\Service\MelisEngineComposerService::class,
+            'MelisEngineTemplateService'        => \MelisEngine\Service\MelisEngineTemplateService::class,
+            'MelisEngineSEOService'             => \MelisEngine\Service\MelisEngineSEOService::class,
+            'MelisEnginePageDefaultUrlsService' => \MelisEngine\Service\MelisEnginePageDefaultUrlsService::class,
+            'MelisEngineSiteService'            => \MelisEngine\Service\MelisEngineSiteService::class,
+            'MelisEngineSiteDomainService'      => \MelisEngine\Service\MelisEngineSiteDomainService::class,
+            'MelisGdprAutoDeleteService'        => \MelisEngine\Service\MelisGdprAutoDeleteService::class,
 
-		),
-		'aliases' => array(
-			'MelisEngineTablePlatformIds' => 'MelisEngine\Model\Tables\MelisPlatformIdsTable',
-			'MelisEngineTableTemplate' => 'MelisEngine\Model\Tables\MelisTemplateTable',
-			'MelisEngineTablePageLang' => 'MelisEngine\Model\Tables\MelisPageLangTable',
-			'MelisEngineTablePageTree' => 'MelisEngine\Model\Tables\MelisPageTreeTable',
-			'MelisEngineTableSite' => 'MelisEngine\Model\Tables\MelisSiteTable',
-			'MelisEngineTableSiteDomain' => 'MelisEngine\Model\Tables\MelisSiteDomainTable',
-			'MelisEngineTableSite404' => 'MelisEngine\Model\Tables\MelisSite404Table',
-			'MelisEngineTableSite301' => 'MelisEngine\Model\Tables\MelisSite301Table',
-			'MelisEngineTablePagePublished' => 'MelisEngine\Model\Tables\MelisPagePublishedTable',
-			'MelisEngineTablePageSaved' => 'MelisEngine\Model\Tables\MelisPageSavedTable',
-			'MelisEngineTablePageSeo' => 'MelisEngine\Model\Tables\MelisPageSeoTable',
-		    'MelisEngineTableCmsLang' => 'MelisEngine\Model\Tables\MelisCmsLangTable',
-		    'MelisEngineTableStyle' => 'MelisEngine\Model\Tables\MelisCmsStyleTable',
-		    'MelisEngineTablePageStyle' => 'MelisEngine\Model\Tables\MelisPageStyleTable',
-			'MelisEngineTablePageDefaultUrls' => 'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable',
-            'MelisEngineTableRobot' => 'MelisEngine\Model\Tables\MelisCmsSiteRobotTable',
-            'MelisEngineTableCmsSiteHome' => 'MelisEngine\Model\Tables\MelisCmsSiteHome',
-            'MelisEngineTableCmsSiteLangs' => 'MelisEngine\Model\Tables\MelisCmsSiteLangs',
-            'MelisEngineTableCmsSiteConfig' => 'MelisEngine\Model\Tables\MelisCmsSiteConfig',
+            // Model tables
+            'MelisCmsGdprTextsTable'            => \MelisEngine\Model\Tables\MelisCmsGdprTextsTable::class,
+            'MelisEngineTableCmsLang'           => \MelisEngine\Model\Tables\MelisCmsLangTable::class,
+            'MelisEngineTablePageLang'          => \MelisEngine\Model\Tables\MelisPageLangTable::class,
+            'MelisEngineTablePageTree'          => \MelisEngine\Model\Tables\MelisPageTreeTable::class,
+            'MelisEngineTableTemplate'          => \MelisEngine\Model\Tables\MelisTemplateTable::class,
+            'MelisEngineTableSite'              => \MelisEngine\Model\Tables\MelisSiteTable::class,
+            'MelisEngineTableSiteDomain'        => \MelisEngine\Model\Tables\MelisSiteDomainTable::class,
+            'MelisEngineTableSite404'           => \MelisEngine\Model\Tables\MelisSite404Table::class,
+            'MelisEngineTableSite301'           => \MelisEngine\Model\Tables\MelisSite301Table::class,
+            'MelisEngineTablePagePublished'     => \MelisEngine\Model\Tables\MelisPagePublishedTable::class,
+            'MelisEngineTablePageSaved'         => \MelisEngine\Model\Tables\MelisPageSavedTable::class,
+            'MelisEngineTablePageSeo'           => \MelisEngine\Model\Tables\MelisPageSeoTable::class,
+            'MelisEngineTablePlatformIds'       => \MelisEngine\Model\Tables\MelisPlatformIdsTable::class,
+            'MelisEngineTablePageDefaultUrls'   => \MelisEngine\Model\Tables\MelisPageDefaultUrlsTable::class,
+            'MelisEngineTableStyle'             => \MelisEngine\Model\Tables\MelisCmsStyleTable::class,
+            'MelisEngineTablePageStyle'         => \MelisEngine\Model\Tables\MelisPageStyleTable::class,
+            'MelisEngineTableRobot'             => \MelisEngine\Model\Tables\MelisCmsSiteRobotTable::class,
+            'MelisEngineTableCmsSiteHome'       => \MelisEngine\Model\Tables\MelisCmsSiteHomeTable::class,
+            'MelisEngineTableCmsSiteLangs'      => \MelisEngine\Model\Tables\MelisCmsSiteLangsTable::class,
+            'MelisEngineTableCmsSiteConfig'     => \MelisEngine\Model\Tables\MelisCmsSiteConfigTable::class,
+            'MelisSiteTranslationTable'         => \MelisEngine\Model\Tables\MelisSiteTranslationTable::class,
+            'MelisSiteTranslationTextTable'     => \MelisEngine\Model\Tables\MelisSiteTranslationTextTable::class,
+            'MelisGdprAutodeleteConfigTable'    => \MelisEngine\Model\Tables\MelisGdprAutoDeleteConfigTable::class,
+            'MelisGdprDeleteEmailsSentTable'    => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable::class,
 
-		    'MelisEngineStyleService' => 'MelisEngine\Service\MelisEngineStyleService',
-            'MelisPageService' => 'MelisEngine\Service\MelisPageService',
-            'MelisTreeService' => 'MelisEngine\Service\MelisTreeService',
-            'MelisEngineLangService' => 'MelisEngine\Service\MelisEngineLangService',
-
-            'MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTable',
-            'MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\MelisSiteTranslationTextTable',
-            'MelisGdprAutodeleteConfigTable' => 'MelisEngine\Model\Tables\MelisGdprAutoDeleteConfigTable',
-            'MelisGdprDeleteEmailsSentTable' => 'MelisEngine\Model\Tables\MelisGdprDeleteEmailsSentTable',
-		),
-        'factories' => array(
-			'MelisEnginePage' => 'MelisEngine\Service\Factory\MelisPageServiceFactory',
-			'MelisEngineTree' => 'MelisEngine\Service\Factory\MelisTreeServiceFactory',
-		    'MelisSearch' => 'MelisEngine\Service\Factory\MelisSearchServiceFactory',
-		    'MelisEngineGeneralService' => 'MelisEngine\Service\Factory\MelisEngineGeneralServiceFactory',
-            'MelisEngineSendMail' => 'MelisEngine\Service\Factory\MelisEngineSendMailServiceFactory',
-			'MelisEngineCacheSystem' => 'MelisEngine\Service\Factory\MelisEngineCacheSystemServiceFactory',
-			'MelisEngineStyle' => 'MelisEngine\Service\Factory\MelisEngineStyleServiceFactory',
-			'MelisEngineLang' => 'MelisEngine\Service\Factory\MelisEngineLangServiceFactory',
-			'MelisGdprService' => 'MelisEngine\Service\Factory\MelisGdprServiceFactory',
-            'MelisEngineComposer' => 'MelisEngine\Service\Factory\MelisEngineComposerServiceFactory',
-            'MelisGdprAutoDeleteService' => 'MelisEngine\Service\Factory\MelisGdprAutoDeleteServiceFactory',
-            'MelisEngineTemplateService' => 'MelisEngine\Service\Factory\MelisEngineTemplateServiceFactory',
-            'MelisEngineSEOService' => 'MelisEngine\Service\Factory\MelisEngineSEOServiceFactory',
-            'MelisEnginePageDefaultUrlsService' => 'MelisEngine\Service\Factory\MelisEnginePageDefaultUrlsServiceFactory',
-            'MelisEngineSiteService' => 'MelisEngine\Service\Factory\MelisEngineSiteServiceFactory',
-            'MelisEngineSiteDomainService' => 'MelisEngine\Service\Factory\MelisEngineSiteDomainServiceFactory',
-
-            'MelisEngine\Model\Tables\MelisCmsGdprTextsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsGdprTextsFactory',
-            'MelisEngine\Model\Tables\MelisCmsLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsLangTableFactory',
-            'MelisEngine\Model\Tables\MelisPageLangTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageLangTableFactory',
-            'MelisEngine\Model\Tables\MelisPageTreeTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageTreeTableFactory',
-            'MelisEngine\Model\Tables\MelisTemplateTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsTemplateTableFactory',
-            'MelisEngine\Model\Tables\MelisSiteTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteTableFactory',
-            'MelisEngine\Model\Tables\MelisSiteDomainTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteDomainTableFactory',
-            'MelisEngine\Model\Tables\MelisSite404Table' => 'MelisEngine\Model\Tables\Factory\MelisCmsSite404TableFactory',
-            'MelisEngine\Model\Tables\MelisSite301Table' => 'MelisEngine\Model\Tables\Factory\MelisCmsSite301TableFactory',
-            'MelisEngine\Model\Tables\MelisPagePublishedTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPagePublishedTableFactory',
-            'MelisEngine\Model\Tables\MelisPageSavedTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageSavedTableFactory',
-            'MelisEngine\Model\Tables\MelisPageSeoTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageSeoTableFactory',
-            'MelisEngine\Model\Tables\MelisPlatformIdsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPlatformIdsTableFactory',
-            'MelisEngine\Model\Tables\MelisPageDefaultUrlsTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageDefaultUrlsTableFactory',
-            'MelisEngine\Model\Tables\MelisCmsStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsStyleTableFactory',
-            'MelisEngine\Model\Tables\MelisPageStyleTable' => 'MelisEngine\Model\Tables\Factory\MelisPageStyleTableFactory',
-            'MelisEngine\MelisPageColumns' => 'MelisEngine\Model\Tables\Factory\MelisCmsPageColumnsFactory',
-            'MelisEngine\Model\Tables\MelisCmsSiteRobotTable' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteRobotTableFactory',
-            'MelisEngine\Model\Tables\MelisCmsSiteHome' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteHomeTableFactory',
-            'MelisEngine\Model\Tables\MelisCmsSiteLangs' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteLangsTableFactory',
-            'MelisEngine\Model\Tables\MelisCmsSiteConfig' => 'MelisEngine\Model\Tables\Factory\MelisCmsSiteConfigTableFactory',
-            'MelisEngine\Model\Tables\MelisGdprDeleteEmailsSentTable' => 'MelisEngine\Model\Tables\Factory\MelisGdprDeleteEmailsSentTableFactory',
-            'MelisEngine\Model\Tables\MelisGdprAutoDeleteConfigTable' => 'MelisEngine\Model\Tables\Factory\MelisGdprAutoDeleteConfigTableFactory',
-
-            'MelisEngine\Model\Tables\MelisSiteTranslationTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTableFactory',
-            'MelisEngine\Model\Tables\MelisSiteTranslationTextTable' => 'MelisEngine\Model\Tables\Factory\MelisSiteTranslationTextTableFactory',
-		),
-        'abstract_factories' => array(
-            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
-        )
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'MelisEngine\Controller\MelisSetup' => 'MelisEngine\Controller\MelisSetupController',
+            // Alias redeclared
+            // **This not neccessary but its already used from modules**
+            'MelisEngineStyleService'           => \MelisEngine\Service\MelisEngineStyleService::class,
+            'MelisPageService'                  => \MelisEngine\Service\MelisPageService::class,
+            'MelisTreeService'                  => \MelisEngine\Service\MelisTreeService::class,
+            'MelisEngineLangService'            => \MelisEngine\Service\MelisEngineLangService::class,
+        ]
+    ],
+    'controllers' => [
+        'invokables' => [
+            'MelisEngine\Controller\MelisSetup'                     => \MelisEngine\Controller\MelisSetupController::class,
             //updated installer
-            'MelisEngine\Controller\MelisSetupPostDownload' => 'MelisEngine\Controller\MelisSetupPostDownloadController',
-            'MelisEngine\Controller\Setup\MelisSetupPostUpdate'   => 'MelisEngine\Controller\MelisSetupPostUpdateController',
-        ),
-    ),
-    'form_elements' => array(
-        'factories' => array(
-    		'MelisEnginePluginTemplateSelect' => 'MelisEngine\Form\Factory\PluginTemplateSelectFactory',
-    		'MelisEngineSiteSelect'           => 'MelisEngine\Form\Factory\SitesSelectFactory',
-        ),
-    ),
-    'view_manager' => array(
-        'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'template_map' => array(
-            'layout/layoutEngine'           => __DIR__ . '/../view/layout/layoutEngine.phtml',
-            'melis-engine/index/index'  => __DIR__ . '/../view/melis-engine/render/index.phtml',
-            'MelisEngine/emailLayout'          => __DIR__ . '/../view/layout/email-layout.phtml',
-            'melis-engine/plugins/notemplate'  => __DIR__ . '/../view/melis-engine/plugins/notemplate.phtml',
-            'melis-engine/plugins/noformtemplate'  => __DIR__ . '/../view/melis-engine/plugins/noformtemplate.phtml',
-            'melis-engine/plugins/meliscontainer'  => __DIR__ . '/../view/melis-engine/plugins/default-melis-container-view.phtml',
-        ),
-        'template_path_stack' => array(
+            'MelisEngine\Controller\MelisSetupPostDownload'         => \MelisEngine\Controller\MelisSetupPostDownloadController::class,
+            'MelisEngine\Controller\Setup\MelisSetupPostUpdate'     => \MelisEngine\Controller\MelisSetupPostUpdateController::class,
+        ],
+    ],
+    'form_elements' => [
+        'factories' => [
+            'MelisEnginePluginTemplateSelect' => \MelisEngine\Form\Factory\PluginTemplateSelectFactory::class,
+            'MelisEngineSiteSelect'           => \MelisEngine\Form\Factory\SitesSelectFactory::class,
+        ],
+    ],
+    'view_manager' => [
+        'template_map' => [
+            'layout/layoutEngine'                   => __DIR__ . '/../view/layout/layoutEngine.phtml',
+            'melis-engine/index/index'              => __DIR__ . '/../view/melis-engine/render/index.phtml',
+            'MelisEngine/emailLayout'               => __DIR__ . '/../view/layout/email-layout.phtml',
+            'melis-engine/plugins/notemplate'       => __DIR__ . '/../view/melis-engine/plugins/notemplate.phtml',
+            'melis-engine/plugins/noformtemplate'   => __DIR__ . '/../view/melis-engine/plugins/noformtemplate.phtml',
+            'melis-engine/plugins/meliscontainer'   => __DIR__ . '/../view/melis-engine/plugins/default-melis-container-view.phtml',
+        ],
+        'template_path_stack' => [
             __DIR__ . '/../view',
-        ),
-        'strategies' => array(
+        ],
+        'strategies' => [
             'ViewJsonStrategy',
-        ),
-    ),
-    'caches' => array(
-        'engine_memory_cache' => array( 
+        ],
+    ],
+    'caches' => [
+        'engine_memory_cache' => [ 
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => array(
+            'adapter' => [
                 'name'    => 'Memory',
                 'options' => array('ttl' => 0, 'namespace' => 'engine_memory_cache'),
-            ),
-            'plugins' => array(
+            ],
+            'plugins' => [
                 'exception_handler' => array('throw_exceptions' => false),
-            ),
-            'ttls' => array(
+            ],
+            'ttls' => [
                 // add a specific ttl for a specific cache key
                 // 'my_cache_key' => 60,
-            )
-        ),
-        'engine_file_cache' => array(
+            ]
+        ],
+        'engine_file_cache' => [
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => array(
+            'adapter' => [
                 'name'    => 'Filesystem',
-                'options' => array(
+                'options' => [
                     'ttl' => 0, // 24hrs
                     'namespace' => 'meliscms_page',
                     'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
-                ),
-            ),
-            'plugins' => array(
-                'exception_handler' => array('throw_exceptions' => false),
+                ],
+            ],
+            'plugins' => [
+                'exception_handler' => ['throw_exceptions' => false],
                 'Serializer'
-            ),
-            'ttls' => array(
+            ],
+            'ttls' => [
                 // add a specific ttl for a specific cache key (found via regexp)
                 // 'my_cache_key' => 60,
-            )
-        ),
-        'engine_page_services' => array( 
+            ]
+        ],
+        'engine_page_services' => [ 
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => array(
+            'adapter' => [
                 'name'    => 'Memory',
-                'options' => array('ttl' => 0, 'namespace' => 'melisengine'),
-            ),
-            'plugins' => array(
-                'exception_handler' => array('throw_exceptions' => false),
-            ),
-            'ttls' => array(
+                'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
+            ],
+            'plugins' => [
+                'exception_handler' => ['throw_exceptions' => false],
+            ],
+            'ttls' => [
                 // add a specific ttl for a specific cache key
                 // 'my_cache_key' => 60,
-            )
-        ),
-        'engine_lang_services' => array(
+            ]
+        ],
+        'engine_lang_services' => [
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => array(
+            'adapter' => [
                 'name'    => 'Memory',
-                'options' => array('ttl' => 0, 'namespace' => 'melisengine'),
-            ),
-            'plugins' => array(
-                'exception_handler' => array('throw_exceptions' => false),
-            ),
-            'ttls' => array(
+                'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
+            ],
+            'plugins' => [
+                'exception_handler' => ['throw_exceptions' => false],
+            ],
+            'ttls' => [
                 // add a specific ttl for a specific cache key
                 // 'my_cache_key' => 60,
-            )
-        ),
-        'templating_plugins' => array( 
-            'adapter' => array(
+            ]
+        ],
+        'templating_plugins' => [
+            'adapter' => [
                 'name'    => 'Memory',
-                'options' => array('ttl' => 0, 'namespace' => 'templating_plugins'),
-            ),
-            'plugins' => array(
-                'exception_handler' => array('throw_exceptions' => false),
-            ),
-        ),
-        'meliscms_page' => array(
+                'options' => ['ttl' => 0, 'namespace' => 'templating_plugins'],
+            ],
+            'plugins' => [
+                'exception_handler' => ['throw_exceptions' => false],
+            ],
+        ],
+        'meliscms_page' => [
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => array(
+            'adapter' => [
                 'name'    => 'Filesystem',
-                'options' => array(
+                'options' => [
                     'ttl' => 0, // 24hrs
                     'namespace' => 'meliscms_page',
                     'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
-                ),
-            ),
-            'plugins' => array(
-                'exception_handler' => array('throw_exceptions' => false),
+                ],
+            ],
+            'plugins' => [
+                'exception_handler' => ['throw_exceptions' => false],
                 'Serializer'
-            ),
-            'ttls' => array(
+            ],
+            'ttls' => [
                 // add a specific ttl for a specific cache key (found via regexp)
                 // 'my_cache_key' => 60,
-            )
-        ),
-    ),
-);
+            ]
+        ],
+    ],
+];

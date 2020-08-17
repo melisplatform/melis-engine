@@ -9,19 +9,22 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Db\Sql\Select;
-use Zend\Db\Metadata\Metadata;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\PredicateSet;
-use Zend\Db\Sql\Predicate\Like;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Predicate;
-class MelisGenericTable implements ServiceLocatorAwareInterface
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Metadata\Metadata;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Predicate\Like;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Predicate;
+use Laminas\Hydrator\ObjectProperty;
+use Laminas\ServiceManager\ServiceManager;
+use MelisEngine\Model\Hydrator\MelisResultSet;
+
+class MelisGenericTable
 {
-    protected $serviceLocator;
+    protected $serviceManager;
     protected $tableGateway;
     protected $idField;
     protected $lastInsertId;
@@ -29,25 +32,44 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
     protected $_selectedValues;
     protected $_currentDataCount;
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * @param ServiceManager $serviceManager
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
+    }
+
+    /**
+     * @param TableGateway $tableGateway
+     */
+    public function setTableGateway(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
     }
 
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
+    /**
+     * @return TableGateway $tableGateway
+     */
     public function getTableGateway()
     {
         return $this->tableGateway;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisResultSet());
     }
 
     public function fetchAll()
@@ -111,7 +133,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 
     protected function aliasColumnsFromTableDefinition($serviceTableName, $prefix)
     {
-        $melisPageColumns = $this->serviceLocator->get($serviceTableName);
+        $melisPageColumns = $this->getServiceManager()->get($serviceTableName);
 
         $final = array();
         foreach ($melisPageColumns as $column)
@@ -209,7 +231,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
      *       )
      * @param array $options
      * @param array $fixedCriteria (optional)
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getPagedData(array $options, $fixedCriteria = null)
     {
@@ -251,7 +273,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
             }
 
             if(!empty($dateFilterSql)) {
-                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Zend\Db\Sql\Predicate\Expression($dateFilterSql));
+                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
             }
             else {
                 $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
@@ -329,7 +351,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
      * @param $filter
      * @param array $columns
      * @param array $site
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getDataForExport($filter, $columns = [], array $site = [])
     {
@@ -369,6 +391,22 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
         }
         return $resultSet;
 
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @return mixed
+     */
+    public function getEntryByFieldUsingLike($field, $value)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $where = new Where();
+        $where->like($field, '%'.$value.'%');
+        $select->where($where);
+        $rowset = $this->tableGateway->selectwith($select);
+
+        return $rowset;
     }
 
     protected function setCurrentDataCount($dataCount)

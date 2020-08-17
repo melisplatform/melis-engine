@@ -20,13 +20,13 @@ class MelisEngineTemplateService extends MelisEngineGeneralService
 		// Retrieve cache version if front mode to avoid multiple calls
 		$cacheKey = 'getTemplate_' . $tplId;
 		$cacheConfig = 'engine_memory_cache';
-		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+		$melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
 
 		if (!is_null($results))
 			return $results; 
 		
-        $tplTable = $this->getServiceLocator()->get('MelisEngineTableTemplate');
+        $tplTable = $this->getServiceManager()->get('MelisEngineTableTemplate');
         $tplData = $tplTable->getEntryById($tplId);
 
 		// Save cache key

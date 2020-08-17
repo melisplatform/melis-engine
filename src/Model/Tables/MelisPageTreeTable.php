@@ -9,16 +9,25 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPageTreeTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'tree_page_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_tree';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'tree_page_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	/**
 	 * Gets full datas for a page from tree, page saved, paged published, lang
 	 * @param int $id PageId

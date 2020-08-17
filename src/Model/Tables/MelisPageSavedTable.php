@@ -9,16 +9,25 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPageSavedTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'page_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_saved';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'page_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	public function getSavedSitePagesById($pageId)
 	{
 	    $select = $this->tableGateway->getSql()->select();
@@ -35,7 +44,7 @@ class MelisPageSavedTable extends MelisGenericTable
      *
      * @param string|null $pageType
      * @param int|null $siteId
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getPagesByType(string $pageType = null, int $siteId = null)
     {

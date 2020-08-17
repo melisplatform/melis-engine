@@ -11,8 +11,8 @@ namespace MelisEngine\Service\Factory;
 
 
 use MelisEngine\Service\MelisGdprAutoDeleteService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisGdprAutoDeleteServiceFactory implements FactoryInterface
 {

@@ -9,14 +9,22 @@
 
 namespace MelisEngine\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPageSeoTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'pseo_id';
-		$this->cacheResults = true;
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_page_seo';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'pseo_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 }

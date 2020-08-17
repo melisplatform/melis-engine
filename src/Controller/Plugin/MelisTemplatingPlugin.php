@@ -9,15 +9,13 @@
 
 namespace MelisEngine\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Stdlib\ArrayUtils;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Session\Container;
 
 /**
  * This is the generic controller plugin that tools use
@@ -26,7 +24,7 @@ use Zend\Session\Container;
  * This class just make the association between the view created and its template.
  *
  */
-abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceLocatorAwareInterface
+abstract class MelisTemplatingPlugin extends AbstractPlugin
 {
     // the key of the configuration in the app.plugins.php
     protected $configPluginKey;
@@ -58,7 +56,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
     protected $pluginContainerId = null;
 
-    protected $serviceLocator;
     protected $eventManager;
 
 
@@ -68,25 +65,22 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         if (count($className) > 0)
             $className = $className[count($className) - 1];
         $this->pluginName = $className;
-        $this->setEventManager(new EventManager());
+//        $this->setEventManager(new EventManager());
     }
 
-    public function getServiceLocator() {
-        return $this->serviceLocator->getServiceLocator();
-    }
-
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    public function setEventManager(EventManagerInterface $eventManager)
+    public function getServiceManager()
     {
-        $this->eventManager = $eventManager;
+        return $this->getController()->getEvent()->getApplication()->getServiceManager();
     }
+
+//    public function setEventManager(EventManagerInterface $eventManager)
+//    {
+//        $this->eventManager = $eventManager;
+//    }
 
     public function getEventManager()
     {
-        return $this->eventManager;
+        return $this->getController()->getEventManager();
     }
 
     // To call to get front view
@@ -116,7 +110,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $viewModel->pluginXmlDbKey = $this->pluginXmlDbKey;
 
         $siteModule = getenv('MELIS_MODULE');
-        $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+        $melisPage = $this->getServiceManager()->get('MelisEnginePage');
         $datasPage = $melisPage->getDatasPage($pageId, 'saved');
         if($datasPage)
         {
@@ -142,13 +136,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
     public function loadGetDataPluginConfig()
     {
-        $request = $this->getServiceLocator()->get('request');
+        $request = $this->getServiceManager()->get('request');
         return $request->getQuery()->toArray();
     }
 
     public function loadPostDataPluginConfig()
     {
-        $request = $this->getServiceLocator()->get('request');
+        $request = $this->getServiceManager()->get('request');
         return $request->getPost()->toArray();
     }
 
@@ -165,12 +159,12 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         $viewModel = new ViewModel();
         $viewModel->setTemplate('melis-engine/plugins/noformtemplate');
 
-        $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+        $viewRender = $this->getServiceManager()->get('ViewRenderer');
         $html = $viewRender->render($viewModel);
 
         return [
             [
-                'name' => $this->getServiceLocator()->get('translator')->translate('tr_front_plugin_common_tab_properties'),
+                'name' => $this->getServiceManager()->get('translator')->translate('tr_front_plugin_common_tab_properties'),
                 'icon' => 'fa fa-cog',
                 'html' => $html,
                 'empty' => true
@@ -196,8 +190,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     public function render($updatesPluginConfig = array(), $generatePluginId = false, $forceRenderModeToFront = false)
     {
-        $router = $this->getServiceLocator()->get('router');
-        $request = $this->getServiceLocator()->get('request');
+        $router = $this->getServiceManager()->get('router');
+        $request = $this->getServiceManager()->get('request');
         $routeMatch = $router->match($request);
 
         if (!$forceRenderModeToFront)
@@ -224,8 +218,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
                 $updatesPluginConfig['pageId'] = $params['idpage'];
         }
 
-        $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
-        $updatesPluginConfig = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_start', $updatesPluginConfig);
+        $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+        $updatesPluginConfig = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_start', $updatesPluginConfig);
 
         // Send event before creating the plugin object with its parameters
         $this->updatesPluginConfig = $updatesPluginConfig;
@@ -242,7 +236,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
             if ($view InstanceOf ViewModel)
             {
-                $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+                $viewRender = $this->getServiceManager()->get('ViewRenderer');
                 $viewFrontRendered = $viewRender->render($viewFront);
 
                 $view->viewFront = $viewFrontRendered;
@@ -272,7 +266,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
         $this->pluginXmlDbValue = '';
         $xmlPage = '';
-        $melisPage = $this->getServiceLocator()->get('MelisEnginePage');
+        $melisPage = $this->getServiceManager()->get('MelisEnginePage');
 
         $id = (!empty($this->pluginConfig['front']['id'])) ? $this->pluginConfig['front']['id'] : null;
         $pageId = (!empty($this->pluginConfig['front']['pageId'])) ? $this->pluginConfig['front']['pageId'] : null;
@@ -322,8 +316,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             'pluginName' => $this->pluginName,
             'actualDatasPageTree' => $datasPageTree,
         );
-        $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
-        $datasPageTree = $melisEngineGeneralService->sendEvent('melistemplating_plugin_get_datas_db', $eventParams);
+        $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+        $datasPageTree = $melisGeneralService->sendEvent('melistemplating_plugin_get_datas_db', $eventParams);
         $datasPageTree = $datasPageTree['actualDatasPageTree'];
 
 
@@ -403,7 +397,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
     public function getPluginConfigs($generatePluginId = false)
     {
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
         if (!empty($config['plugins'][$this->configPluginKey]['plugins']))
             $this->defaultPluginConfig = $config['plugins'][$this->configPluginKey]['plugins'][$this->pluginName];
 
@@ -425,7 +419,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
         if ($generatePluginId) {
             $finalConfig = $this->translateAppConfig($this->pluginConfig['front']);
         } else {
-            $request = $this->getServiceLocator()->get('request');
+            $request = $this->getServiceManager()->get('request');
 
             // merge with DB values
             $this->getPluginValueFromDb();
@@ -542,8 +536,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
     public function savePluginRessources($keyRessource, $array)
     {
-        if ($this->getServiceLocator()->get('templating_plugins')->hasItem($keyRessource)) {
-            $files = $this->getServiceLocator()->get('templating_plugins')->getItem($keyRessource);
+        if ($this->getServiceManager()->get('templating_plugins')->hasItem($keyRessource)) {
+            $files = $this->getServiceManager()->get('templating_plugins')->getItem($keyRessource);
         } else {
             $files = array('js' => array(), 'css' => array());
         }
@@ -576,13 +570,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             }
         }
 
-        $this->getServiceLocator()->get('templating_plugins')->setItem($keyRessource, $files);
+        $this->getServiceManager()->get('templating_plugins')->setItem($keyRessource, $files);
 
     }
 
     public function translateAppConfig($array)
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $final = array();
         foreach($array as $key => $value) {
@@ -606,7 +600,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
         if($variables instanceof JsonModel) {
             // for JSON response
-            $request           = $this->getServiceLocator()->get('request');
+            $request           = $this->getServiceManager()->get('request');
             $variables         = $variables->getVariables();
             $pluginId          = $variables['pluginId'];
             $submittedPluginId = isset($variables['submittedPluginId']) ? $variables['submittedPluginId'] : '';
@@ -624,17 +618,16 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             $model = new ViewModel();
 
             // Site language for site translations
-            $melisEnginLangService = $this->getServiceLocator()->get('MelisEngineLang');
+            $melisEnginLangService = $this->getServiceManager()->get('MelisEngineLang');
             $siteLang = $melisEnginLangService->getSiteLanguage();
             $model->siteLangId = $siteLang['langId'];
             $model->siteLangLocale = $siteLang['langLocale'];
 
             // Send event before creating the view
-            $melisEngineGeneralService = $this->getServiceLocator()->get('MelisEngineGeneralService');
+            $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+            $variables = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
 
-            $variables = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_generate_view', $variables);
-
-            $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+            $viewRender = $this->getServiceManager()->get('ViewRenderer');
 
             foreach ($variables as $keyVar => $valueVar)
             {
@@ -647,7 +640,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
 
             if (!empty($this->pluginFrontConfig['template_path']))
             {
-                $config = $this->getServiceLocator()->get('config');
+                $config = $this->getServiceManager()->get('config');
                 // checking if at least the template is declared
                 if (!empty($config['view_manager']['template_map'][$this->pluginFrontConfig['template_path']]))
                 {
@@ -659,7 +652,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
 
-            $model = $melisEngineGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+            $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
 
             // Plugin config datas
             $model['view']->pluginConfig = $this->pluginFrontConfig;
@@ -911,7 +904,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin  implements ServiceL
      */
     public function getOrderFormsConfig($keyForm)
     {
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
         if (!empty($config['forms_ordering']))
             $array = $config['forms_ordering'];
         else

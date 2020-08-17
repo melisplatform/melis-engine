@@ -9,16 +9,16 @@
 
 namespace MelisEngine\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
+use MelisCore\Controller\MelisAbstractActionController;
 
 /**
  * @property bool $showOnMarketplacePostSetup
  */
-class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
+class MelisSetupPostDownloadController extends MelisAbstractActionController implements MelisSetupInterface
 {
     /**
      * flag for Marketplace whether to display the setup form or not
@@ -27,7 +27,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     public $showOnMarketplacePostSetup = false;
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function getFormAction()
     {
@@ -53,7 +53,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
 
     /**
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function validateFormAction()
     {
@@ -94,7 +94,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
         $form = $this->getForm();
 
         //Services
-        $tablePlatformIds = $this->getServiceLocator()->get('MelisEngineTablePlatformIds');
+        $tablePlatformIds = $this->getServiceManager()->get('MelisEngineTablePlatformIds');
 
         //  if($form->isValid()) {
 
@@ -122,7 +122,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
 
             // Getting current Platform
             $environmentName = getenv('MELIS_PLATFORM');
-            $tablePlatform = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+            $tablePlatform = $this->getServiceManager()->get('MelisCoreTablePlatform');
             $platform = $tablePlatform->getEntryByField('plf_name', $environmentName)->current();
 
             //Save platformData
@@ -137,12 +137,12 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                     'pids_tpl_id_end' => $tplIdEnd
                 ));
 
-                $tableSiteDomain = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
-                $tableSite = $this->getServiceLocator()->get('MelisEngineTableSite');
+                $tableSiteDomain = $this->getServiceManager()->get('MelisEngineTableSiteDomain');
+                $tableSite = $this->getServiceManager()->get('MelisEngineTableSite');
 
-                $container = new \Zend\Session\Container('melisinstaller');
+                $container = new \Laminas\Session\Container('melisinstaller');
                 $container = $container->getArrayCopy();
-                $cmsSiteSrv = $this->getServiceLocator()->get('MelisCmsSiteService');
+                $cmsSiteSrv = $this->getServiceManager()->get('MelisCmsSiteService');
 
                 $selectedSite = isset($container['site_module']['site']) ? $container['site_module']['site'] : null;
 
@@ -180,7 +180,8 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                         }
                     }else{
                         //create domain only if the user install MelisDemoCms or MelisDemoCmsTwig or other sites
-                        if($selectedSite == 'MelisDemoCms')
+                        $sitesList = ['MelisDemoCms', 'MelisDemoCmsTwig'];
+                        if(in_array($selectedSite, $sitesList))
                             $this->saveCmsSiteDomain($scheme, $siteDomain);
                     }
                 }
@@ -218,7 +219,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
      */
     private function getTool()
     {
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('MelisCmsSlider', 'MelisCmsSlider_details');
 
         return $melisTool;
@@ -226,15 +227,15 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
     /**
      * Create a form from the configuration
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm()
     {
-        $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $coreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $form = $coreConfig->getItem('melis_engine_setup/forms/melis_installer_platform_data');
 
-        $factory = new \Zend\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory = new \Laminas\Form\Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($form);
 
@@ -243,7 +244,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
     private function formatErrorMessage($errors = array())
     {
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('melis_engine_setup/forms/melis_installer_platform_data');
         $appConfigForm = $appConfigForm['elements'];
 
@@ -262,7 +263,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
 
     private function saveCmsSiteDomain($scheme, $site)
     {
-        $container = new \Zend\Session\Container('melisinstaller');
+        $container = new \Laminas\Session\Container('melisinstaller');
 
         // default platform
         $environments       = $container['environments'];
@@ -294,7 +295,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
 
             $platformsData = array_merge($defaultPlatformData, $platformsData);
 
-            $siteDomainTable = $this->getServiceLocator()->get('MelisEngineTableSiteDomain');
+            $siteDomainTable = $this->getServiceManager()->get('MelisEngineTableSiteDomain');
 
             foreach($platformsData as $data) {
                 $siteDomainTable->save($data);

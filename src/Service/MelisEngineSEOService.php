@@ -20,13 +20,13 @@ class MelisEngineSEOService extends MelisEngineGeneralService
 		// Retrieve cache version if front mode to avoid multiple calls
 		$cacheKey = 'getSEOById' . $seoId;
 		$cacheConfig = 'engine_memory_cache';
-		$melisEngineCacheSystem = $this->serviceLocator->get('MelisEngineCacheSystem');
+		$melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
 		$results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
 
 		if (!is_null($results))
 			return $results; 
 		
-		$melisTablePageSeo = $this->getServiceLocator()->get('MelisEngineTablePageSeo');
+		$melisTablePageSeo = $this->getServiceManager()->get('MelisEngineTablePageSeo');
 		$pageSeo = $melisTablePageSeo->getEntryById($seoId);
 
 		// Save cache key

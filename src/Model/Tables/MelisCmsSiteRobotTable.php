@@ -8,18 +8,25 @@ namespace MelisEngine\Model\Tables;
  * @package MelisCmsSiteRobotTable\Model
  */
 use MelisEngine\Model\Tables\MelisGenericTable;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Expression;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Expression;
 
 class MelisCmsSiteRobotTable extends MelisGenericTable
 {
-    protected $tableGateway;
-    protected $idField;
 
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_cms_domain_robots';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'robot_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'robot_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
     /**
