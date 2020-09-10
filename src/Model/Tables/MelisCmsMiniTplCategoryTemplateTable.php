@@ -75,4 +75,11 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
             $update->where->equalTo('mtplct_template_name', $template_name);
         $resultSet = $this->tableGateway->updateWith($update);
     }
+
+    public function deletePluginFromCategory($siteId, $template) {
+        $delete = $this->tableGateway->getSql()->delete();
+        $delete->where->equalTo('mtplct_site_id', $siteId);
+        $delete->where->equalTo('mtplct_template_name', $template);
+        return $this->tableGateway->deleteWith($delete);
+    }
 }
