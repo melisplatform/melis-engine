@@ -118,6 +118,7 @@ return [
             'MelisEnginePageDefaultUrlsService' => \MelisEngine\Service\MelisEnginePageDefaultUrlsService::class,
             'MelisEngineSiteService'            => \MelisEngine\Service\MelisEngineSiteService::class,
             'MelisEngineSiteDomainService'      => \MelisEngine\Service\MelisEngineSiteDomainService::class,
+            'MelisGdprAutoDeleteService'        => \MelisEngine\Service\MelisGdprAutoDeleteService::class,
 
             // Model tables
             'MelisCmsGdprTextsTable'            => \MelisEngine\Model\Tables\MelisCmsGdprTextsTable::class,
@@ -146,6 +147,8 @@ return [
             'MelisCmsCategoryTransTable'        => MelisEngine\Model\Tables\MelisCmsCategoryTransTable::class,
             'MelisCmsMiniTplCategoryTemplateTable' => MelisEngine\Model\Tables\MelisCmsMiniTplCategoryTemplateTable::class,
             'MelisCmsMiniTplSiteCategoryTable'  => MelisEngine\Model\Tables\MelisCmsMiniTplSiteCategoryTable::class,
+            'MelisGdprAutodeleteConfigTable'    => \MelisEngine\Model\Tables\MelisGdprAutoDeleteConfigTable::class,
+            'MelisGdprDeleteEmailsSentTable'    => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable::class,
             // Alias redeclared
             // **This not neccessary but its already used from modules**
             'MelisEngineStyleService'           => \MelisEngine\Service\MelisEngineStyleService::class,
