@@ -133,10 +133,6 @@ class MelisSiteTable extends MelisGenericTable
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
-        $getCount = $this->tableGateway->selectWith($select);
-        // set current data count for pagination
-        $this->setCurrentDataCount((int) $getCount->count());
-
         if(!empty($limit)) {
             $select->limit($limit);
         }
