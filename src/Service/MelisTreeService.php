@@ -594,11 +594,11 @@ class MelisTreeService extends MelisGeneralService implements MelisTreeServiceIn
 		* 
 		* @param int $idPage
 		*/
-	public function getSiteByPageId($idPage)
+	public function getSiteByPageId($idPage, $type = 'published')
 	{
 		if (empty($idPage))
 			return null;
-		
+
 		// Retrieve cache version if front mode to avoid multiple calls
 		$cacheKey = 'getSiteByPageId_' . $idPage;
 		$cacheConfig = 'engine_page_services';
@@ -608,8 +608,9 @@ class MelisTreeService extends MelisGeneralService implements MelisTreeServiceIn
 		
 		$datasSite = null;
 		$melisPage = $this->getServiceManager()->get('MelisEnginePage');
-		$datasPage = $melisPage->getDatasPage($idPage);
+		$datasPage = $melisPage->getDatasPage($idPage, $type);
 		$datasTemplate = $datasPage->getMelisTemplate();
+
 		if (!empty($datasTemplate) && !empty($datasTemplate->tpl_site_id))
 		{
 			$melisEngineTableSite = $this->getServiceManager()->get('MelisEngineTableSite');
