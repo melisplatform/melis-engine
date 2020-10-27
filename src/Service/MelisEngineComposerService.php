@@ -65,16 +65,18 @@ class MelisEngineComposerService extends MelisServiceManager
 
             $type = $package->type;
             $extra = $package->extra ?? [];
-            $isMelisModule = true;
-            if (array_key_exists('melis-module', $extra)) {
-                $key = 'melis-module';
-                if (!$extra->$key)
-                    $isMelisModule = false;
-            }
+            if(!empty($extra)) {
+                $isMelisModule = true;
+                if (property_exists($extra,'melis-module')) {
+                    $key = 'melis-module';
+                    if (!$extra->$key)
+                        $isMelisModule = false;
+                }
 
-            /** @var CompletePackage $package */
-            return $type === 'melisplatform-module' &&
-                array_key_exists('module-name', $extra) && $isMelisModule;
+                /** @var CompletePackage $package */
+                return $type === 'melisplatform-module' &&
+                    property_exists($extra,'module-name') && $isMelisModule;
+            }
         });
 
         $modules = array_map(function ($package) {
