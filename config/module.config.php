@@ -143,9 +143,12 @@ return [
             'MelisEngineTableCmsSiteConfig'     => \MelisEngine\Model\Tables\MelisCmsSiteConfigTable::class,
             'MelisSiteTranslationTable'         => \MelisEngine\Model\Tables\MelisSiteTranslationTable::class,
             'MelisSiteTranslationTextTable'     => \MelisEngine\Model\Tables\MelisSiteTranslationTextTable::class,
+            'MelisCmsCategoryTable'             => \MelisEngine\Model\Tables\MelisCmsCategoryTable::class,
+            'MelisCmsCategoryTransTable'        => MelisEngine\Model\Tables\MelisCmsCategoryTransTable::class,
+            'MelisCmsMiniTplCategoryTemplateTable' => MelisEngine\Model\Tables\MelisCmsMiniTplCategoryTemplateTable::class,
+            'MelisCmsMiniTplSiteCategoryTable'  => MelisEngine\Model\Tables\MelisCmsMiniTplSiteCategoryTable::class,
             'MelisGdprAutodeleteConfigTable'    => \MelisEngine\Model\Tables\MelisGdprAutoDeleteConfigTable::class,
             'MelisGdprDeleteEmailsSentTable'    => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable::class,
-
             // Alias redeclared
             // **This not neccessary but its already used from modules**
             'MelisEngineStyleService'           => \MelisEngine\Service\MelisEngineStyleService::class,
