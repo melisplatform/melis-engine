@@ -2,7 +2,7 @@
 -- Table structure for table `melis_cms_category`
 --
 
-CREATE TABLE `melis_cms_category` (
+CREATE TABLE `melis_cms_mini_tpl_category` (
   `mtplc_id` int(11) NOT NULL,
   `mtplc_user_id` int(11) NOT NULL,
   `mtplc_creation_date` datetime NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `melis_cms_category` (
 --
 -- Indexes for table `melis_cms_category`
 --
-ALTER TABLE `melis_cms_category`
+ALTER TABLE `melis_cms_mini_tpl_category`
   ADD PRIMARY KEY (`mtplc_id`);
 
 --
@@ -26,7 +26,7 @@ ALTER TABLE `melis_cms_category`
 --
 -- AUTO_INCREMENT for table `melis_cms_category`
 --
-ALTER TABLE `melis_cms_category`
+ALTER TABLE `melis_cms_mini_tpl_category`
   MODIFY `mtplc_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
@@ -34,7 +34,7 @@ COMMIT;
 -- Table structure for table `melis_cms_category_trans`
 --
 
-CREATE TABLE `melis_cms_category_trans` (
+CREATE TABLE `melis_cms_mini_tpl_category_trans` (
   `mtplct_id` int(11) NOT NULL,
   `mtplc_id` int(11) NOT NULL,
   `mtplct_lang_id` int(11) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `melis_cms_category_trans` (
 --
 -- Indexes for table `melis_cms_category_trans`
 --
-ALTER TABLE `melis_cms_category_trans`
+ALTER TABLE `melis_cms_mini_tpl_category_trans`
   ADD PRIMARY KEY (`mtplct_id`);
 
 --
@@ -58,7 +58,7 @@ ALTER TABLE `melis_cms_category_trans`
 --
 -- AUTO_INCREMENT for table `melis_cms_category_trans`
 --
-ALTER TABLE `melis_cms_category_trans`
+ALTER TABLE `melis_cms_mini_tpl_category_trans`
   MODIFY `mtplct_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

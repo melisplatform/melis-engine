@@ -12,7 +12,7 @@ namespace MelisEngine\Model\Tables;
 use MelisCore\Model\Tables\MelisGenericTable;
 use Laminas\Db\TableGateway\TableGateway;
 
-class MelisCmsCategoryTransTable extends MelisGenericTable
+class MelisCmsMiniTplCategoryTransTable extends MelisGenericTable
 {
     /**
      * Model table

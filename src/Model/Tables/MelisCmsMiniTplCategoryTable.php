@@ -12,12 +12,12 @@ namespace MelisEngine\Model\Tables;
 use MelisCore\Model\Tables\MelisGenericTable;
 use Laminas\Db\TableGateway\TableGateway;
 
-class MelisCmsCategoryTable extends MelisGenericTable
+class MelisCmsMiniTplCategoryTable extends MelisGenericTable
 {
     /**
      * Model table
      */
-    const TABLE = 'melis_cms_category';
+    const TABLE = 'melis_cms_mini_tpl_category';
 
     /**
      * Table primary key
@@ -39,8 +39,8 @@ class MelisCmsCategoryTable extends MelisGenericTable
             $select::JOIN_INNER
         );
         $select->join(
-            'melis_cms_category_trans',
-            'melis_cms_category.mtplc_id = melis_cms_category_trans.mtplc_id',
+            'melis_cms_mini_tpl_category_trans',
+            'melis_cms_mini_tpl_category.mtplc_id = melis_cms_mini_tpl_category_trans.mtplc_id',
             array('*'),
             $select::JOIN_INNER
         );
