@@ -17,7 +17,7 @@ class MelisCmsMiniTplCategoryTransTable extends MelisGenericTable
     /**
      * Model table
      */
-    const TABLE = 'melis_cms_category_trans';
+    const TABLE = 'melis_cms_mini_tpl_category_trans';
 
     /**
      * Table primary key
