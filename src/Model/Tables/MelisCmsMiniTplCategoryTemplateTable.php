@@ -40,6 +40,7 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
     public function getTemplatesByCategoryIds($cat_ids = [], $site_id = null) {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
+        $select->join('melis_cms_site', "melis_cms_site.site_id = " . self::TABLE . ".mtplct_site_id", 'site_label', 'left');
         $select->where->in('mtplct_category_id', $cat_ids);
 
         if (! empty($site_id))
