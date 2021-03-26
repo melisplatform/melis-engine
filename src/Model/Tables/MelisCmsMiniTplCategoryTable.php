@@ -44,6 +44,9 @@ class MelisCmsMiniTplCategoryTable extends MelisGenericTable
             array('*'),
             $select::JOIN_INNER
         );
+        // get site label
+        $select->join('melis_cms_site', "melis_cms_site.site_id = melis_cms_mini_tpl_site_category.mtplsc_site_id", 'site_label', 'left');
+
         $select->where->equalTo('mtplsc_site_id', $site_id);
         $select->order('melis_cms_mini_tpl_site_category.mtplc_order ASC');
         return $this->tableGateway->selectWith($select);
