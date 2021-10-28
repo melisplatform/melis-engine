@@ -652,7 +652,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             else
                 $model->setTemplate('melis-engine/plugins/notemplate');
 
-            $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFronConfig' => $this->pluginFrontConfig));
+            $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFrontConfig' => $this->pluginFrontConfig));
 
             // Plugin config datas
             $model['view']->pluginConfig = $this->pluginFrontConfig;
