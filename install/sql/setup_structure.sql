@@ -167,6 +167,7 @@ COMMENT = 'Saves ids intervals for each environment so that no duplicate id can 
 CREATE TABLE IF NOT EXISTS `melis_cms_site_404` (
   `s404_id` INT(11) NOT NULL AUTO_INCREMENT,
   `s404_site_id` INT(11) NOT NULL,
+  `s404_lang_id` INT(11) NOT NULL,
   `s404_page_id` INT(11) NOT NULL,
   PRIMARY KEY (`s404_id`))
 ENGINE = InnoDB
@@ -271,3 +272,4 @@ CREATE TABLE IF NOT EXISTS `melis_cms_gdpr_texts` (
   `mcgdpr_text_value` LONGTEXT NOT NULL,
   PRIMARY KEY (`mcgdpr_text_id`))
 ENGINE = InnoDB;
+

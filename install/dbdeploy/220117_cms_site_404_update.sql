@@ -1,0 +1,1 @@
+ALTER TABLE `melis_cms_site_404` ADD `s404_lang_id` int(11) NOT NULL AFTER `s404_site_id`;
