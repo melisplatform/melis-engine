@@ -45,4 +45,28 @@ class MelisSite404Table extends MelisGenericTable
 	     
 	    return $resultSet;
 	}
+
+	/**
+	 * Gets the 404 page given the siteId and langId
+	 * 
+	 * @param int $siteId
+	 * @param int $langId
+	 */
+	public function get404PageBySiteIdAndLangId($siteId, $langId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+
+        if (!empty($siteId) && !is_null($siteId)) {
+            $select->where->equalTo("melis_cms_site_404.s404_site_id", $siteId);
+        }
+
+        if (!empty($langId) && !is_null($langId)) {
+            $select->where->equalTo("melis_cms_site_404.s404_lang_id", $langId);
+        }
+
+        $data = $this->tableGateway->selectWith($select);
+
+        return $data;
+    }
+
 }

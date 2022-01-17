@@ -123,4 +123,29 @@ class MelisEngineSiteService extends MelisEngineGeneralService
 
         return $pageId;
     }
+
+
+    /**
+     * Function to get 404 page given the site id and lang id
+     *
+     * @param $siteId
+     * @param $langId
+     * @return mixed
+     */
+    public function get404PageBySiteIdAndLangId($siteId, $langId)
+    {
+        //try to get data from cache
+        $cacheKey = 'get404PageBySiteIdAndLangId_' . $siteId.'_'. $langId;
+        $cacheConfig = 'engine_page_services';
+        $melisEngineCacheSystem = $this->getServiceManager()->get('MelisEngineCacheSystem');
+        $results = $melisEngineCacheSystem->getCacheByKey($cacheKey, $cacheConfig);
+        if(!is_null($results)) return $results;
+
+        $site404Table = $this->getServiceManager()->get('MelisEngineTableSite404');
+        $site404Data = $site404Table->get404PageBySiteIdAndLangId($siteId, $langId)->current();
+
+        $melisEngineCacheSystem->setCacheByKey($cacheKey, $cacheConfig, $site404Data);
+
+        return $site404Data;
+    }
 }
