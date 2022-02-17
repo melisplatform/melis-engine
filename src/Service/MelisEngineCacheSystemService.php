@@ -109,7 +109,8 @@ class MelisEngineCacheSystemService extends MelisServiceManager
 	{
 		// only when in front mode
 		if ($this->getRenderMode() != 'front' && !$getForce)
-			return null;
+			if (!isset($_GET['melisSite']))
+				return null;
 		
 		$active = $this->isCacheConfActive($confCache);
 		if ($active)
@@ -137,7 +138,8 @@ class MelisEngineCacheSystemService extends MelisServiceManager
 	public function setCacheByKey($cacheKey, $confCache, $results, $getForce = false)
 	{
 		if ($this->getRenderMode() != 'front' && !$getForce)
-			return;
+			if (!isset($_GET['melisSite']))
+				return;
 
 		$active = $this->isCacheConfActive($confCache);
 		if ($active)
