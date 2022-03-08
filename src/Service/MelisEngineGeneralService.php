@@ -104,7 +104,8 @@ class MelisEngineGeneralService extends MelisServiceManager implements EventMana
 			
 		$parameters = $this->eventManager->prepareArgs($parameters);
 		$this->eventManager->trigger($eventName, $target, $parameters);
-		$parameters = get_object_vars($parameters);
+        if(!empty($parameters))
+            $parameters = (array)$parameters;
 		
 		return $parameters;
 	}
