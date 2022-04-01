@@ -18,7 +18,7 @@ use Laminas\Db\Sql\Predicate\PredicateSet;
 use Laminas\Db\Sql\Predicate\Like;
 use Laminas\Db\Sql\Predicate\Operator;
 use Laminas\Db\Sql\Predicate\Predicate;
-use Laminas\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\ServiceManager\ServiceManager;
 use MelisEngine\Model\Hydrator\MelisResultSet;
 
@@ -69,7 +69,7 @@ class MelisGenericTable
      */
     public function hydratingResultSet()
     {
-        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisResultSet());
+        return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisResultSet());
     }
 
     public function fetchAll()

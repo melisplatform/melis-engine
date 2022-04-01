@@ -13,7 +13,7 @@ use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Expression;
-use Laminas\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use MelisEngine\Model\Hydrator\MelisPlatformIds;
 
 class MelisPlatformIdsTable extends MelisGenericTable
@@ -38,7 +38,7 @@ class MelisPlatformIdsTable extends MelisGenericTable
      */
     public function hydratingResultSet()
     {
-        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisPlatformIds());
+        return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisPlatformIds());
     }
 
     /**
