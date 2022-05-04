@@ -33,11 +33,18 @@
 	"require": {
 		"php": "^7.3|^8.0",
 		"doctrine/doctrine-module": "^4.4",
-		"laminas/laminas-cache": "^3.0",
-		"laminas/laminas-cache-storage-adapter-filesystem" : "^2.0",
-		"laminas/laminas-cache-storage-adapter-memory" : "^2.0",
+		"laminas/laminas-cache": "^2.13",		
 		"melisplatform/melis-core": "^4.0",
 		"melisplatform/melis-front": "^4.0"
+	},
+	"replace": {
+	    "laminas/laminas-cache-storage-adapter-apc": "*",
+	    "laminas/laminas-cache-storage-adapter-dba": "*",
+	    "laminas/laminas-cache-storage-adapter-mongodb": "*",
+	    "laminas/laminas-cache-storage-adapter-wincache": "*",
+	    "laminas/laminas-cache-storage-adapter-xcache": "*",
+	    "laminas/laminas-cache-storage-adapter-zend-server": "*",
+	    "laminas/laminas-cache-storage-adapter-blackhole" : "*"
 	},
 	"autoload": {
 		"psr-4": {
