@@ -34,6 +34,8 @@
 		"php": "^7.3|^8.0",
 		"doctrine/doctrine-module": "^4.4",
 		"laminas/laminas-cache": "^3.0",
+		"laminas/laminas-cache-storage-adapter-filesystem" : "^2.0",
+		"laminas/laminas-cache-storage-adapter-memory" : "^2.0",
 		"melisplatform/melis-core": "^4.0",
 		"melisplatform/melis-front": "^4.0"
 	},
