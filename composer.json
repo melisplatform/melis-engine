@@ -32,7 +32,8 @@
 	},
 	"require": {
 		"php": "^7.3|^8.0",
-		"laminas/laminas-cache": "^2.13",
+		"doctrine/doctrine-module": "^4.4",
+		"laminas/laminas-cache": "^3.0",
 		"melisplatform/melis-core": "^4.0",
 		"melisplatform/melis-front": "^4.0"
 	},
