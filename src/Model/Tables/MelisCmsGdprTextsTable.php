@@ -12,7 +12,7 @@ namespace MelisEngine\Model\Tables;
 
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use MelisEngine\Model\Hydrator\MelisCmsGdprTexts;
 
 class MelisCmsGdprTextsTable extends MelisGenericTable
@@ -37,7 +37,7 @@ class MelisCmsGdprTextsTable extends MelisGenericTable
      */
     public function hydratingResultSet()
     {
-        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisCmsGdprTexts());
+        return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisCmsGdprTexts());
     }
 
     public function getGdprBannerText($siteId, $langId)
