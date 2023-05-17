@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_page_tree` (
   `tree_page_order` INT(11) NOT NULL,
   PRIMARY KEY (`tree_page_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of Melis pages, and their parents';
 
 
@@ -45,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_page_lang` (
   `plang_page_id_initial` INT(11) NOT NULL,
   PRIMARY KEY (`plang_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'Relation between pages and lang';
 
 
@@ -59,7 +57,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_site` (
   `site_main_page_id` INT(11) NOT NULL,
   PRIMARY KEY (`site_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of melis websites declared';
 
 
@@ -80,7 +77,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_template` (
   `tpl_last_user_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`tpl_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of Melis Templates used by the pages';
 
 
@@ -102,7 +98,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_page_published` (
   `page_search_type` VARCHAR(60) NOT NULL DEFAULT 'tr_meliscms_page_tab_properties_search_type_option1',
   PRIMARY KEY (`page_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of published pages';
 
 
@@ -124,7 +119,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_page_saved` (
   `page_search_type` VARCHAR(60) NOT NULL DEFAULT 'tr_meliscms_page_tab_properties_search_type_option1',
   PRIMARY KEY (`page_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of saved pages';
 
 
@@ -140,7 +134,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_page_seo` (
   `pseo_meta_description` TEXT NULL,
   PRIMARY KEY (`pseo_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'SEO datas for pages';
 
 
@@ -157,7 +150,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_platform_ids` (
   `pids_tpl_id_end` INT(11) NOT NULL,
   PRIMARY KEY (`pids_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'Saves ids intervals for each environment so that no duplicate id can occur between platforms';
 
 
@@ -170,7 +162,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_site_404` (
   `s404_page_id` INT(11) NOT NULL,
   PRIMARY KEY (`s404_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of 404 pages per site';
 
 
@@ -185,7 +176,6 @@ CREATE TABLE IF NOT EXISTS `melis_cms_site_domain` (
   `sdom_domain` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`sdom_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'List of domains per site and per environments';
 
 
