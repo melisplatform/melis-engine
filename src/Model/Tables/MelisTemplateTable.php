@@ -30,6 +30,8 @@ class MelisTemplateTable extends MelisGenericTable
      */
     const PRIMARY_KEY = 'tpl_id';
 
+    private $cacheResults = true;
+
     public function __construct()
     {
         $this->idField = self::PRIMARY_KEY;

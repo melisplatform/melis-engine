@@ -8,6 +8,7 @@
 
 namespace MelisEngine\Model\Hydrator;
 
+#[\AllowDynamicProperties]
 class MelisCmsGdprTexts
 {
     protected $unfilteredDataCount = 0;
