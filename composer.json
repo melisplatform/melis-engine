@@ -35,7 +35,7 @@
 		"laminas/laminas-cache": "^3.12",
 		"laminas/laminas-cache-storage-adapter-filesystem": "^2.3",
 		"melisplatform/melis-core": "*",
-		"melisplatform/melis-front": "*"
+		"melisplatform/melis-front": "dev-update/php83 as 5.0"
 	},
 	"replace": {
 	    "laminas/laminas-cache-storage-adapter-apc": "*",
