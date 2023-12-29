@@ -9,6 +9,7 @@
 
 namespace MelisEngine\Model\Hydrator;
 
+#[\AllowDynamicProperties]
 class MelisTemplate
 {
     protected $unfilteredDataCount = 0;

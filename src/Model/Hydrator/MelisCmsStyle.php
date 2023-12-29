@@ -9,6 +9,7 @@
 
 namespace MelisEngine\Model\Hydrator;
 
+#[\AllowDynamicProperties]
 class MelisCmsStyle
 {
     protected $unfilteredDataCount = 0;
