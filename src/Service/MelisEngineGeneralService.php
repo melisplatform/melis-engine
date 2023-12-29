@@ -22,11 +22,14 @@ class MelisEngineGeneralService extends MelisServiceManager implements EventMana
 {
 	public $eventManager;
 
-	public function setEventManager(EventManagerInterface $eventManager)
+	public function setEventManager(EventManagerInterface $eventManager): void
 	{
 		$this->eventManager = $eventManager;
 	}
 	
+	/**
+     * @return array
+     */
 	public function getEventManager()
 	{
 		return $this->eventManager;
@@ -104,7 +107,8 @@ class MelisEngineGeneralService extends MelisServiceManager implements EventMana
 			
 		$parameters = $this->eventManager->prepareArgs($parameters);
 		$this->eventManager->trigger($eventName, $target, $parameters);
-		$parameters = get_object_vars($parameters);
+        if(!empty($parameters))
+            $parameters = (array)$parameters;
 		
 		return $parameters;
 	}

@@ -36,6 +36,16 @@
 		"melisplatform/melis-core": "*",
 		"melisplatform/melis-front": "*"
 	},
+	"replace": {
+	    "laminas/laminas-cache-storage-adapter-apc": "*",
+	    "laminas/laminas-cache-storage-adapter-dba": "*",
+	    "laminas/laminas-cache-storage-adapter-mongodb": "*",
+	    "laminas/laminas-cache-storage-adapter-wincache": "*",
+	    "laminas/laminas-cache-storage-adapter-xcache": "*",
+	    "laminas/laminas-cache-storage-adapter-zend-server": "*",
+	    "laminas/laminas-cache-storage-adapter-blackhole" : "*",
+	    "laminas/laminas-cache-storage-adapter-memcache" : "*"
+	},
 	"autoload": {
 		"psr-4": {
 			"MelisEngine\\": "src/"

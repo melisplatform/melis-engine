@@ -11,7 +11,7 @@ namespace MelisEngine\Model\Tables;
 
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use MelisEngine\Model\Hydrator\MelisCmsStyle;
 
 class MelisCmsStyleTable extends MelisGenericTable
@@ -36,7 +36,7 @@ class MelisCmsStyleTable extends MelisGenericTable
      */
     public function hydratingResultSet()
     {
-        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisCmsStyle());
+        return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisCmsStyle());
     }
 
 	public function getStyles($idPage = null, $status = null)
