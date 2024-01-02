@@ -8,5 +8,6 @@
  */
 
 return [
-    'Laminas\Cache'
+    'Laminas\Cache',
+    'Laminas\Cache\Storage\Adapter\Filesystem',
 ];

@@ -261,17 +261,22 @@ return [
         ],
         'meliscms_page' => [
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => [
-                'name'    => 'Filesystem',
-                'options' => [
-                    'ttl' => 0, // 24hrs
-                    'namespace' => 'meliscms_page',
-                    'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
-                ],
+            'adapter' => \Laminas\Cache\Storage\Adapter\Filesystem::class,
+            'options' => [
+                'ttl' => 0, // 24hrs
+                'namespace' => 'meliscms_page',
+                'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
             ],
             'plugins' => [
-                'exception_handler' => ['throw_exceptions' => false],
-                'Serializer'
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => false,
+                    ],
+                ],
+                [
+                    'name' => 'Serializer'
+                ]
             ],
             'ttls' => [
                 // add a specific ttl for a specific cache key (found via regexp)
