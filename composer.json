@@ -34,6 +34,7 @@
 		"php": "^8.1|^8.3",
 		"laminas/laminas-cache": "^3.12",
 		"laminas/laminas-cache-storage-adapter-filesystem": "^2.3",
+		"laminas/laminas-cache-storage-adapter-memcached": "*",
 		"melisplatform/melis-core": "*",
 		"melisplatform/melis-front": "dev-update/php83"
 	},
@@ -44,8 +45,7 @@
 	    "laminas/laminas-cache-storage-adapter-wincache": "*",
 	    "laminas/laminas-cache-storage-adapter-xcache": "*",
 	    "laminas/laminas-cache-storage-adapter-zend-server": "*",
-	    "laminas/laminas-cache-storage-adapter-blackhole" : "*",
-		"laminas/laminas-cache-storage-adapter-memcached": "*"
+	    "laminas/laminas-cache-storage-adapter-blackhole" : "*"
 	},
 	"autoload": {
 		"psr-4": {
