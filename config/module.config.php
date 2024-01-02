@@ -191,12 +191,15 @@ return [
     'caches' => [
         'engine_memory_cache' => [ 
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => [
-                'name'    => 'Memory',
-                'options' => array('ttl' => 0, 'namespace' => 'engine_memory_cache'),
-            ],
+            'adapter' =>'Memory',
+            'options' => ['ttl' => 0, 'namespace' => 'engine_memory_cache'],
             'plugins' => [
-                'exception_handler' => array('throw_exceptions' => false),
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => false
+                    ],
+                ]
             ],
             'ttls' => [
                 // add a specific ttl for a specific cache key
@@ -205,17 +208,22 @@ return [
         ],
         'engine_file_cache' => [
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => [
-                'name'    => 'Filesystem',
-                'options' => [
-                    'ttl' => 0, // 24hrs
-                    'namespace' => 'meliscms_page',
-                    'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
-                ],
+            'adapter' => 'Filesystem',
+            'options' => [
+                'ttl' => 0, // 24hrs
+                'namespace' => 'meliscms_page',
+                'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
             ],
             'plugins' => [
-                'exception_handler' => ['throw_exceptions' => false],
-                'Serializer'
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => false,
+                    ]
+                ],
+                [
+                    'name' => 'Serializer'
+                ]
             ],
             'ttls' => [
                 // add a specific ttl for a specific cache key (found via regexp)
@@ -224,12 +232,15 @@ return [
         ],
         'engine_page_services' => [ 
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => [
-                'name'    => 'Memory',
-                'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
-            ],
+            'adapter' => 'Memory',
+            'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
             'plugins' => [
-                'exception_handler' => ['throw_exceptions' => false],
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => false,
+                    ]
+                ]
             ],
             'ttls' => [
                 // add a specific ttl for a specific cache key
@@ -237,13 +248,16 @@ return [
             ]
         ],
         'engine_lang_services' => [
-            'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => [
-                'name'    => 'Memory',
-                'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
-            ],
+            'active' => true, // activate or deactivate Melis Cache for this conf,
+            'adapter' => 'Memory',
+            'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
             'plugins' => [
-                'exception_handler' => ['throw_exceptions' => false],
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => false,
+                    ],
+                ],
             ],
             'ttls' => [
                 // add a specific ttl for a specific cache key
@@ -251,12 +265,15 @@ return [
             ]
         ],
         'templating_plugins' => [
-            'adapter' => [
-                'name'    => 'Memory',
-                'options' => ['ttl' => 0, 'namespace' => 'templating_plugins'],
-            ],
+            'adapter' => 'Memory',
+            'options' => ['ttl' => 0, 'namespace' => 'templating_plugins'],
             'plugins' => [
-                'exception_handler' => ['throw_exceptions' => false],
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => false,
+                    ],
+                ],
             ],
         ],
         'meliscms_page' => [

@@ -45,7 +45,7 @@
 	    "laminas/laminas-cache-storage-adapter-xcache": "*",
 	    "laminas/laminas-cache-storage-adapter-zend-server": "*",
 	    "laminas/laminas-cache-storage-adapter-blackhole" : "*",
-	    "laminas/laminas-cache-storage-adapter-memcache" : "*"
+		"laminas/laminas-cache-storage-adapter-memcached": "*"
 	},
 	"autoload": {
 		"psr-4": {
