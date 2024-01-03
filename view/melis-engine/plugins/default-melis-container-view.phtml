@@ -8,7 +8,7 @@
     {
         $conf = $this->pluginBackConfig;
         if (!empty($conf['name'])) {
-            $name = str_replace('\\', null, $conf['name']);
+            $name = str_replace('\\', '', $conf['name']);
             $name = $this->boTranslate($name);
         }
 

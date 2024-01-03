@@ -584,7 +584,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                 $children = $this->translateAppConfig($value);
                 $final[$key] = $children;
             } else {
-                if (substr($value, 0, 3) == 'tr_') {
+                if (substr($value ?? '', 0, 3) == 'tr_') {
                     $value = $translator->translate($value);
                 }
 
@@ -974,15 +974,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 		ksort($trans);
 		
 		foreach ($trans as $k => $v) {
-			$str = str_replace($v, $k, $str);
+			$str = str_replace($v, $k ?? '', $str);
 		}
 		
 		$str = strip_tags($str);
 		$str = html_entity_decode($str);
 		$str = preg_replace('/[^(\x20-\x7F)]*/','', $str);
 		$targets=array('\r\n', '\n', '\r', '\t');
-		$results=array(" ", " ", " ", "");
-		$str = str_replace($targets, $results, $str);
+		$str = str_replace($targets, '', $str);
 		
 		return ($str);
 	}
