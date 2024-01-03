@@ -10,4 +10,5 @@
 return [
     'Laminas\Cache',
     'Laminas\Cache\Storage\Adapter\Filesystem',
+    'Laminas\Cache\Storage\Adapter\Memory',
 ];

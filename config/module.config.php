@@ -232,7 +232,7 @@ return [
         ],
         'engine_page_services' => [ 
             'active' => true, // activate or deactivate Melis Cache for this conf
-            'adapter' => 'Memory',
+            'adapter' => \Laminas\Cache\Storage\Adapter\Memory::class,
             'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
             'plugins' => [
                 [
@@ -249,7 +249,7 @@ return [
         ],
         'engine_lang_services' => [
             'active' => true, // activate or deactivate Melis Cache for this conf,
-            'adapter' => 'Memory',
+            'adapter' => \Laminas\Cache\Storage\Adapter\Memory::class,
             'options' => ['ttl' => 0, 'namespace' => 'melisengine'],
             'plugins' => [
                 [
@@ -265,7 +265,7 @@ return [
             ]
         ],
         'templating_plugins' => [
-            'adapter' => 'Memory',
+            'adapter' => \Laminas\Cache\Storage\Adapter\Memory::class,
             'options' => ['ttl' => 0, 'namespace' => 'templating_plugins'],
             'plugins' => [
                 [
