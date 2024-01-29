@@ -32,7 +32,8 @@
 	},
 	"require": {
 		"php": "^8.1|^8.3",
-		"laminas/laminas-cache": "^4.0",
+		"psr/cache": "1.0 as 2.0",
+		"laminas/laminas-cache": "^3.12",
 		"laminas/laminas-cache-storage-adapter-filesystem": "^2.3",
 		"laminas/laminas-cache-storage-adapter-memcached": "^2.4",
 		"laminas/laminas-cache-storage-adapter-memory": "^2.3",
