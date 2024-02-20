@@ -32,11 +32,10 @@
 	},
 	"require": {
 		"php": "^8.1|^8.3",
-		"melisplatform/laminas-cache": "^3.12",
+		"laminas/laminas-cache": "^3.12",
 		"laminas/laminas-cache-storage-adapter-filesystem": "^2.3",
 		"laminas/laminas-cache-storage-adapter-memory": "^2.3",
-		"melisplatform/melis-core": "^5.1",
-		"melisplatform/melis-front": "^5.1"
+		"melisplatform/melis-core": "dev-update/php83 as 5.1"
 	},
 	"replace": {
 		"laminas/laminas-cache-storage-adapter-memcached": "*",
