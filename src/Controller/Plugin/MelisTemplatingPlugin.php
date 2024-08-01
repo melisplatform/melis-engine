@@ -436,6 +436,12 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             // Updating config with GET
             $parametersResults = $this->formatGetPostInArray($this->loadGetDataPluginConfig());
             $this->pluginConfig['front'] = $this->updateFrontConfig($this->pluginConfig['front'], $parametersResults);
+
+            //we add a listener just incase we need to override or add some parameters
+            $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
+            $this->pluginConfig['front'] = $melisGeneralService->sendEvent('melistemplating_plugin_update_parameters', $this->pluginConfig['front']);
+
+
             /* // merging with POST
             $parameters = $request->getPost()->toArray();
             $parametersResults = $this->formatGetPostInArray($parameters);
