@@ -439,8 +439,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
             //we add a listener just incase we need to override or add some parameters
             $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
-            $this->pluginConfig['front'] = $melisGeneralService->sendEvent('melistemplating_plugin_update_parameters', $this->pluginConfig['front']);
-
+            $this->pluginConfig['front'] = $melisGeneralService->sendEvent('melistemplating_plugin_update_parameters', array_merge($this->pluginConfig['front'], ['xmldbvalues' => $this->pluginXmlDbValue]));
 
             /* // merging with POST
             $parameters = $request->getPost()->toArray();
