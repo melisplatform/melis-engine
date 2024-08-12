@@ -254,7 +254,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                 $view = $viewFront;
 
         }
-
+//        dump($view);exit;
         return $view;
     }
 
@@ -439,7 +439,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
             //we add a listener just incase we need to override or add some parameters
             $melisGeneralService = $this->getServiceManager()->get('MelisGeneralService');
-            $this->pluginConfig['front'] = $melisGeneralService->sendEvent('melistemplating_plugin_update_parameters', array_merge($this->pluginConfig['front'], ['xmldbvalues' => $this->pluginXmlDbValue]));
+            $this->pluginConfig['front'] = $melisGeneralService->sendEvent('melistemplating_plugin_update_parameters', array_merge($this->pluginConfig['front'], ['xmldbvalues' => $this->pluginXmlDbValue, 'pluginName' => $this->pluginName]));
 
             /* // merging with POST
             $parameters = $request->getPost()->toArray();
@@ -658,6 +658,8 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                 $model->setTemplate('melis-engine/plugins/notemplate');
 
             $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFrontConfig' => $this->pluginFrontConfig));
+            //prepare global event incase we need to modify the view
+            $model = $melisGeneralService->sendEvent('melisengine_melistemplating_view_result_plugin_end', array('view' => $model['view'], 'pluginFrontConfig' => $this->pluginFrontConfig));
 
             // Plugin config datas
             $model['view']->pluginConfig = $this->pluginFrontConfig;
