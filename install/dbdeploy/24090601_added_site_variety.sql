@@ -1,0 +1,1 @@
+ALTER TABLE `melis_cms_site` ADD `site_variety` VARCHAR(20) NOT NULL DEFAULT 'SITE' AFTER `site_main_page_id`;

@@ -114,9 +114,10 @@ class MelisSiteTable extends MelisGenericTable
      * @param string $orderDirection
      * @param int $start
      * @param null $limit
+     * @param null $siteVariety
      * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
-	public function getSitesData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
+	public function getSitesData($search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null, $siteVariety = null)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
@@ -133,6 +134,10 @@ class MelisSiteTable extends MelisGenericTable
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
+        if(!empty($siteVariety)){
+            $select->where->equalTo('site_variety', $siteVariety);
+        }
+
         if(!empty($limit)) {
             $select->limit($limit);
         }
@@ -142,9 +147,6 @@ class MelisSiteTable extends MelisGenericTable
         }
 
         $select->group('site_id');
-
-        $sql = $this->tableGateway->getSql();
-        $raw = $sql->getSqlstringForSqlObject($select);
 
         $resultSet = $this->tableGateway->selectWith($select);
         return $resultSet;
