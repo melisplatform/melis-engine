@@ -261,3 +261,13 @@ CREATE TABLE IF NOT EXISTS `melis_cms_gdpr_texts` (
   `mcgdpr_text_value` LONGTEXT NOT NULL,
   PRIMARY KEY (`mcgdpr_text_id`))
 ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `melis_cms_mini_tpl_flagged_template` (
+  `mtpft_id` int(11) NOT NULL,
+  `mtpft_template_name` varchar(255) NOT NULL COMMENT 'the name of the updated template ',
+  `mtpft_template_module` varchar(255) NOT NULL COMMENT 'the name of the module to which the template belongs'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ALTER TABLE `melis_cms_mini_tpl_flagged_template`
+  ADD PRIMARY KEY (`mtpft_id`);
+ALTER TABLE `melis_cms_mini_tpl_flagged_template`
+  MODIFY `mtpft_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;

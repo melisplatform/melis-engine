@@ -156,6 +156,7 @@ return [
             'MelisPageService'                  => \MelisEngine\Service\MelisPageService::class,
             'MelisTreeService'                  => \MelisEngine\Service\MelisTreeService::class,
             'MelisEngineLangService'            => \MelisEngine\Service\MelisEngineLangService::class,
+            'MelisEngineTableFlaggedTemplate'    => \MelisEngine\Model\Tables\MelisCmsMiniTplFlaggedTemplateTable::class,
         ]
     ],
     'controllers' => [
