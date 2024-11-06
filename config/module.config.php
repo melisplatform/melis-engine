@@ -169,6 +169,7 @@ return [
     'form_elements' => [
         'factories' => [
             'MelisEnginePluginTemplateSelect' => \MelisEngine\Form\Factory\PluginTemplateSelectFactory::class,
+            'MelisEngineMenuBasedOnTagTagSelect' => \MelisEngine\Form\Factory\PluginMenuBasedOnTagsSelectFactory::class,
             'MelisEngineSiteSelect'           => \MelisEngine\Form\Factory\SitesSelectFactory::class,
         ],
     ],
