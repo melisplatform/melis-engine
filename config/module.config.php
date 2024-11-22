@@ -150,6 +150,8 @@ return [
             'MelisGdprAutodeleteConfigTable'    => \MelisEngine\Model\Tables\MelisGdprAutoDeleteConfigTable::class,
             'MelisGdprDeleteEmailsSentTable'    => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable::class,
             'MelisEngineTableCmsSiteBundle'    => \MelisEngine\Model\Tables\MelisCmsSiteBundleTable::class,
+            'MelisEngineTableCmsSiteVarieties'    => \MelisEngine\Model\Tables\MelisCmsSiteVarietiesTable::class,
+            'MelisEngineTableCmsSiteVarietiesTrans'    => \MelisEngine\Model\Tables\MelisCmsSiteVarietiesTransTable::class,
             // Alias redeclared
             // **This not neccessary but its already used from modules**
             'MelisEngineStyleService'           => \MelisEngine\Service\MelisEngineStyleService::class,
