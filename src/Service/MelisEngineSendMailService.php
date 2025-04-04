@@ -59,6 +59,7 @@ class MelisEngineSendMailService extends MelisGeneralService implements MelisEng
 
 		$html = new MimePart($viewRenderer->render($viewModel));
 		$html->type = 'text/html';
+		$html->charset = 'UTF-8';
 
 		$body = new MimeMessage();
 
