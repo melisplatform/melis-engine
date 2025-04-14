@@ -43,7 +43,7 @@ MelisEngine provides many services to be used in other modules:
 * MelisPageService  
 Provides services to get all datas from a page.
 File: /melis-engine/src/Service/MelisPageService.php  
-```
+```php
 // Get the service
 $melisPage = $this->getServiceManager()->get('MelisEnginePage');
 // Get all datas of this page
@@ -54,7 +54,7 @@ $datasPageRes = $melisPage->getDatasPage($siteMainPage);
 Provides services to get sets of pages based on the tree of pages.  
 Meant to deliver parent pages, breadcrumb, generate menus, generate URLs, etc.   
 File: /melis-engine/src/Service/MelisTreeService.php  
-```
+```php
 // Get the service
 $treeSrv = $this->getServiceManager()->get('MelisEngineTree');
 // Get the breadcrumb
@@ -65,7 +65,7 @@ $pageBreadcrumb = $treeSrv->getPageBreadcrumb($pageId, 0, true);
 This service deals with search on the Melis Platform hosted website.  
 Search is done using Zend_Search.  
 File: /melis-engine/src/Service/MelisSearchService.php  
-```
+```php
 // Get the service
 $searchSvc = $this->getServiceManager()->get('MelisSearch');
 // Search
