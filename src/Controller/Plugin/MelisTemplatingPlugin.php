@@ -268,6 +268,24 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             return;
         }
 
+        $searchXmlKey = function ($xml, $keyToFind) use (&$searchXmlKey) {
+
+            foreach ($xml->children() as $child) {
+
+                if ((string)$child->attributes()->id === $keyToFind) {
+                    // dump($keyToFind, $child->asXml());
+                    return $child->asXml();
+                }
+
+                // Recursive call on child
+                $result = $searchXmlKey($child, $keyToFind);
+                if ($result !== '') {
+                    return $result;
+                }
+            }
+            return '';
+        };
+
         $datasPage = array();
         $valueSetted = false;
         if ($this->renderMode == 'front')
@@ -276,16 +294,35 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             // Melis BO's display, first check if there's something in session
             $container = new Container('meliscms');
             if (!empty($container['content-pages'][$pageId]) && !$this->previewMode) {
+
+                $this->pluginXmlDbValue = '';
+
                 if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
                     $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
-                else
-                    $this->pluginXmlDbValue = '';
+                else {
+
+                    // check plugin if from dragdropzone
+                    if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+
+                        $dndData = $container['content-pages'][$pageId][$this->pluginXmlDbKey];
+
+                        foreach ($dndData as $k => $xmlData) {
+
+                            // search plugin xml data
+                            $pluginXml = $searchXmlKey(simplexml_load_string($xmlData), $id);
+
+                            if ($pluginXml) {
+                                $this->pluginXmlDbValue = $pluginXml;
+                                break;
+                            }
+                        }
+                    }
+                }
                 $valueSetted = true;
             } else {
                 $datasPage = $melisPage->getDatasPage($pageId, 'saved');
             }
         }
-
 
         $datasPageTree = array();
         if (!empty($datasPage))
@@ -312,14 +349,21 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             $xml = simplexml_load_string($xmlPage);
 
             if ($xml) {
-                foreach ($xml as $namePlugin => $valuePlugin) {
-                    if ($namePlugin == $this->pluginXmlDbKey) {
-                        if (
-                            !empty($valuePlugin->attributes()->id) &&
-                            (string)$valuePlugin->attributes()->id == $id
-                        ) {
-                            $this->pluginXmlDbValue = $valuePlugin->asXML();
-                            break;
+                // check plugin if from dragdropzone
+                if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+
+                    $this->pluginXmlDbValue = $searchXmlKey($xml, $id);
+                } else {
+
+                    foreach ($xml as $namePlugin => $valuePlugin) {
+                        if ($namePlugin == $this->pluginXmlDbKey) {
+                            if (
+                                !empty($valuePlugin->attributes()->id) &&
+                                (string)$valuePlugin->attributes()->id == $id
+                            ) {
+                                $this->pluginXmlDbValue = $valuePlugin->asXML();
+                                break;
+                            }
                         }
                     }
                 }
