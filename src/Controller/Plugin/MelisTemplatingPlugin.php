@@ -224,10 +224,9 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             $view = $this->sendViewResult($this->front());
         else {
 
-            $view = $this->back();
-
             $viewFront = $this->sendViewResult($this->front());
 
+            $view = $this->back();
 
             if ($view instanceof ViewModel) {
                 $viewRender = $this->getServiceManager()->get('ViewRenderer');
@@ -245,7 +244,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             } else
                 $view = $viewFront;
         }
-        //        dump($view);exit;
+
         return $view;
     }
 
@@ -679,6 +678,13 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                     $model->setTemplate('melis-engine/plugins/notemplate');
             } else
                 $model->setTemplate('melis-engine/plugins/notemplate');
+
+            if (!empty($this->pluginFrontConfig['pluginName']))
+                if ($this->pluginFrontConfig['pluginName'] == 'MelisFrontDragDropZonePlugin') {
+
+                    $model->dndId = $this->pluginFrontConfig['id'];
+                    $model->pageId = $this->pluginFrontConfig['pageId'];
+                }
 
             $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFrontConfig' => $this->pluginFrontConfig));
             //prepare global event incase we need to modify the view
