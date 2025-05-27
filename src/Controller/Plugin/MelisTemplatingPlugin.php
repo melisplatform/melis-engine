@@ -296,27 +296,37 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
                 $this->pluginXmlDbValue = '';
 
-                if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
-                    $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
-                else {
+                // check plugin if from dragdropzone
+                if ($this->pluginXmlDbKey == 'melisDragDropZone') {
 
-                    // check plugin if from dragdropzone
-                    if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+                    if ($this->pluginConfig['front']['isInnerDragDropZone']) {
 
-                        $dndData = $container['content-pages'][$pageId][$this->pluginXmlDbKey];
+                        if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
+                            $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
+                        else {
 
-                        foreach ($dndData as $k => $xmlData) {
+                            $dndData = $container['content-pages'][$pageId][$this->pluginXmlDbKey];
 
-                            // search plugin xml data
-                            $pluginXml = $searchXmlKey(simplexml_load_string($xmlData), $id);
+                            foreach ($dndData as $k => $xmlData) {
 
-                            if ($pluginXml) {
-                                $this->pluginXmlDbValue = $pluginXml;
-                                break;
+                                // search plugin xml data
+                                $pluginXml = $searchXmlKey(simplexml_load_string($xmlData), $id);
+
+                                if ($pluginXml) {
+                                    $this->pluginXmlDbValue = $pluginXml;
+                                    break;
+                                }
                             }
                         }
+                    } else {
+                        $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey];
                     }
+                } else {
+
+                    if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
+                        $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
                 }
+
                 $valueSetted = true;
             } else {
                 $datasPage = $melisPage->getDatasPage($pageId, 'saved');
@@ -347,11 +357,20 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             $xmlPage = $datasPageTree['page_content'];
             $xml = simplexml_load_string($xmlPage);
 
+            // if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+
+            //     dump($xml->asXML());
+            //     dump('pluginFrontConfig', $this->pluginConfig);
+            // }
+
             if ($xml) {
                 // check plugin if from dragdropzone
                 if ($this->pluginXmlDbKey == 'melisDragDropZone') {
 
-                    $this->pluginXmlDbValue = $searchXmlKey($xml, $id);
+                    if ($this->pluginConfig['front']['isInnerDragDropZone'])
+                        $this->pluginXmlDbValue = $searchXmlKey($xml, $id);
+                    else
+                        $this->pluginXmlDbValue = $xml->asXML();
                 } else {
 
                     foreach ($xml as $namePlugin => $valuePlugin) {
@@ -372,19 +391,21 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
     protected function getPluginWidths()
     {
-        $xml = simplexml_load_string($this->pluginXmlDbValue);
-        if ($xml) {
-            if (!empty($xml->attributes()->width_desktop))
-                $this->widthDesktop = (string) $xml->attributes()->width_desktop;
+        if (is_string($this->pluginXmlDbValue)) {
+            $xml = simplexml_load_string($this->pluginXmlDbValue);
+            if ($xml) {
+                if (!empty($xml->attributes()->width_desktop))
+                    $this->widthDesktop = (string) $xml->attributes()->width_desktop;
 
-            if (!empty($xml->attributes()->width_tablet))
-                $this->widthTablet  = (string) $xml->attributes()->width_tablet;
+                if (!empty($xml->attributes()->width_tablet))
+                    $this->widthTablet  = (string) $xml->attributes()->width_tablet;
 
-            if (!empty($xml->attributes()->width_mobile))
-                $this->widthMobile  = (string) $xml->attributes()->width_mobile;
+                if (!empty($xml->attributes()->width_mobile))
+                    $this->widthMobile  = (string) $xml->attributes()->width_mobile;
 
-            if (!empty($xml->attributes()->plugin_container_id))
-                $this->pluginContainerId = (string) $xml->attributes()->plugin_container_id;
+                if (!empty($xml->attributes()->plugin_container_id))
+                    $this->pluginContainerId = (string) $xml->attributes()->plugin_container_id;
+            }
         }
     }
 
