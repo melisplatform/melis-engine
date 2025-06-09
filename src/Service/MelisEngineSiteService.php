@@ -41,6 +41,38 @@ class MelisEngineSiteService extends MelisEngineGeneralService
     }
 
     /**
+     * @param $siteId
+     * @return string
+     */
+    public function getSiteDNDRenderMode($siteId)
+    {
+        $mode = '';
+        $siteTable = $this->getServiceManager()->get('MelisEngineTableSite');
+        $siteData = $siteTable->getEntryById($siteId);
+        if(!empty($siteData))
+            $mode = $siteData->current()->site_dnd_render_mode;
+
+        return $mode;
+    }
+
+    /**
+     * @param $pageId
+     * @return string
+     */
+    public function getSiteDNDRenderModeByPageId($pageId)
+    {
+        if(!empty($pageId)) {
+            $treeService = $this->getServiceManager()->get('MelisEngineTree');
+            $siteData = $treeService->getSiteByPageId($pageId);
+            if (!empty($siteData))
+                $siteData = $treeService->getSiteByPageId($pageId, 'saved');
+
+            return $this->getSiteDNDRenderMode($siteData->site_id);
+        }
+        return '';
+    }
+
+    /**
      * Function to get site data by domain
      *
      * @param $domain
