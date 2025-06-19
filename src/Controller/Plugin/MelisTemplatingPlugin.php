@@ -319,7 +319,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                             }
                         }
                     } else {
-                        $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey];
+                        $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey] ?? '';
                     }
                 } else {
 
