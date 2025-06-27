@@ -67,7 +67,9 @@ class MelisEngineSiteService extends MelisEngineGeneralService
             if (empty($siteData))
                 $siteData = $treeService->getSiteByPageId($pageId, 'saved');
 
-            return $this->getSiteDNDRenderMode($siteData->site_id);
+            if(!empty($siteData)) {
+                return $this->getSiteDNDRenderMode($siteData->site_id);
+            }
         }
         return '';
     }
