@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
@@ -35,7 +35,7 @@ class MelisCmsLangTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-	    /**
+    /**
      * This is used whenever you want to implement a pagination on your data table
      * @tutorial Array Structure
      * array(
@@ -76,30 +76,29 @@ class MelisCmsLangTable extends MelisGenericTable
         $dateFilter = $options['date_filter'];
         $dateFilterSql = '';
 
-        if(count($dateFilter)) {
-            if(!empty($dateFilter['startDate']) && !empty($dateFilter['endDate'])) {
+        if (count($dateFilter)) {
+            if (!empty($dateFilter['startDate']) && !empty($dateFilter['endDate'])) {
                 $dateFilterSql = '`' . $dateFilter['key'] . '` BETWEEN \'' . $dateFilter['startDate'] . '\' AND \'' . $dateFilter['endDate'] . '\'';
             }
         }
 
         // this is used when searching
-        if(!empty($where)) {
+        if (!empty($where)) {
             $w = new Where();
             $p = new PredicateSet();
             $filters = array();
             $likes = array();
-            foreach($columns as $colKeys) {
-                $likes[] = new Like($colKeys, '%'.$whereValue.'%');
+            foreach ($columns as $colKeys) {
+                $likes[] = new Like($colKeys, '%' . $whereValue . '%');
             }
 
-            if(!empty($dateFilterSql)) {
-                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
-            }
-            else {
-                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
+            if (!empty($dateFilterSql)) {
+                $filters = array(new PredicateSet($likes, PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
+            } else {
+                $filters = array(new PredicateSet($likes, PredicateSet::COMBINED_BY_OR));
             }
             $fixedWhere = array(new PredicateSet(array(new Operator('', '=', ''))));
-            if(is_null($fixedCriteria)) {
+            if (is_null($fixedCriteria)) {
                 $select->where($filters);
             } else {
                 $select->where(array(
@@ -107,19 +106,18 @@ class MelisCmsLangTable extends MelisGenericTable
                     $filters,
                 ), PredicateSet::OP_AND);
             }
-
         }
 
         // used when column ordering is clicked
-        if(!empty($order))
+        if (!empty($order))
             $select->order($order . ' ' . $orderDir);
 
         $getCount = $this->tableGateway->selectWith($select);
         $this->setCurrentDataCount((int) $getCount->count());
 
         // this is used in paginations
-        $select->limit($limit);
-        $select->offset($start);
+        $select->limit((int)$limit);
+        $select->offset((int)$start);
 
         $resultSet = $this->tableGateway->selectWith($select);
 
@@ -127,6 +125,5 @@ class MelisCmsLangTable extends MelisGenericTable
         $raw = $sql->getSqlstringForSqlObject($select);
 
         return $resultSet;
-
     }
 }

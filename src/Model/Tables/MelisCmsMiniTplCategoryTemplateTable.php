@@ -29,7 +29,8 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-    public function getTemplateBySiteId($site_id, $template_name) {
+    public function getTemplateBySiteId($site_id, $template_name)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->where->equalTo('mtplct_site_id', $site_id);
@@ -37,7 +38,8 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function getTemplatesByCategoryIds($cat_ids = [], $site_id = null) {
+    public function getTemplatesByCategoryIds($cat_ids = [], $site_id = null)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->join('melis_cms_site', "melis_cms_site.site_id = " . self::TABLE . ".mtplct_site_id", 'site_label', 'left');
@@ -50,7 +52,8 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function getAffectedMiniTemplates($order) {
+    public function getAffectedMiniTemplates($order)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->where->greaterThanOrEqualTo('mtplct_order', $order);
@@ -58,7 +61,8 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function getLatestOrder($cat_id) {
+    public function getLatestOrder($cat_id)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->where->equalTo('mtplct_category_id', $cat_id);
@@ -67,7 +71,8 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function updateMiniTemplate($data, $site_id, $template_name) {
+    public function updateMiniTemplate($data, $site_id, $template_name)
+    {
         $update = $this->tableGateway->getSql()->update();
         $update->set($data);
         if (! empty($site_id))
@@ -77,7 +82,8 @@ class MelisCmsMiniTplCategoryTemplateTable extends MelisGenericTable
         $resultSet = $this->tableGateway->updateWith($update);
     }
 
-    public function deletePluginFromCategory($siteId, $template) {
+    public function deletePluginFromCategory($siteId, $template)
+    {
         $delete = $this->tableGateway->getSql()->delete();
         $delete->where->equalTo('mtplct_site_id', $siteId);
         $delete->where->equalTo('mtplct_template_name', $template);

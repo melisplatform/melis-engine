@@ -29,7 +29,8 @@ class MelisCmsMiniTplCategoryTransTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-    public function getTextByLang($cat_id, $lang_id) {
+    public function getTextByLang($cat_id, $lang_id)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->where->equalTo('mtplc_id', $cat_id);

@@ -7,6 +7,7 @@ namespace MelisEngine\Model\Tables;
  * Class MelisCmsSiteRobotTable
  * @package MelisCmsSiteRobotTable\Model
  */
+
 use MelisEngine\Model\Tables\MelisGenericTable;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Expression;
@@ -43,14 +44,14 @@ class MelisCmsSiteRobotTable extends MelisGenericTable
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
 
-        if(!empty($searchableColumns) && !empty($search)) {
-            foreach($searchableColumns as $column) {
-                $select->where->or->like($column, '%'.$search.'%');
+        if (!empty($searchableColumns) && !empty($search)) {
+            foreach ($searchableColumns as $column) {
+                $select->where->or->like($column, '%' . $search . '%');
             }
         }
 
 
-        if(!empty($orderBy)) {
+        if (!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
@@ -58,11 +59,11 @@ class MelisCmsSiteRobotTable extends MelisGenericTable
         // set current data count for pagination
         $this->setCurrentDataCount((int) $getCount->count());
 
-        if(!empty($limit)) {
+        if (!empty($limit)) {
             $select->limit($limit);
         }
 
-        if(!empty($start)) {
+        if (!empty($start)) {
             $select->offset($start);
         }
 

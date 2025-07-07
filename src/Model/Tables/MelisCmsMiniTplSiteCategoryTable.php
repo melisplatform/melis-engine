@@ -30,7 +30,8 @@ class MelisCmsMiniTplSiteCategoryTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-    public function getLastOrderId() {
+    public function getLastOrderId()
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->order('mtplc_order DESC');
@@ -38,7 +39,8 @@ class MelisCmsMiniTplSiteCategoryTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function getAffectedCategories($order) {
+    public function getAffectedCategories($order)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->where->greaterThanOrEqualTo('mtplc_order', $order);

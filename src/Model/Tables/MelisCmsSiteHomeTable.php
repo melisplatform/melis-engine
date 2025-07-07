@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
@@ -28,7 +28,7 @@ class MelisCmsSiteHomeTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-	public function getHomePageBySiteIdAndLangId($siteId, $langId)
+    public function getHomePageBySiteIdAndLangId($siteId, $langId)
     {
         $select = $this->tableGateway->getSql()->select();
 
@@ -52,7 +52,7 @@ class MelisCmsSiteHomeTable extends MelisGenericTable
         if (!empty($siteId) && !is_null($siteId)) {
             $select->where->equalTo("melis_cms_site_home.shome_site_id", $siteId);
         }
-        
+
         $data = $this->tableGateway->selectWith($select);
 
         return $data;

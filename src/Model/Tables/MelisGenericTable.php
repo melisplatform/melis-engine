@@ -105,13 +105,10 @@ class MelisGenericTable
     {
         $id    = (int) $id;
 
-        if ($this->getEntryById($id)->current())
-        {
+        if ($this->getEntryById($id)->current()) {
             $this->tableGateway->update($datas, array($this->idField => $id));
             return $id;
-        }
-        else
-        {
+        } else {
             $this->tableGateway->insert($datas);
             $insertedId = $this->tableGateway->lastInsertValue;
             return $insertedId;
@@ -120,8 +117,7 @@ class MelisGenericTable
 
     public function update($datas, $whereField, $whereValue)
     {
-        if($this->getEntryByField($whereField, $whereValue)->current())
-        {
+        if ($this->getEntryByField($whereField, $whereValue)->current()) {
             $this->tableGateway->update($datas, array($whereField => $whereValue));
         }
     }
@@ -169,18 +165,12 @@ class MelisGenericTable
 
         // auto populate columns with arrays from the existing Table
         // when user does not supply a parameter to this function
-        if($columns == null)
-        {
+        if ($columns == null) {
             $this->_selectedColumns = $this->getTableColumns();
-        }
-        else
-        {
-            if(is_array($columns))
-            {
+        } else {
+            if (is_array($columns)) {
                 $this->_selectedColumns = $columns;
-            }
-            else
-            {
+            } else {
                 throw new \InvalidArgumentException('Invalid argument provided on Column parameter');
             }
         }
@@ -194,7 +184,6 @@ class MelisGenericTable
         $this->_selectedValues = $resultSet;
 
         return $resultSet;
-
     }
 
     /**
@@ -203,12 +192,9 @@ class MelisGenericTable
      */
     public function getSelectedColumns()
     {
-        if(!empty($this->_selectedColumns))
-        {
+        if (!empty($this->_selectedColumns)) {
             return $this->_selectedColumns;
-        }
-        else
-        {
+        } else {
             return $this->getTableColumns();
         }
     }
@@ -256,30 +242,29 @@ class MelisGenericTable
         $dateFilter = $options['date_filter'];
         $dateFilterSql = '';
 
-        if(count($dateFilter)) {
-            if(!empty($dateFilter['startDate']) && !empty($dateFilter['endDate'])) {
+        if (count($dateFilter)) {
+            if (!empty($dateFilter['startDate']) && !empty($dateFilter['endDate'])) {
                 $dateFilterSql = '`' . $dateFilter['key'] . '` BETWEEN \'' . $dateFilter['startDate'] . '\' AND \'' . $dateFilter['endDate'] . '\'';
             }
         }
 
         // this is used when searching
-        if(!empty($where)) {
+        if (!empty($where)) {
             $w = new Where();
             $p = new PredicateSet();
             $filters = array();
             $likes = array();
-            foreach($columns as $colKeys) {
-                $likes[] = new Like($colKeys, '%'.$whereValue.'%');
+            foreach ($columns as $colKeys) {
+                $likes[] = new Like($colKeys, '%' . $whereValue . '%');
             }
 
-            if(!empty($dateFilterSql)) {
-                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
-            }
-            else {
-                $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
+            if (!empty($dateFilterSql)) {
+                $filters = array(new PredicateSet($likes, PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
+            } else {
+                $filters = array(new PredicateSet($likes, PredicateSet::COMBINED_BY_OR));
             }
             $fixedWhere = array(new PredicateSet(array(new Operator('', '=', ''))));
-            if(is_null($fixedCriteria)) {
+            if (is_null($fixedCriteria)) {
                 $select->where($filters);
             } else {
                 $select->where(array(
@@ -287,12 +272,11 @@ class MelisGenericTable
                     $filters,
                 ), PredicateSet::OP_AND);
             }
-
         }
 
 
         // used when column ordering is clicked
-        if(!empty($order))
+        if (!empty($order))
             $select->order($order . ' ' . $orderDir);
 
         $getCount = $this->tableGateway->selectWith($select);
@@ -319,8 +303,7 @@ class MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
 
-        if (!empty($field) && !empty($idValue))
-        {
+        if (!empty($field) && !empty($idValue)) {
             $select->where(array($field => (int) $idValue));
         }
 
@@ -384,13 +367,11 @@ class MelisGenericTable
     protected function getSelectedValues()
     {
         $resultSet = array();
-        foreach($this->_selectedValues as $keys => $values)
-        {
+        foreach ($this->_selectedValues as $keys => $values) {
             // cast object into array
             $resultSet[] = (array)$values;
         }
         return $resultSet;
-
     }
 
     /**
@@ -402,7 +383,7 @@ class MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         $where = new Where();
-        $where->like($field, '%'.$value.'%');
+        $where->like($field, '%' . $value . '%');
         $select->where($where);
         $rowset = $this->tableGateway->selectwith($select);
 
@@ -421,5 +402,4 @@ class MelisGenericTable
 
         return $raw;
     }
-
 }

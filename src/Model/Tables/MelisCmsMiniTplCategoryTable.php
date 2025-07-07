@@ -29,7 +29,8 @@ class MelisCmsMiniTplCategoryTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-    public function getCategoryBySite($site_id) {
+    public function getCategoryBySite($site_id)
+    {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);
         $select->join(

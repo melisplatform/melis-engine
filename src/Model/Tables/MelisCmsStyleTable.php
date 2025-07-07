@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
@@ -39,26 +39,26 @@ class MelisCmsStyleTable extends MelisGenericTable
         return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisCmsStyle());
     }
 
-	public function getStyles($idPage = null, $status = null)
-	{
-	    $select = $this->tableGateway->getSql()->select();
-	    
-	    if(!is_null($status)){
-	        $select->where->equalTo('style_status', '1');
-	    }
-	    
-	    if(!is_null($idPage)){
-	        $select->join('melis_cms_page_style', 'pstyle_style_id = style_id', array(), $select::JOIN_LEFT);
-	        
-	        $select->where->equalTo('pstyle_page_id', $idPage);
-	    }
-	    
-	    $resultSet = $this->tableGateway->selectWith($select);
-	    
-	    return $resultSet;
-	}
+    public function getStyles($idPage = null, $status = null)
+    {
+        $select = $this->tableGateway->getSql()->select();
 
-	 /**
+        if (!is_null($status)) {
+            $select->where->equalTo('style_status', '1');
+        }
+
+        if (!is_null($idPage)) {
+            $select->join('melis_cms_page_style', 'pstyle_style_id = style_id', array(), $select::JOIN_LEFT);
+
+            $select->where->equalTo('pstyle_page_id', $idPage);
+        }
+
+        $resultSet = $this->tableGateway->selectWith($select);
+
+        return $resultSet;
+    }
+
+    /**
      * @param string $search
      * @param array $searchableColumns
      * @param string $orderBy
@@ -74,24 +74,24 @@ class MelisCmsStyleTable extends MelisGenericTable
 
         $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_style.style_site_id', array('*'), $select::JOIN_LEFT);
 
-        if(!empty($searchableColumns) && !empty($search)) {
-            foreach($searchableColumns as $column) {
-                $select->where->or->like($column, '%'.$search.'%');
+        if (!empty($searchableColumns) && !empty($search)) {
+            foreach ($searchableColumns as $column) {
+                $select->where->or->like($column, '%' . $search . '%');
             }
         }
 
         /** Get "unfiltered" data */
         $unfilteredData = $this->tableGateway->selectWith($select);
 
-        if(!empty($orderBy)) {
+        if (!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
-        if(!is_null($limit)) {
+        if (!is_null($limit)) {
             $select->limit((int) $limit);
         }
 
-        if(!empty($start)) {
+        if (!empty($start)) {
             $select->offset((int) $start);
         }
 

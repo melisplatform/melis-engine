@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
@@ -39,7 +39,7 @@ class MelisCmsSiteLangsTable extends MelisGenericTable
         return $data;
     }
 
-	public function getSiteLangs ($siteLangId, $siteId, $langId, $isActive)
+    public function getSiteLangs($siteLangId, $siteId, $langId, $isActive)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['*']);

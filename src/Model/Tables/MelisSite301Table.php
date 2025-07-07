@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
@@ -32,20 +32,24 @@ class MelisSite301Table extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         $select->columns(array('*'));
-        $select->join('melis_cms_site', 'melis_cms_site.site_id = melis_cms_site_301.s301_site_id',
-            array('site_name','site_label'), $select::JOIN_LEFT);
+        $select->join(
+            'melis_cms_site',
+            'melis_cms_site.site_id = melis_cms_site_301.s301_site_id',
+            array('site_name', 'site_label'),
+            $select::JOIN_LEFT
+        );
 
-        if(!empty($searchableColumns) && !empty($search)) {
-            foreach($searchableColumns as $column) {
-                $select->where->or->like($column, '%'.$search.'%');
+        if (!empty($searchableColumns) && !empty($search)) {
+            foreach ($searchableColumns as $column) {
+                $select->where->or->like($column, '%' . $search . '%');
             }
         }
 
-        if(!empty($siteId) && !is_null($siteId)){
+        if (!empty($siteId) && !is_null($siteId)) {
             $select->where->equalTo("s301_site_id", $siteId);
         }
 
-        if(!empty($orderBy)) {
+        if (!empty($orderBy)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
@@ -53,12 +57,12 @@ class MelisSite301Table extends MelisGenericTable
         // set current data count for pagination
         $this->setCurrentDataCount((int) $getCount->count());
 
-        if(!empty($limit)) {
-            $select->limit( (int) $limit);
+        if (!empty($limit)) {
+            $select->limit((int) $limit);
         }
 
-        if(!empty($start)) {
-            $select->offset( (int) $start);
+        if (!empty($start)) {
+            $select->offset((int) $start);
         }
 
         $resultSet = $this->tableGateway->selectWith($select);

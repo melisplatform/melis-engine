@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
@@ -28,17 +28,17 @@ class MelisPagePublishedTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
-	public function getPublishedSitePagesById($pageId)
-	{
-	    $select = $this->tableGateway->getSql()->select();
-	     
-	    $select->where('page_status = 1');
-	    $select->where(array('page_type' => array('SITE', 'PAGE')));
-	    $select->where('page_id ='.$pageId);
-	    $resultSet = $this->tableGateway->selectWith($select);
-	     
-	    return $resultSet;
-	}
+    public function getPublishedSitePagesById($pageId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+
+        $select->where('page_status = 1');
+        $select->where(array('page_type' => array('SITE', 'PAGE')));
+        $select->where('page_id =' . (int)$pageId);
+        $resultSet = $this->tableGateway->selectWith($select);
+
+        return $resultSet;
+    }
 
     /**
      * Retrieve pages by type & per site

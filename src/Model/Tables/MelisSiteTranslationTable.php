@@ -42,13 +42,13 @@ class MelisSiteTranslationTable extends MelisGenericTable
     public function getSiteTranslation($key, $langId, $siteId)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->join(array('mstt'=>'melis_site_translation_text'), 'mstt.mstt_mst_id = melis_site_translation.mst_id');
-        $select->join(array('lang'=>'melis_cms_lang'), 'mstt.mstt_lang_id = lang.lang_cms_id');
+        $select->join(array('mstt' => 'melis_site_translation_text'), 'mstt.mstt_mst_id = melis_site_translation.mst_id');
+        $select->join(array('lang' => 'melis_cms_lang'), 'mstt.mstt_lang_id = lang.lang_cms_id');
 
-        if(!is_null($key) && !empty($key)){
+        if (!is_null($key) && !empty($key)) {
             $select->where->equalTo("melis_site_translation.mst_key", $key);
         }
-        if(!empty($langId)) {
+        if (!empty($langId)) {
             $select->where->equalTo("lang.lang_cms_id", $langId);
         }
         $select->where->equalTo("melis_site_translation.mst_site_id", $siteId);

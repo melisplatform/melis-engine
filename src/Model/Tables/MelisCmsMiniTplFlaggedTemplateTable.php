@@ -33,7 +33,7 @@ class MelisCmsMiniTplFlaggedTemplateTable extends MelisGenericTable
     public function getFlaggedTemplate($moduleName = null, $templateName = null)
     {
         $select = $this->tableGateway->getSql()->select();
-        
+
         if (!empty($templateName)) {
             $select->where->equalTo("melis_cms_mini_tpl_flagged_template.mtpft_template_name", $templateName);
         }
