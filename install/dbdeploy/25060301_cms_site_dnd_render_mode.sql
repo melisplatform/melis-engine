@@ -1,0 +1,1 @@
+ALTER TABLE `melis_cms_site` ADD `site_dnd_render_mode` VARCHAR(255) NULL AFTER `site_main_page_id`;

@@ -65,7 +65,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         if (count($className) > 0)
             $className = $className[count($className) - 1];
         $this->pluginName = $className;
-//        $this->setEventManager(new EventManager());
+        //        $this->setEventManager(new EventManager());
     }
 
     public function getServiceManager()
@@ -73,10 +73,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         return $this->getController()->getEvent()->getApplication()->getServiceManager();
     }
 
-//    public function setEventManager(EventManagerInterface $eventManager)
-//    {
-//        $this->eventManager = $eventManager;
-//    }
+    //    public function setEventManager(EventManagerInterface $eventManager)
+    //    {
+    //        $this->eventManager = $eventManager;
+    //    }
 
     public function getEventManager()
     {
@@ -112,12 +112,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         $siteModule = getenv('MELIS_MODULE');
         $melisPage = $this->getServiceManager()->get('MelisEnginePage');
         $datasPage = $melisPage->getDatasPage($pageId, 'saved');
-        if($datasPage)
-        {
+        if ($datasPage) {
             $datasTemplate = $datasPage->getMelisTemplate();
 
-            if(!empty($datasTemplate))
-            {
+            if (!empty($datasTemplate)) {
                 $siteModule = $datasTemplate->tpl_zf2_website_folder;
             }
         }
@@ -194,22 +192,18 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         $request = $this->getServiceManager()->get('request');
         $routeMatch = $router->match($request);
 
-        if (!$forceRenderModeToFront)
-        {
+        if (!$forceRenderModeToFront) {
             $this->renderMode = 'front';
-            if (!empty($routeMatch))
-            {
+            if (!empty($routeMatch)) {
                 $params = $routeMatch->getParams();
                 if (!empty($params['renderMode']))
                     $this->renderMode = $params['renderMode'];
             }
-        }
-        else
+        } else
             $this->renderMode = 'front';
 
         $this->previewMode = false;
-        if (!empty($routeMatch))
-        {
+        if (!empty($routeMatch)) {
             $params = $routeMatch->getParams();
             if (!empty($params['preview']))
                 $this->previewMode = $params['preview'];
@@ -228,33 +222,29 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
         if ($this->renderMode == 'front' || $this->previewMode)
             $view = $this->sendViewResult($this->front());
-        else
-        {
+        else {
+
             $viewFront = $this->sendViewResult($this->front());
 
             $view = $this->back();
 
-            if ($view InstanceOf ViewModel)
-            {
+            if ($view instanceof ViewModel) {
                 $viewRender = $this->getServiceManager()->get('ViewRenderer');
                 $viewFrontRendered = $viewRender->render($viewFront);
 
                 $view->viewFront = $viewFrontRendered;
 
-                foreach ($viewFront->getVariables() as $keyVar => $valueVar)
-                {
+                foreach ($viewFront->getVariables() as $keyVar => $valueVar) {
                     // Sub plugin needs to render first before assigning to plugin viewmodel
                     if ($valueVar instanceof ViewModel)
-                        $valueVar = $viewRender->render($valueVar);
+                        $view->$keyVar = $viewRender->render($valueVar);
 
                     $view->$keyVar = $valueVar;
                 }
-            }
-            else
+            } else
                 $view = $viewFront;
-
         }
-//        dump($view);exit;
+
         return $view;
     }
 
@@ -272,34 +262,76 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         $pageId = (!empty($this->pluginConfig['front']['pageId'])) ? $this->pluginConfig['front']['pageId'] : null;
         // This overides the pageId if the plugin requesting is MelisTag
         $pageId = (!empty($this->pluginConfig['front']['tagPageId'])) ? $this->pluginConfig['front']['tagPageId'] : $pageId;
-        if (empty($pageId) || empty($id))
-        {
+        if (empty($pageId) || empty($id)) {
             // The plugin is not used with a pageId an item id, so nothing to get in DB
             return;
         }
+
+        $searchXmlKey = function ($xml, $keyToFind) use (&$searchXmlKey) {
+
+            foreach ($xml->children() as $child) {
+
+                if ((string)$child->attributes()->id === $keyToFind) {
+                    // dump($keyToFind, $child->asXml());
+                    return $child->asXml();
+                }
+
+                // Recursive call on child
+                $result = $searchXmlKey($child, $keyToFind);
+                if ($result !== '') {
+                    return $result;
+                }
+            }
+            return '';
+        };
 
         $datasPage = array();
         $valueSetted = false;
         if ($this->renderMode == 'front')
             $datasPage = $melisPage->getDatasPage($pageId, 'published');
-        else
-        {
+        else {
             // Melis BO's display, first check if there's something in session
             $container = new Container('meliscms');
-            if (!empty($container['content-pages'][$pageId]) && !$this->previewMode)
-            {
-                if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
-                    $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
-                else
-                    $this->pluginXmlDbValue = '';
+            if (!empty($container['content-pages'][$pageId]) && !$this->previewMode) {
+
+                $this->pluginXmlDbValue = '';
+
+                // check plugin if from dragdropzone
+                if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+
+                    if ($this->pluginConfig['front']['isInnerDragDropZone']) {
+
+                        if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
+                            $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
+                        else {
+
+                            $dndData = $container['content-pages'][$pageId][$this->pluginXmlDbKey];
+
+                            foreach ($dndData as $k => $xmlData) {
+
+                                // search plugin xml data
+                                $pluginXml = $searchXmlKey(simplexml_load_string($xmlData), $id);
+
+                                if ($pluginXml) {
+                                    $this->pluginXmlDbValue = $pluginXml;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey] ?? '';
+                    }
+                } else {
+
+                    if (!empty($container['content-pages'][$pageId][$this->pluginXmlDbKey][$id]))
+                        $this->pluginXmlDbValue = $container['content-pages'][$pageId][$this->pluginXmlDbKey][$id];
+                }
+
                 $valueSetted = true;
-            }
-            else
-            {
+            } else {
                 $datasPage = $melisPage->getDatasPage($pageId, 'saved');
             }
         }
-
 
         $datasPageTree = array();
         if (!empty($datasPage))
@@ -325,17 +357,31 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             $xmlPage = $datasPageTree['page_content'];
             $xml = simplexml_load_string($xmlPage);
 
-            if ($xml)
-            {
-                foreach ($xml as $namePlugin => $valuePlugin)
-                {
-                    if ($namePlugin == $this->pluginXmlDbKey)
-                    {
-                        if (!empty($valuePlugin->attributes()->id) &&
-                            (string)$valuePlugin->attributes()->id == $id)
-                        {
-                            $this->pluginXmlDbValue = $valuePlugin->asXML();
-                            break;
+            // if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+
+            //     dump($xml->asXML());
+            //     dump('pluginFrontConfig', $this->pluginConfig);
+            // }
+
+            if ($xml) {
+                // check plugin if from dragdropzone
+                if ($this->pluginXmlDbKey == 'melisDragDropZone') {
+
+                    if ($this->pluginConfig['front']['isInnerDragDropZone'])
+                        $this->pluginXmlDbValue = $searchXmlKey($xml, $id);
+                    else
+                        $this->pluginXmlDbValue = $xml->asXML();
+                } else {
+
+                    foreach ($xml as $namePlugin => $valuePlugin) {
+                        if ($namePlugin == $this->pluginXmlDbKey) {
+                            if (
+                                !empty($valuePlugin->attributes()->id) &&
+                                (string)$valuePlugin->attributes()->id == $id
+                            ) {
+                                $this->pluginXmlDbValue = $valuePlugin->asXML();
+                                break;
+                            }
                         }
                     }
                 }
@@ -345,20 +391,21 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
     protected function getPluginWidths()
     {
-        $xml = simplexml_load_string($this->pluginXmlDbValue);
-        if ($xml) {
-            if(!empty($xml->attributes()->width_desktop))
-                $this->widthDesktop = (string) $xml->attributes()->width_desktop;
+        if (is_string($this->pluginXmlDbValue)) {
+            $xml = simplexml_load_string($this->pluginXmlDbValue);
+            if ($xml) {
+                if (!empty($xml->attributes()->width_desktop))
+                    $this->widthDesktop = (string) $xml->attributes()->width_desktop;
 
-            if(!empty($xml->attributes()->width_tablet))
-                $this->widthTablet  = (string) $xml->attributes()->width_tablet;
+                if (!empty($xml->attributes()->width_tablet))
+                    $this->widthTablet  = (string) $xml->attributes()->width_tablet;
 
-            if(!empty($xml->attributes()->width_mobile))
-                $this->widthMobile  = (string) $xml->attributes()->width_mobile;
+                if (!empty($xml->attributes()->width_mobile))
+                    $this->widthMobile  = (string) $xml->attributes()->width_mobile;
 
-            if (!empty($xml->attributes()->plugin_container_id))
-                $this->pluginContainerId = (string) $xml->attributes()->plugin_container_id;
-
+                if (!empty($xml->attributes()->plugin_container_id))
+                    $this->pluginContainerId = (string) $xml->attributes()->plugin_container_id;
+            }
         }
     }
 
@@ -464,12 +511,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         } else $this->fullTemplateList = array($finalConfig['template_path']);
 
         // Generate pluginId if needed
-        if ($generatePluginId) {$newPluginId = time();
+        if ($generatePluginId) {
+            $newPluginId = time();
             if (!empty($finalConfig['id']))
                 $newPluginId = $finalConfig['id'] . '_' . $newPluginId;
             $finalConfig['id'] = $newPluginId;
         }
 
+        // dump($finalConfig['id']);
         $this->pluginConfig['front'] = $finalConfig;
 
 
@@ -480,10 +529,9 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
         // Getting JS/CSS files for auto adding in front and back if necessary
         $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
-//        $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
-        if ($this->renderMode == 'melis')
-        {
-//            $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
+        //        $this->savePluginRessources('plugins_front', $this->pluginFrontConfig);
+        if ($this->renderMode == 'melis') {
+            //            $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
             $this->savePluginRessources('plugins_melis', $this->pluginBackConfig);
         }
     }
@@ -504,7 +552,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         if (!empty($newPluginConfig)) {
             $excludeParams = (!empty($pluginConfig['sub_plugins_params'])) ? $pluginConfig['sub_plugins_params'] : array();
 
-            foreach ($pluginConfig As $key => $val) {
+            foreach ($pluginConfig as $key => $val) {
                 if (!in_array($key, ArrayUtils::merge($excludeParams, array('sub_plugins_params', 'forms')))) {
                     /*
                      * Checking if the key is exisitng on the new config
@@ -561,10 +609,10 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         /**
          * check if js or css are already in the file list
          */
-        if(!empty($files)){
+        if (!empty($files)) {
             $tempArray = array();
-            foreach($files as $key => $val){
-                foreach($val as $k => $v) {
+            foreach ($files as $key => $val) {
+                foreach ($val as $k => $v) {
                     if (!in_array($v, $tempArray)) {
                         array_push($tempArray, $v);
                     } else {
@@ -576,7 +624,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         }
 
         $this->getServiceManager()->get('templating_plugins')->setItem($keyRessource, $files);
-
     }
 
     public function translateAppConfig($array)
@@ -584,7 +631,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         $translator = $this->getServiceManager()->get('translator');
 
         $final = array();
-        foreach($array as $key => $value) {
+        foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $children = $this->translateAppConfig($value);
                 $final[$key] = $children;
@@ -603,22 +650,23 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
     public function sendViewResult($variables)
     {
 
-        if($variables instanceof JsonModel) {
+        if ($variables instanceof JsonModel) {
             // for JSON response
             $request           = $this->getServiceManager()->get('request');
             $variables         = $variables->getVariables();
             $pluginId          = $variables['pluginId'];
             $submittedPluginId = isset($variables['submittedPluginId']) ? $variables['submittedPluginId'] : '';
 
-            if( $request->isPost() &&
-                (!is_null($submittedPluginId) && ($pluginId == $submittedPluginId))) {
+            if (
+                $request->isPost() &&
+                (!is_null($submittedPluginId) && ($pluginId == $submittedPluginId))
+            ) {
                 // only return the JSON that we need, or the form that has been submitted.
                 unset($variables['submittedPluginId']);
                 $model = new JsonModel($variables);
                 return $model;
             }
-        }
-        else {
+        } else {
 
             $model = new ViewModel();
 
@@ -634,8 +682,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
             $viewRender = $this->getServiceManager()->get('ViewRenderer');
 
-            foreach ($variables as $keyVar => $valueVar)
-            {
+            foreach ($variables as $keyVar => $valueVar) {
                 // Sub plugin needs to render first before assigning to plugin viewmodel
                 if ($valueVar instanceof ViewModel)
                     $valueVar = $viewRender->render($valueVar);
@@ -643,19 +690,22 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                 $model->$keyVar = $valueVar;
             }
 
-            if (!empty($this->pluginFrontConfig['template_path']))
-            {
+            if (!empty($this->pluginFrontConfig['template_path'])) {
                 $config = $this->getServiceManager()->get('config');
                 // checking if at least the template is declared
-                if (!empty($config['view_manager']['template_map'][$this->pluginFrontConfig['template_path']]))
-                {
+                if (!empty($config['view_manager']['template_map'][$this->pluginFrontConfig['template_path']])) {
                     $model->setTemplate($this->pluginFrontConfig['template_path']);
-                }
-                else
+                } else
                     $model->setTemplate('melis-engine/plugins/notemplate');
-            }
-            else
+            } else
                 $model->setTemplate('melis-engine/plugins/notemplate');
+
+            if (!empty($this->pluginFrontConfig['pluginName']))
+                if ($this->pluginFrontConfig['pluginName'] == 'MelisFrontDragDropZonePlugin') {
+
+                    $model->dndId = $this->pluginFrontConfig['id'];
+                    $model->pageId = $this->pluginFrontConfig['pageId'];
+                }
 
             $model = $melisGeneralService->sendEvent($this->pluginName . '_melistemplating_plugin_end', array('view' => $model, 'pluginFrontConfig' => $this->pluginFrontConfig));
             //prepare global event incase we need to modify the view
@@ -664,7 +714,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             // Plugin config datas
             $model['view']->pluginConfig = $this->pluginFrontConfig;
 
-            if(isset($model['view']) && ($model['view'] instanceof ViewModel)) {
+            if (isset($model['view']) && ($model['view'] instanceof ViewModel)) {
                 // add with variables to plugin view
                 $model['view']->setVariables(array(
                     'widthDesktop'      => $this->convertToCssClass('desktop', $this->widthDesktop),
@@ -716,17 +766,16 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
     public function getFormData()
     {
         // formats the configuration into single array, in order to fill-out the forms with the current pluginFrontConfig value
-        $configData  = function($arr, $data, $configData){
-            foreach($arr as $key => $items) {
-                if(is_array($items)) {
-                    foreach($items as $childKey => $childItems) {
-                        if(!is_array($childItems)) {
+        $configData  = function ($arr, $data, $configData) {
+            foreach ($arr as $key => $items) {
+                if (is_array($items)) {
+                    foreach ($items as $childKey => $childItems) {
+                        if (!is_array($childItems)) {
                             $data[$childKey] = $childItems;
                         }
                     }
                     $configData($items, $data, $configData);
-                }
-                else {
+                } else {
                     $data[$key] = $items;
                 }
             }
@@ -746,15 +795,15 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
     public function convertToCssClass($type, $width)
     {
         $className = null;
-        switch($type) {
+        switch ($type) {
             case 'desktop':
-                $className = 'plugin-width-lg-' .number_format( (float) $width, 2, '-', ',');
+                $className = 'plugin-width-lg-' . number_format((float) $width, 2, '-', ',');
                 break;
             case 'tablet':
-                $className = 'plugin-width-md-' .number_format( (float) $width, 2, '-', ',');
+                $className = 'plugin-width-md-' . number_format((float) $width, 2, '-', ',');
                 break;
             case 'mobile':
-                $className = 'plugin-width-xs-' .number_format( (float) $width, 2, '-', ',');
+                $className = 'plugin-width-xs-' . number_format((float) $width, 2, '-', ',');
                 break;
         }
 
@@ -772,8 +821,7 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
     {
         $reorderedConfigForm = $this->getOrderFormsConfig($formReorderKey);
 
-        if (!empty($appConfigForm) && !empty($appConfigForm['elements']))
-        {
+        if (!empty($appConfigForm) && !empty($appConfigForm['elements'])) {
             $elements = $appConfigForm['elements'];
             /*
              * Reverse order so we can take only the last definition of fields
@@ -789,19 +837,15 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
             $elementsReordered = array();
 
             // We first reorder elements depending on order defined.
-            if(isset($reorderedConfigForm['elements'])) {
-                foreach ($reorderedConfigForm['elements'] as $orderElement)
-                {
+            if (isset($reorderedConfigForm['elements'])) {
+                foreach ($reorderedConfigForm['elements'] as $orderElement) {
                     // find the element in original config
-                    foreach ($elements as $keyElement => $element)
-                    {
-                        if ($element['spec']['name'] == $orderElement['spec']['name'])
-                        {
+                    foreach ($elements as $keyElement => $element) {
+                        if ($element['spec']['name'] == $orderElement['spec']['name']) {
                             array_push($elementsReordered, $element);
 
                             // delete all elements with this name, we have the last one already
-                            foreach ($elements as $keyElementtmp => $elementTmp)
-                            {
+                            foreach ($elements as $keyElementtmp => $elementTmp) {
                                 if ($elementTmp['spec']['name'] == $orderElement['spec']['name'])
                                     unset($elements[$keyElementtmp]);
                             }
@@ -817,14 +861,11 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
 
             // We add items at the end that are in the config but not present in the custom order
             // and avoid those present more than once
-            foreach ($elements as $keyElement => $element)
-            {
-                if (!in_array($element['spec']['name'], $elementsFound))
-                {
+            foreach ($elements as $keyElement => $element) {
+                if (!in_array($element['spec']['name'], $elementsFound)) {
                     array_push($oldElementsReordered, $element);
                     array_push($elementsFound, $element['spec']['name']);
-                }
-                else
+                } else
                     continue;
             }
 
@@ -837,24 +878,19 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
         }
 
         // Let's merge well input_filters
-        if (!empty($appConfigForm) && !empty($appConfigForm['input_filter']))
-        {
+        if (!empty($appConfigForm) && !empty($appConfigForm['input_filter'])) {
             $inputFilters = $appConfigForm['input_filter'];
             $newInputFilters = array();
 
-            foreach ($inputFilters as $keyInputFilter => $inputFilter)
-            {
-                if (!empty($inputFilter['validators']))
-                {
+            foreach ($inputFilters as $keyInputFilter => $inputFilter) {
+                if (!empty($inputFilter['validators'])) {
                     $newValidators = array();
                     $foundValidators = array();
                     $validators = $inputFilter['validators'];
                     krsort($validators);
 
-                    foreach ($validators as $validator)
-                    {
-                        if (empty($foundValidators[$validator['name']]))
-                        {
+                    foreach ($validators as $validator) {
+                        if (empty($foundValidators[$validator['name']])) {
                             // Validator not yet added
                             array_push($newValidators, $validator);
                             $foundValidators[$validator['name']] = 1;
@@ -865,17 +901,14 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                     $inputFilter['validators'] = $newValidators;
                 }
 
-                if (!empty($inputFilter['filters']))
-                {
+                if (!empty($inputFilter['filters'])) {
                     $newFilters = array();
                     $foundFilters = array();
                     $filters = $inputFilter['filters'];
                     krsort($filters);
 
-                    foreach ($filters as $filter)
-                    {
-                        if (empty($foundFilters[$filter['name']]))
-                        {
+                    foreach ($filters as $filter) {
+                        if (empty($foundFilters[$filter['name']])) {
                             // Validator not yet added
                             array_push($newFilters, $filter);
                             $foundFilters[$filter['name']] = 1;
@@ -887,7 +920,6 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
                 }
 
                 array_push($newInputFilters, $inputFilter);
-
             }
 
             $appConfigForm['input_filter'] = $newInputFilters;
@@ -924,73 +956,72 @@ abstract class MelisTemplatingPlugin extends AbstractPlugin
     }
 
     /**
-	 * Clean strings from special characters
-	 * 
-	 * @param string $str
-	 */ 
-	public function cleanString($str)
-	{
-		$str = preg_replace("/[áàâãªä]/u", "a", $str);
-		$str = preg_replace("/[ÁÀÂÃÄ]/u", "A", $str);
-		$str = preg_replace("/[ÍÌÎÏ]/u", "I", $str);
-		$str = preg_replace("/[íìîï]/u", "i", $str);
-		$str = preg_replace("/[éèêë]/u", "e", $str);
-		$str = preg_replace("/[ÉÈÊË]/u", "E", $str);
-		$str = preg_replace("/[óòôõºö]/u", "o", $str);
-		$str = preg_replace("/[ÓÒÔÕÖ]/u", "O", $str);
-		$str = preg_replace("/[úùûü]/u", "u", $str);
-		$str = preg_replace("/[ÚÙÛÜ]/u", "U", $str);
-		$str = preg_replace("/[’‘‹›‚]/u", "'", $str);
-		$str = preg_replace("/[“”«»„]/u", '"', $str);
-		$str = str_replace("–", "-", $str);
-		$str = str_replace(" ", " ", $str);
-		$str = str_replace("ç", "c", $str);
-		$str = str_replace("Ç", "C", $str);
-		$str = str_replace("ñ", "n", $str);
-		$str = str_replace("Ñ", "N", $str);
-		$str = str_replace("'", "-", $str);
+     * Clean strings from special characters
+     * 
+     * @param string $str
+     */
+    public function cleanString($str)
+    {
+        $str = preg_replace("/[áàâãªä]/u", "a", $str);
+        $str = preg_replace("/[ÁÀÂÃÄ]/u", "A", $str);
+        $str = preg_replace("/[ÍÌÎÏ]/u", "I", $str);
+        $str = preg_replace("/[íìîï]/u", "i", $str);
+        $str = preg_replace("/[éèêë]/u", "e", $str);
+        $str = preg_replace("/[ÉÈÊË]/u", "E", $str);
+        $str = preg_replace("/[óòôõºö]/u", "o", $str);
+        $str = preg_replace("/[ÓÒÔÕÖ]/u", "O", $str);
+        $str = preg_replace("/[úùûü]/u", "u", $str);
+        $str = preg_replace("/[ÚÙÛÜ]/u", "U", $str);
+        $str = preg_replace("/[’‘‹›‚]/u", "'", $str);
+        $str = preg_replace("/[“”«»„]/u", '"', $str);
+        $str = str_replace("–", "-", $str);
+        $str = str_replace(" ", " ", $str);
+        $str = str_replace("ç", "c", $str);
+        $str = str_replace("Ç", "C", $str);
+        $str = str_replace("ñ", "n", $str);
+        $str = str_replace("Ñ", "N", $str);
+        $str = str_replace("'", "-", $str);
         $str = str_replace("’", "-", $str);
         $str = str_replace("/", "-", $str);
-		
-		$trans = get_html_translation_table(HTML_ENTITIES);
-		$trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
-		$trans[chr(131)] = '&fnof;';    // Latin Small Letter F With Hook
-		$trans[chr(132)] = '&bdquo;';    // Double Low-9 Quotation Mark
-		$trans[chr(133)] = '&hellip;';    // Horizontal Ellipsis
-		$trans[chr(134)] = '&dagger;';    // Dagger
-		$trans[chr(135)] = '&Dagger;';    // Double Dagger
-		$trans[chr(136)] = '&circ;';    // Modifier Letter Circumflex Accent
-		$trans[chr(137)] = '&permil;';    // Per Mille Sign
-		$trans[chr(138)] = '&Scaron;';    // Latin Capital Letter S With Caron
-		$trans[chr(139)] = '&lsaquo;';    // Single Left-Pointing Angle Quotation Mark
-		$trans[chr(140)] = '&OElig;';    // Latin Capital Ligature OE
-		$trans[chr(145)] = '&lsquo;';    // Left Single Quotation Mark
-		$trans[chr(146)] = '&rsquo;';    // Right Single Quotation Mark
-		$trans[chr(147)] = '&ldquo;';    // Left Double Quotation Mark
-		$trans[chr(148)] = '&rdquo;';    // Right Double Quotation Mark
-		$trans[chr(149)] = '&bull;';    // Bullet
-		$trans[chr(150)] = '&ndash;';    // En Dash
-		$trans[chr(151)] = '&mdash;';    // Em Dash
-		$trans[chr(152)] = '&tilde;';    // Small Tilde
-		$trans[chr(153)] = '&trade;';    // Trade Mark Sign
-		$trans[chr(154)] = '&scaron;';    // Latin Small Letter S With Caron
-		$trans[chr(155)] = '&rsaquo;';    // Single Right-Pointing Angle Quotation Mark
-		$trans[chr(156)] = '&oelig;';    // Latin Small Ligature OE
-		$trans[chr(159)] = '&Yuml;';    // Latin Capital Letter Y With Diaeresis
-		$trans['euro'] = '&euro;';    // euro currency symbol
-		ksort($trans);
-		
-		foreach ($trans as $k => $v) {
-			$str = str_replace($v, $k ?? '', $str);
-		}
-		
-		$str = strip_tags($str);
-		$str = html_entity_decode($str);
-		$str = preg_replace('/[^(\x20-\x7F)]*/','', $str);
-		$targets=array('\r\n', '\n', '\r', '\t');
-		$str = str_replace($targets, '', $str);
-		
-		return ($str);
-	}
 
+        $trans = get_html_translation_table(HTML_ENTITIES);
+        $trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
+        $trans[chr(131)] = '&fnof;';    // Latin Small Letter F With Hook
+        $trans[chr(132)] = '&bdquo;';    // Double Low-9 Quotation Mark
+        $trans[chr(133)] = '&hellip;';    // Horizontal Ellipsis
+        $trans[chr(134)] = '&dagger;';    // Dagger
+        $trans[chr(135)] = '&Dagger;';    // Double Dagger
+        $trans[chr(136)] = '&circ;';    // Modifier Letter Circumflex Accent
+        $trans[chr(137)] = '&permil;';    // Per Mille Sign
+        $trans[chr(138)] = '&Scaron;';    // Latin Capital Letter S With Caron
+        $trans[chr(139)] = '&lsaquo;';    // Single Left-Pointing Angle Quotation Mark
+        $trans[chr(140)] = '&OElig;';    // Latin Capital Ligature OE
+        $trans[chr(145)] = '&lsquo;';    // Left Single Quotation Mark
+        $trans[chr(146)] = '&rsquo;';    // Right Single Quotation Mark
+        $trans[chr(147)] = '&ldquo;';    // Left Double Quotation Mark
+        $trans[chr(148)] = '&rdquo;';    // Right Double Quotation Mark
+        $trans[chr(149)] = '&bull;';    // Bullet
+        $trans[chr(150)] = '&ndash;';    // En Dash
+        $trans[chr(151)] = '&mdash;';    // Em Dash
+        $trans[chr(152)] = '&tilde;';    // Small Tilde
+        $trans[chr(153)] = '&trade;';    // Trade Mark Sign
+        $trans[chr(154)] = '&scaron;';    // Latin Small Letter S With Caron
+        $trans[chr(155)] = '&rsaquo;';    // Single Right-Pointing Angle Quotation Mark
+        $trans[chr(156)] = '&oelig;';    // Latin Small Ligature OE
+        $trans[chr(159)] = '&Yuml;';    // Latin Capital Letter Y With Diaeresis
+        $trans['euro'] = '&euro;';    // euro currency symbol
+        ksort($trans);
+
+        foreach ($trans as $k => $v) {
+            $str = str_replace($v, $k ?? '', $str);
+        }
+
+        $str = strip_tags($str);
+        $str = html_entity_decode($str);
+        $str = preg_replace('/[^(\x20-\x7F)]*/', '', $str);
+        $targets = array('\r\n', '\n', '\r', '\t');
+        $str = str_replace($targets, '', $str);
+
+        return ($str);
+    }
 }
