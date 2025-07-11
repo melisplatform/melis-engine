@@ -402,4 +402,31 @@ class MelisGenericTable
 
         return $raw;
     }
+
+    public function getByFields($fields)
+    {
+        $select = $this->getTableGateway()->getSql()->select();
+
+        if (is_array($fields))
+            $select->where($fields);
+        else
+            $select->limit(0);
+
+        return $this->getTableGateway()->selectWith($select);
+    }
+
+    public function getAdapter()
+    {
+        return $this->getTableGateway()->getAdapter();
+    }
+
+    public function getSelect()
+    {
+        return $this->getTableGateway()->getSql()->select();
+    }
+
+    public function select($select)
+    {
+        return $this->getTableGateway()->selectWith($select);
+    }
 }
