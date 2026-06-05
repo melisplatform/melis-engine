@@ -47,7 +47,7 @@ class MelisPagePublishedTable extends MelisGenericTable
      * @param int|null $siteId
      * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
-    public function getPagesByType(string $pageType = null, int $siteId = null)
+    public function getPagesByType(?string $pageType = null, ?int $siteId = null)
     {
         $select = $this->tableGateway->getSql()->select();
 
