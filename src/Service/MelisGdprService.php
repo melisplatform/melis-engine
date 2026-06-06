@@ -27,10 +27,10 @@ class MelisGdprService extends MelisGeneralService
      * @return mixed
      */
     public function saveBanner(
-        int $bannerId = null,
+        ?int $bannerId = null,
         string $content = '',
-        int $siteId = null,
-        int $langId = null
+        ?int $siteId = null,
+        ?int $langId = null
     )
     {
         // Event parameters prepare
@@ -73,7 +73,7 @@ class MelisGdprService extends MelisGeneralService
         return $arrayParameters['results'];
     }
 
-    public function deleteBannerById(int $bannerId = null)
+    public function deleteBannerById(?int $bannerId = null)
     {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
@@ -106,7 +106,7 @@ class MelisGdprService extends MelisGeneralService
      * @param int|null $langId
      * @return mixed
      */
-    public function getGdprBannerText(int $siteId = null, int $langId = null)
+    public function getGdprBannerText(?int $siteId = null, ?int $langId = null)
     {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
