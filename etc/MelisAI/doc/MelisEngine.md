@@ -210,6 +210,59 @@ page id + mode. MelisFront caches rendered pages here; MelisCms invalidates them
   publish copies saved→published and clears the page cache.
 - **Tool modules**: also consume gateways — e.g. *site-robot* via `MelisEngineTableRobot`.
 
+## B-ex. Developer recipes (examples)
+
+**Read a page and navigate the tree** (the two services you'll use most):
+
+```php
+$pageSvc = $sm->get('MelisEnginePage');
+$page    = $pageSvc->getDatasPage($idPage);            // 'published' (live) by default
+$draft   = $pageSvc->getDatasPage($idPage, 'saved');   // the working draft
+// $page->getMelisPageTree(), ->getMelisPage(), ->getMelisPageSeo() … hydrated objects
+
+$tree       = $sm->get('MelisEngineTree');
+$children   = $tree->getPageChildren($idPage, 1);       // 1 = published only
+$breadcrumb = $tree->getPageBreadcrumb($idPage);
+$url        = $tree->getPageLink($idPage, true);        // true = absolute
+```
+
+**Read/write through a table gateway** (never raw SQL):
+
+```php
+$seoTable = $sm->get('MelisEngineTablePageSeo');
+$seo      = $seoTable->getEntryByField('plang_page_id', $idPage)->current();   // a row
+$seoTable->save(['seo_meta_title' => 'New title'], $existingSeoId);            // upsert
+```
+
+**Resolve a site from a domain / get a template:**
+
+```php
+$site = $sm->get('MelisEngineSiteDomainService')->getSiteByDomain('www.example.com');
+$tpl  = $sm->get('MelisEngineTemplateService')->getTemplate($tplId);
+```
+
+**Cache a computed result:**
+
+```php
+$cache = $sm->get('MelisEngineCacheSystem');
+$cache->setCacheByKey('mykey', 'my_cache_config', $value);
+$value = $cache->getCacheByKey('mykey', 'my_cache_config');
+$cache->deleteCacheByPrefix('page_' . $idPage, 'meliscms_page');   // invalidate a page
+```
+
+**Listen to a service event** (engine services extend `MelisGeneralService`):
+
+```php
+$sharedEvents->attach('MelisEngine', 'melisengine_page_getdatas_end', function ($e) {
+    $p = $e->getParams();          // includes the page id and the 'results'
+    // alter $p['results'] before it's returned, etc.
+}, 50);
+```
+
+**Build a content block:** subclass `MelisEngine\Controller\Plugin\MelisTemplatingPlugin`,
+implement `front()` (live render) and rely on the base for `back()` (BO container), config
+XML persistence and preview. See the News/Slider module docs for end-to-end examples.
+
 ## B9. Quick code map
 
 ```
