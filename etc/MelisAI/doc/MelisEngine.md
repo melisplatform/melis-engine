@@ -2,76 +2,87 @@
 title: MelisEngine module
 package: melisplatform/melis-engine
 doc_type: module-documentation
-audience: ai
+audience: [users, developers, ai]
 language: en
 module_version: unversioned   # no `version` field in composer.json; this doc tracks the current source
 last_reviewed: 2026-06-08
 maintainer: Melis Technology
-keywords: [engine, cms, core, pages, templates, sites, languages, domains, seo, cache, table-gateway, rendering, melis]
+keywords: [engine, cms, core, pages, templates, sites, languages, domains, seo, cache, table-gateway, rendering, plugin-base, melis]
 screenshots_dir: ./images
 ---
 
-# MelisEngine Module — Functional Documentation (for AI)
+# MelisEngine — Functional & Technical Documentation (for AI)
 
-> **Purpose of this document**: describe, functionally and technically, the
-> `melisplatform/melis-engine` module, so that an AI (or a developer) can understand
-> *what the module does*, *which services and models it provides*, *how they work* and
-> *where the corresponding code lives*.
+> **What this is.** MelisEngine is the **shared foundation** beneath the Melis website
+> platform. It is **invisible to end-users** — it has no screen of its own — but it is what
+> makes everything work: it **stores all the website data** (pages, sites, templates,
+> languages, SEO, styles…), provides the **services** that read and render that data, runs the
+> **cache** that keeps pages fast, and defines the **content-block (plugin) framework** that the
+> back-office and the front-office both build on.
 >
-> **Audience**: consumed by the **MelisAI** module (a MelisPlatform module that exposes an
-> MCP function to answer user questions). MelisAI fetches this `.md` file on demand.
+> **How this document is organised — two clearly separated parts:**
+> - **[Part A — Functional Guide](#part-a--functional-guide)** — a short, plain-language
+>   explanation of what MelisEngine is and why it matters (for the chat assistant to answer
+>   "what is the engine / where is my page data / why are pages cached").
+> - **[Part B — Technical Reference](#part-b--technical-reference)** — the substantial part: the
+>   data model, table gateways, services, caching, the plugin base class, and how the siblings
+>   consume it. **This is the doc to read before building anything in the platform.**
 >
-> **Status**: reviewed 2026-06-08 against the current source. The module carries no
-> semantic version (no `version` in `composer.json`).
->
-> **No screenshots**: MelisEngine is a **headless technical layer** — it has no back-office
-> tool UI of its own, so this doc has no `images/`. The visible UIs that use it live in the
-> [MelisCms](../../../melis-cms/etc/MelisAI/doc/MelisCms.md) (back-office) and
-> [MelisFront](../../../melis-front/etc/MelisAI/doc/MelisFront.md) (front rendering) docs.
+> **Audience**: consumed by the **MelisAI** module (an MCP that answers user questions and may be
+> used by an AI to build things). **No screenshots** — MelisEngine has no UI.
 
 ---
-
-## 0. The MelisCms / MelisFront / MelisEngine trio
-
-These three modules are the heart of the Melis website platform and **must be understood
-together**:
-
-- **MelisEngine** *(this module)* — the **shared technical layer**: it owns the **CMS
-  database model** (pages, templates, sites, languages, domains, SEO, styles…), exposes it
-  through **table gateways** and **services**, provides the **caching system**, and defines
-  the **templating-plugin base class** that both siblings extend.
-- **MelisFront** — the **front-office rendering system** that displays the public websites
-  (routing a URL → a page, running the render pipeline, templating plugins, SEO, assets).
-- **MelisCms** — the **back-office** to build/administer those websites (page tree, page
-  editor, sites, templates, styles, languages…).
-
-**Dependency / load order** (from the `composer.json` of each): `melis-core` → **melis-front**
-→ **melis-engine** → **melis-cms**. Notably, **melis-engine requires melis-front**, and
-**melis-cms requires both melis-engine and melis-front**. In practice: **MelisCms and
-MelisFront both read and write the CMS data exclusively through MelisEngine** — neither owns
-database tables; MelisEngine is the single source of truth for the page/site model.
-
-```
-            ┌─────────────┐   edits via services/tables   ┌──────────────┐
-            │  MelisCms    │ ────────────────────────────▶ │              │
-            │ (back-office)│                                │  MelisEngine │  owns the DB model
-            └─────────────┘                                │  (data +     │  (pages, sites,
-            ┌─────────────┐   renders via services/tables  │   services + │   templates, SEO…)
-            │  MelisFront  │ ────────────────────────────▶ │   cache)     │  + plugin base class
-            │ (front render)│                               └──────────────┘
-            └─────────────┘
-```
-
 ---
 
-## 1. Overview
+# PART A — Functional Guide
 
-`MelisEngine` is the **shared data + services + caching foundation** of the Melis CMS. It
-defines and owns the entire CMS database schema and provides a unified, cached access layer
-over it (the **`MelisEngineTable*`** gateways and the **`MelisEngine*`** services), the
-**page-rendering services** that resolve a page to its template/content, and the abstract
-**`MelisTemplatingPlugin`** contract that all front-office and back-office content plugins
-extend.
+*Short, because MelisEngine has no screens. It's the engine room.*
+
+## A1. What MelisEngine is (in plain words)
+
+Think of a Melis website as having three layers:
+
+- **MelisCms** — the **back-office** where you build and manage sites and pages (the steering wheel).
+- **MelisFront** — the system that **shows the website** to visitors (the bodywork & wheels).
+- **MelisEngine** *(this module)* — the **engine and fuel tank**: it holds **all the data** and
+  the machinery both of the others rely on.
+
+You never click "MelisEngine" anywhere — but every time you create a page, switch a language,
+choose a template, or see a page load quickly, MelisEngine is doing the work underneath.
+
+## A2. What lives in MelisEngine (so you know where things are)
+
+- **Your pages** — both the **published** (live) version and the **draft (saved)** version of
+  every page.
+- **The page tree** — the hierarchy of pages under each site.
+- **Your sites** — names, **domains** (web addresses), and which **languages** they use.
+- **Templates** (page layouts) and **styles** (CSS).
+- **SEO** — each page's URL, redirects and meta tags.
+- **Caching** — pre-rendered pages kept ready so visitors get fast responses.
+
+So, e.g., "where is my page content stored?" → in MelisEngine's page tables; "why did my change
+not appear?" → the engine's page **cache** refreshes when you **publish**.
+
+## A3. Why this matters to you
+
+- **Drafts are safe** — because the engine keeps *published* and *saved* versions separate, you
+  can edit freely and only affect visitors when you **publish**.
+- **Multilingual & multi-site** — the engine models pages per language and per site, so one
+  installation can run many sites in many languages.
+- **Speed** — the engine's cache is why pages load fast; publishing clears the relevant cache so
+  your edits go live.
+
+For anything beyond this — building, integrating, troubleshooting — use **Part B**.
+
+---
+---
+
+# PART B — Technical Reference
+
+*For developers and AI. This is the module that owns the CMS data model and the services the
+whole platform builds on.*
+
+## B1. Module metadata & dependencies
 
 | Item | Value |
 |---|---|
@@ -82,192 +93,151 @@ extend.
 | License | OSL-3.0 |
 | PHP required | `^8.1 | ^8.3` |
 | dbdeploy | `true` |
-| Cache | **laminas-cache** (filesystem + memory adapters) |
+| Cache | laminas-cache (filesystem + memory) |
 
-### Dependencies (`composer.json`)
+Dependencies: `melisplatform/melis-core`, `melisplatform/melis-front` (engine loads after
+front), `laminas/laminas-cache` + filesystem/memory adapters.
 
-- `melisplatform/melis-core` (`^5.2`) — base services, events, rights, the `MelisGeneralService` base
-- `melisplatform/melis-front` (`^5.2`) — engine loads **after** front (see §0)
-- `laminas/laminas-cache` + filesystem/memory storage adapters — the caching system
+## B2. The trio & load order
 
----
+`melis-core` → `melis-front` → **`melis-engine`** → `melis-cms`. **MelisEngine owns the CMS DB
+model**; **MelisFront renders from it**; **MelisCms edits through it**. Neither sibling owns
+tables — engine is the single source of truth. (See the
+[MelisCms](../../../melis-cms/etc/MelisAI/doc/MelisCms.md) and
+[MelisFront](../../../melis-front/etc/MelisAI/doc/MelisFront.md) docs.)
 
-## 2. The CMS data model (owned by MelisEngine)
+```
+  MelisCms (BO) ─┐  read/write via gateways+services   ┌─ MelisEngine ─┐
+                 ├────────────────────────────────────▶│  DB model +    │
+  MelisFront ────┘  render via gateways+services        │  services +    │
+                                                         │  cache + plugin│
+                                                         │  base class    │
+                                                         └────────────────┘
+```
 
-MelisEngine owns the CMS database tables. The most important domain tables:
+## B3. The CMS data model (owned here)
+
+Key tables (base: `install/sql/setup_structure.sql`; model: `install/sql/Model/`):
 
 | Table | Role |
 |---|---|
-| `melis_cms_page_tree` | The **page hierarchy** (parent `tree_father_page_id`, order) — the tree of every site |
-| `melis_cms_page_published` | **Published** page version (live content shown on the front) |
-| `melis_cms_page_saved` | **Saved/draft** page version (the working copy edited in the BO) |
-| `melis_cms_page_lang` | Page ↔ language links (multilingual page versions) |
+| `melis_cms_page_tree` | Page hierarchy (parent `tree_father_page_id`, order) |
+| `melis_cms_page_published` | Published (live) page version |
+| `melis_cms_page_saved` | Saved/draft page version (edited in the BO) |
+| `melis_cms_page_lang` | Page ↔ language links (multilingual versions) |
 | `melis_cms_lang` | CMS languages/locales |
-| `melis_cms_site` | **Sites** (the root container of pages) |
-| `melis_cms_template` | **Templates** (layout/controller/action or PHP path) per site |
-| `melis_cms_page_seo` | Per-page **SEO** (URL, redirect, 301, meta title/description, canonical) |
-| `melis_cms_site_domain` | Site **domains** (per environment) |
-| `melis_cms_site_301` / `melis_cms_site_404` | Site-level 301 redirects / 404 page mapping |
+| `melis_cms_site` | Sites (root of pages) |
+| `melis_cms_template` | Templates (layout/controller/action or PHP path) |
+| `melis_cms_page_seo` | Per-page SEO (URL, redirect/301, meta title/description, canonical) |
+| `melis_cms_site_domain` | Site domains per environment |
+| `melis_cms_site_301` / `melis_cms_site_404` | Site 301 redirects / 404 mapping |
 | `melis_cms_page_default_urls` | Pre-computed page URLs (cache table) |
-| `melis_cms_style` / `melis_cms_page_style` | Site **styles (CSS)** and page↔style links |
+| `melis_cms_style` / `melis_cms_page_style` | Styles (CSS) and page↔style links |
 | `melis_cms_platform_ids` | Page-id allocation ranges per environment |
-| `melis_cms_site_config` / `melis_cms_site_home` / `melis_cms_site_langs` | Site config / home page per lang / active languages |
-| `melis_cms_site_robot` | robots.txt content per domain (managed by the *site-robot* module, gateway here) |
-| `melis_cms_mini_tpl_*` | Mini-template categories / templates / flags |
+| `melis_cms_site_config` / `_home` / `_langs` | Site config / home per lang / active languages |
+| `melis_cms_site_robot` | robots.txt per domain (edited by the *site-robot* module) |
+| `melis_cms_mini_tpl_*` | Mini-template categories/templates/flags |
 | `melis_cms_gdpr_texts` | GDPR banner texts per site/language |
 | `melis_site_translation` / `_text` | Site-wide translation strings |
 
-- Base structure: `install/sql/setup_structure.sql`; model: `install/sql/Model/`.
+### Table gateways (`src/Model/Tables`) — the only sanctioned data path
 
-### Table gateways (`src/Model/Tables`)
+Registered as `service_manager` aliases. Other modules read/write **only** through these (never
+raw SQL): `MelisEngineTablePageTree`, `…PagePublished`, `…PageSaved`, `…PageLang`,
+`MelisEngineTableCmsLang`, `…Site`, `…Template`, `…PageSeo`, `…SiteDomain`, `…Site301`, `…Site404`,
+`…Style`, `…PageStyle`, `…PlatformIds`, `…PageDefaultUrls`, `…CmsSiteHome`, `…CmsSiteLangs`,
+`…CmsSiteConfig`, `…Robot`, `…FlaggedTemplate`, `…CmsSiteBundle`. They extend a generic table base
+(`getEntryById`, `getEntryByField`, `save`, `deleteById`, `fetchAll`…).
 
-Registered as `service_manager` aliases in `config/module.config.php`. Other modules read and
-write **only** through these (never raw SQL). Key gateways:
-
-`MelisEngineTablePageTree`, `MelisEngineTablePagePublished`, `MelisEngineTablePageSaved`,
-`MelisEngineTablePageLang`, `MelisEngineTableCmsLang`, `MelisEngineTableSite`,
-`MelisEngineTableTemplate`, `MelisEngineTablePageSeo`, `MelisEngineTableSiteDomain`,
-`MelisEngineTableSite301`, `MelisEngineTableSite404`, `MelisEngineTableStyle`,
-`MelisEngineTablePageStyle`, `MelisEngineTablePlatformIds`, `MelisEngineTablePageDefaultUrls`,
-`MelisEngineTableCmsSiteHome`, `MelisEngineTableCmsSiteLangs`, `MelisEngineTableCmsSiteConfig`,
-`MelisEngineTableRobot`, `MelisEngineTableFlaggedTemplate`, `MelisEngineTableCmsSiteBundle`.
-
-They extend a generic table base (CRUD: `getEntryById`, `getEntryByField`, `save`,
-`deleteById`, `fetchAll`, …).
-
----
-
-## 3. Services (`src/Service`)
-
-Registered as `service_manager` aliases. The most important:
+## B4. Services (`src/Service`)
 
 | Service alias | Role |
 |---|---|
-| `MelisEnginePage` (`MelisPageService`) | **Resolve a page**: full page data (tree + template + SEO + lang + style) for a page id and a mode (`published` / `saved`), with caching — `getDatasPage()` |
-| `MelisEngineTree` (`MelisTreeService`) | **Page-tree navigation**: `getPageChildren()`, `getPageFather()`, `getPageBreadcrumb()`, `getPageLink()`, search by value |
-| `MelisEngineTemplateService` | Template lookup (`getTemplate($tplId)`) with cache |
-| `MelisEngineSiteService` | Site data: `getSiteById()`, `getSiteDataByDomain()`, home page per lang |
-| `MelisEngineSiteDomainService` | Domain → site resolution |
-| `MelisEngineLang` (`MelisEngineLangService`) | Languages: available languages, locale ↔ lang id, site language |
-| `MelisEngineSEOService` | Per-page SEO data (`getSEOById()`) |
+| `MelisEnginePage` (`MelisPageService`) | Resolve a page (tree+template+SEO+lang+style) by id & mode (`published`/`saved`), cached — `getDatasPage()` |
+| `MelisEngineTree` (`MelisTreeService`) | Tree nav: `getPageChildren()`, `getPageFather()`, `getPageBreadcrumb()`, `getPageLink()`, search |
+| `MelisEngineTemplateService` | Template lookup (`getTemplate()`), cached |
+| `MelisEngineSiteService` / `MelisEngineSiteDomainService` | Site data / domain → site |
+| `MelisEngineLang` (`MelisEngineLangService`) | Languages: available, locale ↔ id, site language |
+| `MelisEngineSEOService` | Per-page SEO (`getSEOById()`) |
 | `MelisEnginePageDefaultUrlsService` | Pre-computed page URL lookups |
 | `MelisEngineStyle` (`MelisEngineStyleService`) | Site styles / page CSS |
-| `MelisEngineCacheSystem` (`MelisEngineCacheSystemService`) | **The cache orchestrator** (§5) |
-| `MelisSearch` (`MelisSearchService`) | Full-text search index (Lucene-style) — used by front search |
-| `MelisEngineSendMail` | Email sending utility |
+| `MelisEngineCacheSystem` | The cache orchestrator (§B6) |
+| `MelisSearch` | Full-text (Lucene-style) index used by front search |
+| `MelisEngineSendMail` | Email utility |
 | `MelisGdprService` / `MelisGdprAutoDeleteService` | GDPR banner texts / auto-delete framework |
-| `MelisEngineComposer` | Composer/dependency operations |
+| `MelisEngineComposer` | Composer/dependency ops |
 
-Many services extend `MelisCore`'s `MelisGeneralService`, so they fire `*_start` / `*_end`
-events (e.g. `melisengine_service_get_available_languages_start` / `_end`) that other modules
-can hook.
+Many extend MelisCore's `MelisGeneralService`, firing `*_start` / `*_end` events (e.g.
+`melisengine_service_get_available_languages_start`/`_end`) other modules can hook.
 
----
+## B5. The templating-plugin contract (the plugin base class)
 
-## 4. The templating-plugin contract
+`src/Controller/Plugin/MelisTemplatingPlugin.php` is the **abstract base for every content
+plugin** in the platform (MelisFront's Tag/Menu/Breadcrumb…, and tool-module plugins: News,
+Slider, Category2, Prospects…). It defines `front()` (render on the live site, abstract),
+`back()` (the BO container/edit view), config persistence in the page XML
+(`loadDbXmlToPluginConfig()` / `savePluginConfigToXml()`), GET/POST loading, preview mode and
+responsive width. **MelisFront renders** subclasses' `front()`; **MelisCms edits** via `back()`.
+Engine also ships form factories used across the BO: `MelisEnginePluginTemplateSelect`,
+`MelisEngineSiteSelect`.
 
-`src/Controller/Plugin/MelisTemplatingPlugin.php` is the **abstract base class for every
-content plugin** in the platform (the News/Slider/Category2 front plugins, the MelisFront
-Tag/Menu/Breadcrumb plugins, etc.). It defines:
+## B6. Caching
 
-- `front()` (abstract) — render the content block on the **live site** (implemented by each plugin)
-- `back()` — render the block's **back-office** container/edit view
-- config persistence in the page XML (`loadDbXmlToPluginConfig()` / `savePluginConfigToXml()`),
-  GET/POST data loading, preview mode and responsive width
+`MelisEngineCacheSystem` over laminas-cache, two tiers (config `caches`):
+- **Memory** (per-request): page/service/lang/plugin caches (`engine_memory_cache`,
+  `engine_page_services`, `engine_lang_services`, `templating_plugins`).
+- **Filesystem** (persistent, `../cache`): rendered page/template output (`engine_file_cache`,
+  `meliscms_page`), with serializer + non-throwing exception handler.
 
-This is the single seam through which **MelisFront renders** plugins and **MelisCms edits**
-them — both call into subclasses of this engine class.
+API: `getCacheByKey()` / `setCacheByKey()` / `deleteCacheByPrefix()`. Page caches are keyed by
+page id + mode. MelisFront caches rendered pages here; MelisCms invalidates them on publish/save.
 
-Engine also provides form factories used across the BO: `MelisEnginePluginTemplateSelect`
-(template dropdown) and `MelisEngineSiteSelect` (site dropdown).
+## B7. Controllers & listeners
 
----
+- **Controllers**: only setup/maintenance (`MelisSetup*`). No editing UI.
+- **Listeners** (`src/Listener`): two micro-service listeners hooking
+  `melis_core_microservice_amend_data` to expose tree/page methods (`getPageChildren`,
+  `getPageFather`, `getDomainByPageId`, `getDatasPage`) and inject domain-qualified URLs.
 
-## 5. Caching
+## B8. How the siblings consume MelisEngine
 
-MelisEngine centralizes caching through `MelisEngineCacheSystem` over **laminas-cache**, with
-two tiers configured in `config/module.config.php` (`caches`):
+- **Front render**: domain→site (`MelisEngineSiteDomainService`/`SiteService`) → page+template
+  (`MelisEnginePage`, `MelisEngineTemplateService`) → menus/links (`MelisEngineTree`) →
+  SEO/styles (`MelisEngineSEOService`, `MelisEngineStyle`) → cache (`MelisEngineCacheSystem`);
+  plugins extend `MelisTemplatingPlugin`.
+- **BO editing**: read/write the page model via gateways (`…PageTree`, `…PageSaved`,
+  `…PagePublished`, `…PageSeo`, `…PageLang`, `…PageStyle`, `…Template`, `…Site`, …) + services;
+  publish copies saved→published and clears the page cache.
+- **Tool modules**: also consume gateways — e.g. *site-robot* via `MelisEngineTableRobot`.
 
-- **Memory** adapters (per-request): page/service/lang/plugin result caches
-  (`engine_memory_cache`, `engine_page_services`, `engine_lang_services`, `templating_plugins`).
-- **Filesystem** adapters (persistent, on disk under `../cache`): rendered page / template
-  output (`engine_file_cache`, `meliscms_page`), with serializer + non-throwing exception
-  handler plugins.
-
-`getCacheByKey()` / `setCacheByKey()` / `deleteCacheByPrefix()` are the main entry points;
-page caches are keyed by page id + mode. **MelisFront** caches rendered pages here and
-**MelisCms** invalidates them on publish/save (see §7).
-
----
-
-## 6. Controllers & listeners
-
-- **Controllers**: only setup/maintenance controllers (`MelisSetup*` — install, post-download,
-  post-update). Engine has no editing UI.
-- **Listeners** (`src/Listener`): two micro-service listeners that hook
-  `melis_core_microservice_amend_data` to expose tree/page service methods
-  (`getPageChildren`, `getPageFather`, `getDomainByPageId`, `getDatasPage`) over the
-  micro-service bus and inject domain-qualified URLs into page content.
-
----
-
-## 7. How the siblings use MelisEngine (cross-module links)
-
-### Front rendering (MelisFront → MelisEngine)
-When a public URL is served, MelisFront resolves the page id, then asks engine:
-`MelisEngineSiteDomainService`/`MelisEngineSiteService` (domain → site),
-`MelisEnginePage::getDatasPage()` (page + template), `MelisEngineTemplateService` (template),
-`MelisEngineTree` (menus/breadcrumbs/links), `MelisEngineSEOService` (title/description/
-canonical), `MelisEngineStyle` (page CSS), and `MelisEngineCacheSystem` (cache the result).
-The page template then runs plugins that all extend engine's `MelisTemplatingPlugin`.
-
-### Back-office editing (MelisCms → MelisEngine)
-The BO page editor reads/writes the page model through engine gateways
-(`MelisEngineTablePageTree`, `…PageSaved`, `…PagePublished`, `…PageSeo`, `…PageLang`,
-`…PageStyle`, `…Template`, `…Site`, `…SiteDomain`, `…CmsLang`, `…PlatformIds`, …) and engine
-services. Publishing a page copies `melis_cms_page_saved` → `melis_cms_page_published` and the
-engine page cache is invalidated.
-
-### Module-data classification
-Other tool modules also consume engine gateways — e.g. **melis-cms-site-robot** edits
-`melis_cms_site_robot` via `MelisEngineTableRobot`; SEO-aware modules read `…PageSeo`.
-
----
-
-## 8. Quick code map
+## B9. Quick code map
 
 ```
 melis-engine/
 ├── composer.json                 → deps (core + front + laminas-cache), category cms, dbdeploy
-├── config/module.config.php      → service & table-gateway aliases, caches, form factories, routes
+├── config/module.config.php      → service & table-gateway aliases, caches, form factories
 ├── src/
 │   ├── Module.php                → bootstrap, micro-service listeners
 │   ├── Model/Tables/             → 30+ MelisEngineTable* gateways (the CMS data model)
 │   ├── Model/Hydrator/           → page/result hydrators
-│   ├── Service/ (+ Factory/)     → MelisEnginePage, MelisEngineTree, Template, Site, Lang, Cache, SEO, Style, Search, Gdpr…
-│   ├── Controller/ (+ Plugin/)   → setup controllers + MelisTemplatingPlugin (the plugin base class)
+│   ├── Service/ (+ Factory/)     → Page, Tree, Template, Site, Lang, Cache, SEO, Style, Search, Gdpr…
+│   ├── Controller/ (+ Plugin/)   → setup controllers + MelisTemplatingPlugin (plugin base class)
 │   ├── Form/Factory/             → MelisEnginePluginTemplateSelect, MelisEngineSiteSelect
 │   └── Listener/                 → micro-service listeners (tree/page)
 ├── install/                      → SQL (setup_structure + dbdeploy) — the CMS schema
 └── etc/                          → MarketPlace + MelisAI/doc (this doc)
 ```
 
----
+## B10. Glossary
 
-## 9. Glossary (engine terms used across the trio)
-
-- **Page (published vs saved)** — every page has a *published* row (live) and a *saved* row
-  (draft being edited). Publishing copies saved → published.
-- **Page tree** — the hierarchy of pages under a site (`melis_cms_page_tree`).
-- **Template** — the layout/controller/action (or PHP file) that renders a page type.
-- **Site** — the root of a page tree, bound to one or more domains.
-- **Table gateway** — a `MelisEngineTable*` class wrapping one DB table; the only sanctioned
-  data access path for other modules.
-- **Templating plugin** — a content block extending `MelisTemplatingPlugin` with `front()` /
-  `back()`.
+- **Published vs saved** — live vs draft version of a page; publishing copies saved→published.
+- **Page tree** — the hierarchy under a site (`melis_cms_page_tree`).
+- **Template** — layout/controller/action (or PHP file) rendering a page type.
+- **Table gateway** — a `MelisEngineTable*` wrapping one table; the only data path for other modules.
+- **Templating plugin** — content block extending `MelisTemplatingPlugin` (`front()`/`back()`).
 
 ---
 
-*Document for AI consumption (MelisAI MCP) — describes the `melisplatform/melis-engine`
-module and its place in the MelisCms / MelisFront / MelisEngine trio. Last reviewed
-2026-06-08 against the current source.*
+*Document for AI consumption (MelisAI MCP) — `melisplatform/melis-engine`. Part A = short
+functional intro; Part B = the technical reference to read before building. Part of the
+MelisCms / MelisFront / MelisEngine trio. Last reviewed 2026-06-08.*
