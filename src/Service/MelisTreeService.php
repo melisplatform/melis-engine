@@ -621,7 +621,9 @@ class MelisTreeService extends MelisGeneralService implements MelisTreeServiceIn
 
 		$melisTree = $this->getServiceManager()->get('MelisEngineTree');
 		$sisters = $melisTree->getPageChildren($datasPagePublishedTree->tree_father_page_id, $publishedOnly);
-		$sisters = $sisters->toArray();
+		// getPageChildren() may return either a ResultSet (DB) or a plain array (cache hit) — normalize
+		// to an array so we never call ->toArray() on an array ("Call to a member function toArray() on array").
+		$sisters = (is_object($sisters) && method_exists($sisters, 'toArray')) ? $sisters->toArray() : (array) $sisters;
 
 		if (!empty($sisters)) {
 
