@@ -1,5 +1,10 @@
 <?php 
 	return array(
+    'tr_melisengine_ws_desc_page' => 'CMS page data: content, language versions and search.',
+    'tr_melisengine_ws_desc_tree' => 'Page tree: navigation, hierarchy and link/URL generation.',
+    'tr_melisengine_ws_desc_lang' => 'CMS languages: list, locale/id mapping and the site\'s current language.',
+    'tr_melisengine_ws_desc_pagedefaulturls' => 'Default (canonical) URL of a CMS page.',
+    'tr_melisengine_ws_desc_gdpr' => 'GDPR (cookie) consent banner texts, per site and language.',
 	    'tr_melis_engine_search_create_temp_folder' => 'Creating temporary folder for indexing: ',
 	    'tr_melis_engine_search_create_temp_folder_fail' => 'Unable to create temp folder, please check the rights of the main folder',
 	    

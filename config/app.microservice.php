@@ -4,6 +4,7 @@ return array(
 		'microservice' => array(
 			'MelisEngine' => array(
 				'MelisPageService' => array(
+				    '_description' => 'tr_melisengine_ws_desc_page',
 					/**
 					 * method getDatasPage
 					 * @param idPage (required)
@@ -56,8 +57,51 @@ return array(
 							),
 						),
 					),
+                    'searchPage' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'value', 'type' => 'Text', 'options' => array('label' => 'value'), 'attributes' => array('id' => 'value', 'value' => '', 'placeholder' => 'home', 'data-type' => 'string'))),
+                        ),
+                        'input_filter' => array(
+                            'value' => array('name' => 'value', 'required' => true, 'validators' => array(array('name' => 'NotEmpty')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getPageLanguageList' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'pageId', 'type' => 'Text', 'options' => array('label' => 'pageId'), 'attributes' => array('id' => 'pageId', 'value' => '', 'placeholder' => '10', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'pageId' => array('name' => 'pageId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getPageLanguageById' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'pageId', 'type' => 'Text', 'options' => array('label' => 'pageId'), 'attributes' => array('id' => 'pageId', 'value' => '', 'placeholder' => '10', 'data-type' => 'int'))),
+                            array('spec' => array('name' => 'langId', 'type' => 'Text', 'options' => array('label' => 'langId'), 'attributes' => array('id' => 'langId', 'value' => '', 'placeholder' => '1', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'pageId' => array('name' => 'pageId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                            'langId' => array('name' => 'langId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getPageById' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'idPage', 'type' => 'Text', 'options' => array('label' => 'idPage'), 'attributes' => array('id' => 'idPage', 'value' => '', 'placeholder' => '10', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'idPage' => array('name' => 'idPage', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
 				),
 				'MelisTreeService' => array(
+				    '_description' => 'tr_melisengine_ws_desc_tree',
 					/**
 					 * method getPageChildren
 					 * @param idPage (required)
@@ -625,7 +669,110 @@ return array(
 							),
 						),
 					),
+                    'getAllPages' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'idPage', 'type' => 'Text', 'options' => array('label' => 'idPage'), 'attributes' => array('id' => 'idPage', 'value' => '', 'placeholder' => '3', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'idPage' => array('name' => 'idPage', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getHomePageLink' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'idPage', 'type' => 'Text', 'options' => array('label' => 'idPage'), 'attributes' => array('id' => 'idPage', 'value' => '', 'placeholder' => '3', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'idPage' => array('name' => 'idPage', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getPageLinkByLocale' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'idPage', 'type' => 'Text', 'options' => array('label' => 'idPage'), 'attributes' => array('id' => 'idPage', 'value' => '', 'placeholder' => '3', 'data-type' => 'int'))),
+                            array('spec' => array('name' => 'locale', 'type' => 'Text', 'options' => array('label' => 'locale'), 'attributes' => array('id' => 'locale', 'value' => '', 'placeholder' => 'en_EN', 'data-type' => 'string'))),
+                        ),
+                        'input_filter' => array(
+                            'idPage' => array('name' => 'idPage', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                            'locale' => array('name' => 'locale', 'required' => true, 'validators' => array(array('name' => 'NotEmpty')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
 				),
+                'MelisEngineLangService' => array(
+                    '_description' => 'tr_melisengine_ws_desc_lang',
+                    'getLocaleByLangId' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'langId', 'type' => 'Text', 'options' => array('label' => 'langId'), 'attributes' => array('id' => 'langId', 'value' => '', 'placeholder' => '1', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'langId' => array('name' => 'langId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getLangByLocale' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'locale', 'type' => 'Text', 'options' => array('label' => 'locale'), 'attributes' => array('id' => 'locale', 'value' => '', 'placeholder' => 'en_EN', 'data-type' => 'string'))),
+                        ),
+                        'input_filter' => array(
+                            'locale' => array('name' => 'locale', 'required' => true, 'validators' => array(array('name' => 'NotEmpty')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getSiteLanguage' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => '_trigger', 'type' => 'Hidden', 'options' => array('label' => '_trigger'), 'attributes' => array('id' => '_trigger', 'value' => '1', 'placeholder' => '', 'data-type' => ''))),
+                        ),
+                        'input_filter' => array(
+                            '_trigger' => array('name' => '_trigger', 'required' => false, 'validators' => array(), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                    'getLangDataById' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'langId', 'type' => 'Text', 'options' => array('label' => 'langId'), 'attributes' => array('id' => 'langId', 'value' => '', 'placeholder' => '1', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'langId' => array('name' => 'langId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                ),
+                'MelisEnginePageDefaultUrlsService' => array(
+                    '_description' => 'tr_melisengine_ws_desc_pagedefaulturls',
+                    'getPageDefaultUrl' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'pageId', 'type' => 'Text', 'options' => array('label' => 'pageId'), 'attributes' => array('id' => 'pageId', 'value' => '', 'placeholder' => '10', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'pageId' => array('name' => 'pageId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                ),
+                'MelisGdprService' => array(
+                    '_description' => 'tr_melisengine_ws_desc_gdpr',
+                    'getGdprBannerText' => array(
+                        'attributes' => array('name' => 'microservice_form', 'id' => 'microservice_form', 'method' => 'POST', 'action' => $_SERVER['REQUEST_URI']),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                        'elements' => array(
+                            array('spec' => array('name' => 'siteId', 'type' => 'Text', 'options' => array('label' => 'siteId'), 'attributes' => array('id' => 'siteId', 'value' => '', 'placeholder' => '1', 'data-type' => 'int'))),
+                            array('spec' => array('name' => 'langId', 'type' => 'Text', 'options' => array('label' => 'langId'), 'attributes' => array('id' => 'langId', 'value' => '', 'placeholder' => '1', 'data-type' => 'int'))),
+                        ),
+                        'input_filter' => array(
+                            'siteId' => array('name' => 'siteId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                            'langId' => array('name' => 'langId', 'required' => true, 'validators' => array(array('name' => 'IsInt')), 'filters' => array(array('name' => 'StripTags'), array('name' => 'StringTrim'))),
+                        ),
+                    ),
+                ),
 			),
 		),
 	),

@@ -1,5 +1,10 @@
 <?php 
 	return array(
+    'tr_melisengine_ws_desc_page' => 'Données des pages CMS : contenu, versions linguistiques et recherche.',
+    'tr_melisengine_ws_desc_tree' => 'Arborescence des pages : navigation, hiérarchie et génération des liens et URL.',
+    'tr_melisengine_ws_desc_lang' => 'Langues du CMS : liste, correspondances locale/identifiant et langue courante du site.',
+    'tr_melisengine_ws_desc_pagedefaulturls' => 'URL par défaut (canonique) d\'une page CMS.',
+    'tr_melisengine_ws_desc_gdpr' => 'Textes de la bannière de consentement RGPD (cookies), par site et langue.',
 	    'tr_melis_engine_search_create_temp_folder' => 'Création d\'un dossier temporaire pour indéxer: ',
 	    'tr_melis_engine_search_create_temp_folder_fail' => 'Impossible de créer le dossier temporaire, veuillez vérifier les droits du dossier principal',
 	    

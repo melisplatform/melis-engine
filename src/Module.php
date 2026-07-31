@@ -86,7 +86,14 @@ class Module
     {
         $sm = $e->getApplication()->getServiceManager();
         $translator = $sm->get('translator');
-        
+
+        // Use the current back-office / API session locale instead of the hard-coded 'en_EN'
+        // default, so MelisEngine translations follow the selected language like every other module.
+        $container = new \Laminas\Session\Container('meliscore');
+        if (!empty($container['melis-lang-locale'])) {
+            $locale = $container['melis-lang-locale'];
+        }
+
         if (!empty($locale)){
             $translationType = [
                 'interface',

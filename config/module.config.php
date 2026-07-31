@@ -111,6 +111,7 @@ return [
             'MelisEngineCacheSystem'            => \MelisEngine\Service\MelisEngineCacheSystemService::class,
             'MelisEngineStyle'                  => \MelisEngine\Service\MelisEngineStyleService::class,
             'MelisEngineLang'                   => \MelisEngine\Service\MelisEngineLangService::class,
+            'MelisEngineLangService'            => \MelisEngine\Service\MelisEngineLangService::class,
             'MelisGdprService'                  => \MelisEngine\Service\MelisGdprService::class,
             'MelisEngineComposer'               => \MelisEngine\Service\MelisEngineComposerService::class,
             'MelisEngineTemplateService'        => \MelisEngine\Service\MelisEngineTemplateService::class,
