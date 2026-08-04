@@ -27,9 +27,15 @@ class PluginTemplateSelectFactory extends MelisSelectFactory
 		$module = (!empty($parameters['module'])) ? $parameters['module'] : '';
 		$pluginName = (!empty($parameters['pluginName'])) ? $parameters['pluginName'] : '';
 		$siteModule = (!empty($parameters['siteModule'])) ? $parameters['siteModule'] : '';
-		
+		// Sécurité : $siteModule (paramètre de requête) construit un chemin passé à require() →
+		// n'autoriser qu'un identifiant de module simple, sinon inclusion de fichier arbitraire
+		// (LFI/RCE via « ../ » pointant vers un .php quelconque écrivable).
+		if (!preg_match('/^[A-Za-z0-9_]+$/', (string) $siteModule)) {
+		    $siteModule = '';
+		}
+
 		$siteconfig = $_SERVER['DOCUMENT_ROOT'] . "/../module/MelisSites/$siteModule/config/$siteModule.config.php";
-		if (file_exists($siteconfig))
+		if ($siteModule !== '' && file_exists($siteconfig))
 		    $config = ArrayUtils::merge($config, require $siteconfig);
 		
 		if (empty($config['plugins'][$module]['plugins'][$pluginName]))
