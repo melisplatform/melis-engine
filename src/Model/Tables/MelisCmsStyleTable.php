@@ -84,7 +84,7 @@ class MelisCmsStyleTable extends MelisGenericTable
         $unfilteredData = $this->tableGateway->selectWith($select);
 
         if (!empty($orderBy)) {
-            $select->order($orderBy . ' ' . $orderDirection);
+            \MelisCore\Model\Tables\MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
         }
 
         if (!is_null($limit)) {
