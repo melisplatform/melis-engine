@@ -107,9 +107,10 @@ class MelisTemplateTable extends MelisGenericTable
 
         if (!empty($orderBy)) {
             if ($orderBy == 'tpl_type') {
-                $select->order(new Expression("CAST($orderBy AS CHAR) $orderDirection"));
+                // $orderBy is the literal 'tpl_type' here; only the direction needs whitelisting.
+                $select->order(new Expression('CAST(tpl_type AS CHAR) ' . \MelisCore\Model\Tables\MelisGenericTable::sqlSortDirection($orderDirection)));
             } else {
-                $select->order("$orderBy $orderDirection");
+                \MelisCore\Model\Tables\MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
             }
         }
 
