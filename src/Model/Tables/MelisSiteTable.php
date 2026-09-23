@@ -69,7 +69,7 @@ class MelisSiteTable extends MelisGenericTable
 
 
         if ($env != '')
-            $select->where("sdom_env = '$env'");
+            $select->where->equalTo('sdom_env', (string) $env);
 
         $resultSet = $this->tableGateway->selectWith($select);
 
@@ -140,7 +140,7 @@ class MelisSiteTable extends MelisGenericTable
         }
 
         if (!empty($orderBy)) {
-            $select->order($orderBy . ' ' . $orderDirection);
+            \MelisCore\Model\Tables\MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
         }
 
         if (!empty($limit)) {
