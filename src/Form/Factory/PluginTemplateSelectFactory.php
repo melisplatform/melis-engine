@@ -35,9 +35,16 @@ class PluginTemplateSelectFactory extends MelisSelectFactory
 		}
 
 		$siteconfig = $_SERVER['DOCUMENT_ROOT'] . "/../module/MelisSites/$siteModule/config/$siteModule.config.php";
-		if ($siteModule !== '' && file_exists($siteconfig))
+		if ($siteModule !== '' && file_exists($siteconfig)) {
 		    $config = ArrayUtils::merge($config, require $siteconfig);
-		
+		} elseif ($siteModule !== '' && $this->isVendorSite($serviceManager, $siteModule)) {
+		    // Site installed with composer (vendor/, e.g. MelisDemoCms): it is not loaded on
+		    // back-office requests, so its plugin templates are read from its own Module config,
+		    // the same config the front uses (0011040)
+		    $siteModuleClass = $siteModule . '\\Module';
+		    $config = ArrayUtils::merge($config, (new $siteModuleClass())->getConfig());
+		}
+
 		if (empty($config['plugins'][$module]['plugins'][$pluginName]))
             $valueoptions = array();
 		else
@@ -51,6 +58,22 @@ class PluginTemplateSelectFactory extends MelisSelectFactory
 		    $newValueOptions[$val] = $val;
 
 		return $newValueOptions;
+	}
+
+	/**
+	 * True when $siteModule is a composer-installed Melis site exposing a Module config
+	 */
+	private function isVendorSite(ServiceManager $serviceManager, $siteModule)
+	{
+		$moduleClass = $siteModule . '\\Module';
+		if (!class_exists($moduleClass) || !method_exists($moduleClass, 'getConfig'))
+			return false;
+
+		try {
+			return $serviceManager->get('MelisEngineComposer')->isSiteModule($siteModule);
+		} catch (\Throwable $e) {
+			return false;
+		}
 	}
 
 }
