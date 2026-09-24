@@ -70,9 +70,9 @@ class MelisPlatformIdsTable extends MelisGenericTable
 
 		if (!empty($options['order']['key']) && !empty($options['order']['dir'])) {
 			if ($options['order']['key'] == 'pids_name') {
-				$select->order('melis_core_platform.plf_name ' . $options['order']['dir']);
+				\MelisCore\Model\Tables\MelisGenericTable::addSafeOrder($select, 'melis_core_platform.plf_name', $options['order']['dir']);
 			} else {
-				$select->order($options['order']['key'] . ' ' . $options['order']['dir']);
+				\MelisCore\Model\Tables\MelisGenericTable::addSafeOrder($select, $options['order']['key'], $options['order']['dir']);
 			}
 		}
 
@@ -97,7 +97,7 @@ class MelisPlatformIdsTable extends MelisGenericTable
 			'melis_core_platform.plf_id = melis_cms_platform_ids.pids_id',
 			array('*')
 		);
-		$select->where("plf_name = '$platformName'");
+		$select->where->equalTo('plf_name', (string) $platformName);
 		$resultSet = $this->tableGateway->selectWith($select);
 		return $resultSet;
 	}
