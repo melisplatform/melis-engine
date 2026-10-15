@@ -86,6 +86,10 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
 
     public function submitAction()
     {
+        // SECURITY (audit FE-H6) : écrit en base (platform ids, site, domaines) et dispatchable par
+        // la route top-level `/MelisEngine` (hors CSRF/gate), en GET. Hors installation : POST +
+        // identité exigés (le forward interne de la Marketplace est porté par un POST authentifié).
+        if ($deny = $this->denySetupOutsideInstall()) { return $deny; }
 
         $success = 1;
         $message = 'tr_install_setup_message_ko';
@@ -211,6 +215,31 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
         );
 
         return new JsonModel($response);
+    }
+
+    /**
+     * SECURITY (audit FE-H6) : garde des actions de setup — voir MelisSetupController. Installation
+     * en cours (MelisInstaller dans melis.module.load.php) : permis ; sinon POST + identité exigés.
+     */
+    private function denySetupOutsideInstall()
+    {
+        $moduleLoadFile = $_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php';
+        if (file_exists($moduleLoadFile) && in_array('MelisInstaller', (array) include $moduleLoadFile, true)) {
+            return null; // installation en cours
+        }
+
+        $hasIdentity = false;
+        try {
+            $hasIdentity = $this->getServiceManager()->get('MelisCoreAuth')->hasIdentity();
+        } catch (\Throwable $e) {
+            // service indisponible → refus (fail-closed)
+        }
+
+        if (! $this->getRequest()->isPost() || ! $hasIdentity) {
+            return new JsonModel(['success' => 0, 'message' => 'Forbidden', 'errors' => ['setup actions require an authenticated POST outside installation']]);
+        }
+
+        return null;
     }
 
     /**
