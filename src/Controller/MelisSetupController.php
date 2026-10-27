@@ -18,6 +18,12 @@ class MelisSetupController extends MelisAbstractActionController
 {
     public function setupResultAction()
     {
+        // SECURITY (audit FE-H6) : action d'INSTALLATION qui écrit en base (platform ids, site,
+        // domaines), dispatchable par la route top-level `/MelisEngine` — hors garde CSRF (préfixe
+        // `/melis`) et hors gate d'outil (routes `melis-backoffice*`) — et en GET. Hors
+        // installation : POST + identité exigés.
+        if ($deny = $this->denySetupOutsideInstall()) { return $deny; }
+
         $success = 1;
         $message = 'tr_install_setup_message_ko';
         $title   = 'tr_install_setup_title';
@@ -135,6 +141,35 @@ class MelisSetupController extends MelisAbstractActionController
         );
 
         return new JsonModel($response);
+    }
+
+    /**
+     * SECURITY (audit FE-H6) : garde des actions de setup. Flux légitimes préservés :
+     *   - installation en cours : MelisInstaller est encore dans config/melis.module.load.php
+     *     (le wizard le retire à la fin) — le flux installeur, anonyme, passe ;
+     *   - post-install (ex. forward interne de la Marketplace lors de l'ajout d'un module) : la
+     *     requête HTTP d'origine est un POST authentifié sous /melis — passe.
+     * Tout le reste (GET direct via la route top-level /MelisEngine, anonyme, non-POST) est refusé.
+     */
+    private function denySetupOutsideInstall()
+    {
+        $moduleLoadFile = $_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php';
+        if (file_exists($moduleLoadFile) && in_array('MelisInstaller', (array) include $moduleLoadFile, true)) {
+            return null; // installation en cours
+        }
+
+        $hasIdentity = false;
+        try {
+            $hasIdentity = $this->getServiceManager()->get('MelisCoreAuth')->hasIdentity();
+        } catch (\Throwable $e) {
+            // service indisponible → refus (fail-closed)
+        }
+
+        if (! $this->getRequest()->isPost() || ! $hasIdentity) {
+            return new JsonModel(['success' => 0, 'message' => 'Forbidden', 'errors' => ['setup actions require an authenticated POST outside installation']]);
+        }
+
+        return null;
     }
 
     /**

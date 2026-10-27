@@ -201,7 +201,12 @@ class MelisSearchService extends MelisServiceManager
         $pageTreeSvc = $this->getServiceManager()->get('MelisEngineTree');
         $xmlContent = '<?xml version="1.0" encoding="UTF-8"?>';
         $xmlContent.= '<document type="MelisSearchResults" author="MelisTechnology" version="2.0">';
-        $xmlContent.= '<searchQuery>'.$searchValue.'</searchQuery>';
+        // SECURITY (audit FE-H5) : $searchValue vient de la requête du VISITEUR (clé `keyword` de la
+        // config du plugin, écrasable par GET) — un `</searchQuery><result>…` forgeait des résultats
+        // de recherche arbitraires (phishing/XSS selon le template). `<` et `>` sont retirés plutôt
+        // qu'échappés : le plugin consommateur ré-échappe déjà les `&` du flux entier avant parsing
+        // (MelisFrontSearchResultsPlugin), un &lt; émis ici ressortirait double-encodé.
+        $xmlContent.= '<searchQuery>'.str_replace(['<', '>'], '', (string) $searchValue).'</searchQuery>';
 
         $lastEditedDate = null;
         $pageStatus     = null;
