@@ -86,9 +86,8 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
 
     public function submitAction()
     {
-        // SECURITY (audit FE-H6) : écrit en base (platform ids, site, domaines) et dispatchable par
-        // la route top-level `/MelisEngine` (hors CSRF/gate), en GET. Hors installation : POST +
-        // identité exigés (le forward interne de la Marketplace est porté par un POST authentifié).
+        // Écrit platform ids, site, domaines. Hors installation : POST + identité exigés (le forward
+        // interne de la Marketplace est porté par un POST authentifié).
         if ($deny = $this->denySetupOutsideInstall()) { return $deny; }
 
         $success = 1;
@@ -218,7 +217,7 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
     }
 
     /**
-     * SECURITY (audit FE-H6) : garde des actions de setup — voir MelisSetupController. Installation
+     * Garde des actions de setup — voir MelisSetupController. Installation
      * en cours (MelisInstaller dans melis.module.load.php) : permis ; sinon POST + identité exigés.
      */
     private function denySetupOutsideInstall()
@@ -232,7 +231,7 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
         try {
             $hasIdentity = $this->getServiceManager()->get('MelisCoreAuth')->hasIdentity();
         } catch (\Throwable $e) {
-            // service indisponible → refus (fail-closed)
+            // service indisponible → refus
         }
 
         if (! $this->getRequest()->isPost() || ! $hasIdentity) {

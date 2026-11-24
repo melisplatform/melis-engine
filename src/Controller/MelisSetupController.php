@@ -18,10 +18,8 @@ class MelisSetupController extends MelisAbstractActionController
 {
     public function setupResultAction()
     {
-        // SECURITY (audit FE-H6) : action d'INSTALLATION qui écrit en base (platform ids, site,
-        // domaines), dispatchable par la route top-level `/MelisEngine` — hors garde CSRF (préfixe
-        // `/melis`) et hors gate d'outil (routes `melis-backoffice*`) — et en GET. Hors
-        // installation : POST + identité exigés.
+        // Action d'installation (écrit platform ids, site, domaines). Hors installation : POST +
+        // identité exigés.
         if ($deny = $this->denySetupOutsideInstall()) { return $deny; }
 
         $success = 1;
@@ -144,12 +142,12 @@ class MelisSetupController extends MelisAbstractActionController
     }
 
     /**
-     * SECURITY (audit FE-H6) : garde des actions de setup. Flux légitimes préservés :
+     * Garde des actions de setup :
      *   - installation en cours : MelisInstaller est encore dans config/melis.module.load.php
      *     (le wizard le retire à la fin) — le flux installeur, anonyme, passe ;
      *   - post-install (ex. forward interne de la Marketplace lors de l'ajout d'un module) : la
      *     requête HTTP d'origine est un POST authentifié sous /melis — passe.
-     * Tout le reste (GET direct via la route top-level /MelisEngine, anonyme, non-POST) est refusé.
+     * Sinon : POST + identité exigés.
      */
     private function denySetupOutsideInstall()
     {
@@ -162,7 +160,7 @@ class MelisSetupController extends MelisAbstractActionController
         try {
             $hasIdentity = $this->getServiceManager()->get('MelisCoreAuth')->hasIdentity();
         } catch (\Throwable $e) {
-            // service indisponible → refus (fail-closed)
+            // service indisponible → refus
         }
 
         if (! $this->getRequest()->isPost() || ! $hasIdentity) {
